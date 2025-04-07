@@ -205,6 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+
     // --- Page Routing ---
     if (currentPage === 'index.html') {
         // Logic for Login Page
