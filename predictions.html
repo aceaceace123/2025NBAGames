@@ -34,14 +34,16 @@
 
         .team {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            padding: 5px;
+            padding: 10px;
+            text-align: center;
         }
 
         .team img {
-            width: 30px;
-            height: 30px;
-            margin-right: 10px;
+            width: 50px;
+            height: 50px;
+            margin-bottom: 8px;
         }
 
         .team.winner {
@@ -52,6 +54,9 @@
         .finals {
             text-align: center;
             margin: 0 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .champion {
@@ -59,16 +64,50 @@
             background: #ffd700;
             border-radius: 10px;
             margin-top: 100px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 200px;
         }
 
         .champion img {
-            width: 60px;
-            height: 60px;
+            width: 80px;
+            height: 80px;
+            margin-bottom: 10px;
+        }
+
+        .champion h3 {
+            margin-bottom: 15px;
         }
 
         .seed {
-            margin-right: 5px;
+            margin: 5px 0;
             color: #666;
+        }
+
+        .incomplete-message {
+            text-align: center;
+            color: #666;
+            margin: 20px;
+            padding: 20px;
+            background: #f8f8f8;
+            border-radius: 5px;
+        }
+
+        #champion-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #champion-content img {
+            margin-bottom: 10px;
+        }
+
+        #champion-content div {
+            font-size: 1.2em;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -80,78 +119,36 @@
             <h1>NBA Playoffs 2025 Predictions</h1>
         </header>
         <main>
-            <div class="bracket-container">
+            <div id="incomplete-message" class="incomplete-message" style="display: none;">
+                <p>You haven't completed all your predictions yet. Please complete all matchups to see your full
+                    bracket.</p>
+                <p>Click <a href="matchup1W.html">here</a> to continue making predictions.</p>
+            </div>
+            <div id="bracket-container" class="bracket-container" style="display: none;">
                 <!-- Western Conference -->
                 <div class="conference">
                     <h2>Western Conference</h2>
                     <!-- First Round -->
-                    <div class="round">
+                    <div class="round" id="west-round1">
                         <h3>First Round</h3>
-                        <div class="matchup">
-                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612747/global/L/logo.svg"
-                                    alt="Lakers"><span class="seed">(1)</span>Lakers</div>
-                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612740/global/L/logo.svg"
-                                    alt="Pelicans"><span class="seed">(8)</span>Pelicans</div>
-                        </div>
-                        <div class="matchup">
-                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612744/global/L/logo.svg"
-                                    alt="Warriors"><span class="seed">(4)</span>Warriors</div>
-                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612743/global/L/logo.svg"
-                                    alt="Nuggets"><span class="seed">(5)</span>Nuggets</div>
-                        </div>
-                        <div class="matchup">
-                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612746/global/L/logo.svg"
-                                    alt="Clippers"><span class="seed">(3)</span>Clippers</div>
-                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612742/global/L/logo.svg"
-                                    alt="Mavericks"><span class="seed">(6)</span>Mavericks</div>
-                        </div>
-                        <div class="matchup">
-                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612756/global/L/logo.svg"
-                                    alt="Suns"><span class="seed">(2)</span>Suns</div>
-                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612763/global/L/logo.svg"
-                                    alt="Grizzlies"><span class="seed">(7)</span>Grizzlies</div>
-                        </div>
                     </div>
-
                     <!-- Conference Semifinals -->
-                    <div class="round">
+                    <div class="round" id="west-round2">
                         <h3>Conference Semifinals</h3>
-                        <div class="matchup">
-                            <div class="team winner"><img
-                                    src="https://cdn.nba.com/logos/nba/1610612747/global/L/logo.svg" alt="Lakers"><span
-                                    class="seed">(1)</span>Lakers</div>
-                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612744/global/L/logo.svg"
-                                    alt="Warriors"><span class="seed">(4)</span>Warriors</div>
-                        </div>
-                        <div class="matchup">
-                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612746/global/L/logo.svg"
-                                    alt="Clippers"><span class="seed">(3)</span>Clippers</div>
-                            <div class="team winner"><img
-                                    src="https://cdn.nba.com/logos/nba/1610612756/global/L/logo.svg" alt="Suns"><span
-                                    class="seed">(2)</span>Suns</div>
-                        </div>
                     </div>
-
                     <!-- Conference Finals -->
-                    <div class="round">
+                    <div class="round" id="west-round3">
                         <h3>Conference Finals</h3>
-                        <div class="matchup">
-                            <div class="team winner"><img
-                                    src="https://cdn.nba.com/logos/nba/1610612747/global/L/logo.svg" alt="Lakers"><span
-                                    class="seed">(1)</span>Lakers</div>
-                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612756/global/L/logo.svg"
-                                    alt="Suns"><span class="seed">(2)</span>Suns</div>
-                        </div>
                     </div>
                 </div>
 
                 <!-- Finals -->
                 <div class="finals">
                     <h2>NBA Finals</h2>
-                    <div class="champion">
+                    <div id="finals-matchup"></div>
+                    <div id="champion-display" class="champion" style="display: none;">
                         <h3>NBA Champion</h3>
-                        <img src="https://cdn.nba.com/logos/nba/1610612747/global/L/logo.svg" alt="Lakers">
-                        <div>Lakers</div>
+                        <div id="champion-content"></div>
                     </div>
                 </div>
 
@@ -159,69 +156,175 @@
                 <div class="conference">
                     <h2>Eastern Conference</h2>
                     <!-- First Round -->
-                    <div class="round">
+                    <div class="round" id="east-round1">
                         <h3>First Round</h3>
-                        <div class="matchup">
-                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612738/global/L/logo.svg"
-                                    alt="Celtics"><span class="seed">(1)</span>Celtics</div>
-                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612737/global/L/logo.svg"
-                                    alt="Hawks"><span class="seed">(8)</span>Hawks</div>
-                        </div>
-                        <div class="matchup">
-                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612749/global/L/logo.svg"
-                                    alt="Bucks"><span class="seed">(4)</span>Bucks</div>
-                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612748/global/L/logo.svg"
-                                    alt="Heat"><span class="seed">(5)</span>Heat</div>
-                        </div>
-                        <div class="matchup">
-                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612755/global/L/logo.svg"
-                                    alt="76ers"><span class="seed">(3)</span>76ers</div>
-                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612751/global/L/logo.svg"
-                                    alt="Nets"><span class="seed">(6)</span>Nets</div>
-                        </div>
-                        <div class="matchup">
-                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612739/global/L/logo.svg"
-                                    alt="Cavaliers"><span class="seed">(2)</span>Cavaliers</div>
-                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612752/global/L/logo.svg"
-                                    alt="Knicks"><span class="seed">(7)</span>Knicks</div>
-                        </div>
                     </div>
-
                     <!-- Conference Semifinals -->
-                    <div class="round">
+                    <div class="round" id="east-round2">
                         <h3>Conference Semifinals</h3>
-                        <div class="matchup">
-                            <div class="team winner"><img
-                                    src="https://cdn.nba.com/logos/nba/1610612738/global/L/logo.svg" alt="Celtics"><span
-                                    class="seed">(1)</span>Celtics</div>
-                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612749/global/L/logo.svg"
-                                    alt="Bucks"><span class="seed">(4)</span>Bucks</div>
-                        </div>
-                        <div class="matchup">
-                            <div class="team winner"><img
-                                    src="https://cdn.nba.com/logos/nba/1610612755/global/L/logo.svg" alt="76ers"><span
-                                    class="seed">(3)</span>76ers</div>
-                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612739/global/L/logo.svg"
-                                    alt="Cavaliers"><span class="seed">(2)</span>Cavaliers</div>
-                        </div>
                     </div>
-
                     <!-- Conference Finals -->
-                    <div class="round">
+                    <div class="round" id="east-round3">
                         <h3>Conference Finals</h3>
-                        <div class="matchup">
-                            <div class="team winner"><img
-                                    src="https://cdn.nba.com/logos/nba/1610612738/global/L/logo.svg" alt="Celtics"><span
-                                    class="seed">(1)</span>Celtics</div>
-                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612755/global/L/logo.svg"
-                                    alt="76ers"><span class="seed">(3)</span>76ers</div>
-                        </div>
                     </div>
                 </div>
             </div>
         </main>
     </div>
     <script src="script.js"></script>
+    <script>
+        // Function to be called after script.js is loaded
+        function initializePredictions() {
+            const username = localStorage.getItem('nbaPlayoffsUsername');
+            if (!username) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            displayWelcomeMessage('prediction');
+
+            const round1Predictions = JSON.parse(localStorage.getItem('round1Predictions') || '{}');
+            const round2Predictions = JSON.parse(localStorage.getItem('round2Predictions') || '{}');
+            const round3Predictions = JSON.parse(localStorage.getItem('round3Predictions') || '{}');
+            const round4Predictions = JSON.parse(localStorage.getItem('round4Predictions') || '{}');
+
+            console.log('Round 1 Predictions:', round1Predictions);
+            console.log('Round 2 Predictions:', round2Predictions);
+            console.log('Round 3 Predictions:', round3Predictions);
+            console.log('Round 4 Predictions:', round4Predictions);
+
+            const isComplete = {
+                round1: Object.keys(round1Predictions).length === 8,
+                round2: Object.keys(round2Predictions).length === 4,
+                round3: Object.keys(round3Predictions).length === 2,
+                round4: Object.keys(round4Predictions).length === 1
+            };
+
+            console.log('Completion Status:', isComplete);
+
+            const incompleteMessage = document.getElementById('incomplete-message');
+            const bracketContainer = document.getElementById('bracket-container');
+
+            if (!isComplete.round1) {
+                incompleteMessage.style.display = 'block';
+                bracketContainer.style.display = 'none';
+                return;
+            }
+
+            incompleteMessage.style.display = 'none';
+            bracketContainer.style.display = 'flex';
+
+            // Helper function to create team element
+            function createTeamElement(teamAbbr, isWinner = false) {
+                const team = teamDetails[teamAbbr];
+                if (!team) {
+                    console.error('Team not found:', teamAbbr);
+                    return null;
+                }
+
+                const div = document.createElement('div');
+                div.className = `team${isWinner ? ' winner' : ''}`;
+                div.innerHTML = `
+                    <img src="${team.logo}" alt="${team.name}">
+                    <span class="seed">(${team.seed})</span>${team.name}
+                `;
+                return div;
+            }
+
+            // Helper function to create matchup element
+            function createMatchupElement(team1Abbr, team2Abbr, winnerAbbr = null) {
+                const matchupDiv = document.createElement('div');
+                matchupDiv.className = 'matchup';
+
+                const team1Element = createTeamElement(team1Abbr, team1Abbr === winnerAbbr);
+                const team2Element = createTeamElement(team2Abbr, team2Abbr === winnerAbbr);
+
+                if (team1Element && team2Element) {
+                    matchupDiv.appendChild(team1Element);
+                    matchupDiv.appendChild(team2Element);
+                }
+
+                return matchupDiv;
+            }
+
+            // Populate Western Conference First Round
+            const westRound1 = document.getElementById('west-round1');
+            round1Matchups.filter(m => m.conference === "Western").forEach(matchup => {
+                const winner = round1Predictions[matchup.id];
+                westRound1.appendChild(createMatchupElement(matchup.team1Abbr, matchup.team2Abbr, winner));
+            });
+
+            // Populate Eastern Conference First Round
+            const eastRound1 = document.getElementById('east-round1');
+            round1Matchups.filter(m => m.conference === "Eastern").forEach(matchup => {
+                const winner = round1Predictions[matchup.id];
+                eastRound1.appendChild(createMatchupElement(matchup.team1Abbr, matchup.team2Abbr, winner));
+            });
+
+            if (isComplete.round2) {
+                // Populate Western Conference Semifinals
+                const westRound2 = document.getElementById('west-round2');
+                ['R2W1', 'R2W2'].forEach(matchupId => {
+                    const sourceData = roundSources[matchupId];
+                    const team1 = round1Predictions[sourceData.source1];
+                    const team2 = round1Predictions[sourceData.source2];
+                    const winner = round2Predictions[matchupId];
+                    westRound2.appendChild(createMatchupElement(team1, team2, winner));
+                });
+
+                // Populate Eastern Conference Semifinals
+                const eastRound2 = document.getElementById('east-round2');
+                ['R2E1', 'R2E2'].forEach(matchupId => {
+                    const sourceData = roundSources[matchupId];
+                    const team1 = round1Predictions[sourceData.source1];
+                    const team2 = round1Predictions[sourceData.source2];
+                    const winner = round2Predictions[matchupId];
+                    eastRound2.appendChild(createMatchupElement(team1, team2, winner));
+                });
+            }
+
+            if (isComplete.round3) {
+                // Populate Conference Finals
+                const westRound3 = document.getElementById('west-round3');
+                const eastRound3 = document.getElementById('east-round3');
+
+                const westFinalsData = roundSources['R3W'];
+                const eastFinalsData = roundSources['R3E'];
+
+                const westTeam1 = round2Predictions[westFinalsData.source1];
+                const westTeam2 = round2Predictions[westFinalsData.source2];
+                const eastTeam1 = round2Predictions[eastFinalsData.source1];
+                const eastTeam2 = round2Predictions[eastFinalsData.source2];
+
+                westRound3.appendChild(createMatchupElement(westTeam1, westTeam2, round3Predictions['R3W']));
+                eastRound3.appendChild(createMatchupElement(eastTeam1, eastTeam2, round3Predictions['R3E']));
+            }
+
+            if (isComplete.round4) {
+                // Populate Finals
+                const finalsMatchup = document.getElementById('finals-matchup');
+                const championDisplay = document.getElementById('champion-display');
+                const championContent = document.getElementById('champion-content');
+
+                const westChampion = round3Predictions['R3W'];
+                const eastChampion = round3Predictions['R3E'];
+                const champion = round4Predictions['R4F'];
+
+                finalsMatchup.appendChild(createMatchupElement(westChampion, eastChampion, champion));
+
+                if (champion && teamDetails[champion]) {
+                    championDisplay.style.display = 'block';
+                    championContent.innerHTML = `
+                        <img src="${teamDetails[champion].logo}" alt="${teamDetails[champion].name}">
+                        <div>${teamDetails[champion].name}</div>
+                    `;
+                }
+            }
+        }
+
+        // Call the initialization function after the page loads
+        document.addEventListener('DOMContentLoaded', initializePredictions);
+    </script>
 </body>
 
 </html>

@@ -1,67 +1,67 @@
+// --- Shared Data ---
+const teamDetails = {
+    "LAL": { name: "Lakers", logo: "https://cdn.nba.com/logos/nba/1610612747/global/L/logo.svg", seed: 1 },
+    "NOP": { name: "Pelicans", logo: "https://cdn.nba.com/logos/nba/1610612740/global/L/logo.svg", seed: 8 },
+    "GSW": { name: "Warriors", logo: "https://cdn.nba.com/logos/nba/1610612744/global/L/logo.svg", seed: 4 },
+    "DEN": { name: "Nuggets", logo: "https://cdn.nba.com/logos/nba/1610612743/global/L/logo.svg", seed: 5 },
+    "LAC": { name: "Clippers", logo: "https://cdn.nba.com/logos/nba/1610612746/global/L/logo.svg", seed: 3 },
+    "DAL": { name: "Mavericks", logo: "https://cdn.nba.com/logos/nba/1610612742/global/L/logo.svg", seed: 6 },
+    "PHX": { name: "Suns", logo: "https://cdn.nba.com/logos/nba/1610612756/global/L/logo.svg", seed: 2 },
+    "MEM": { name: "Grizzlies", logo: "https://cdn.nba.com/logos/nba/1610612763/global/L/logo.svg", seed: 7 },
+    "BOS": { name: "Celtics", logo: "https://cdn.nba.com/logos/nba/1610612738/global/L/logo.svg", seed: 1 },
+    "ATL": { name: "Hawks", logo: "https://cdn.nba.com/logos/nba/1610612737/global/L/logo.svg", seed: 8 },
+    "MIL": { name: "Bucks", logo: "https://cdn.nba.com/logos/nba/1610612749/global/L/logo.svg", seed: 4 },
+    "MIA": { name: "Heat", logo: "https://cdn.nba.com/logos/nba/1610612748/global/L/logo.svg", seed: 5 },
+    "PHI": { name: "76ers", logo: "https://cdn.nba.com/logos/nba/1610612755/global/L/logo.svg", seed: 3 },
+    "BKN": { name: "Nets", logo: "https://cdn.nba.com/logos/nba/1610612751/global/L/logo.svg", seed: 6 },
+    "CLE": { name: "Cavaliers", logo: "https://cdn.nba.com/logos/nba/1610612739/global/L/logo.svg", seed: 2 },
+    "NYK": { name: "Knicks", logo: "https://cdn.nba.com/logos/nba/1610612752/global/L/logo.svg", seed: 7 }
+};
+
+const round1Matchups = [
+    { id: "W1v8", team1Abbr: "LAL", team2Abbr: "NOP", conference: "Western", matchupNum: 1 },
+    { id: "W4v5", team1Abbr: "GSW", team2Abbr: "DEN", conference: "Western", matchupNum: 2 },
+    { id: "W3v6", team1Abbr: "LAC", team2Abbr: "DAL", conference: "Western", matchupNum: 3 },
+    { id: "W2v7", team1Abbr: "PHX", team2Abbr: "MEM", conference: "Western", matchupNum: 4 },
+    { id: "E1v8", team1Abbr: "BOS", team2Abbr: "ATL", conference: "Eastern", matchupNum: 1 },
+    { id: "E4v5", team1Abbr: "MIL", team2Abbr: "MIA", conference: "Eastern", matchupNum: 2 },
+    { id: "E3v6", team1Abbr: "PHI", team2Abbr: "BKN", conference: "Eastern", matchupNum: 3 },
+    { id: "E2v7", team1Abbr: "CLE", team2Abbr: "NYK", conference: "Eastern", matchupNum: 4 }
+];
+
+const roundSources = {
+    "R2W1": { round: 2, source1: "W1v8", source2: "W4v5", name: "Western Semifinal 1", next: "round2_matchup2W.html", prevRound: "round1Predictions", requiredCount: 8 },
+    "R2W2": { round: 2, source1: "W3v6", source2: "W2v7", name: "Western Semifinal 2", next: "round2_matchup1E.html", prevRound: "round1Predictions", requiredCount: 8 },
+    "R2E1": { round: 2, source1: "E1v8", source2: "E4v5", name: "Eastern Semifinal 1", next: "round2_matchup2E.html", prevRound: "round1Predictions", requiredCount: 8 },
+    "R2E2": { round: 2, source1: "E3v6", source2: "E2v7", name: "Eastern Semifinal 2", next: "round3_matchupW.html", prevRound: "round1Predictions", requiredCount: 8 },
+    "R3W": { round: 3, source1: "R2W1", source2: "R2W2", name: "Western Conference Final", next: "round3_matchupE.html", prevRound: "round2Predictions", requiredCount: 4 },
+    "R3E": { round: 3, source1: "R2E1", source2: "R2E2", name: "Eastern Conference Final", next: "round4_finals.html", prevRound: "round2Predictions", requiredCount: 4 },
+    "R4F": { round: 4, source1: "R3W", source2: "R3E", name: "NBA Finals", next: "predictions.html", prevRound: "round3Predictions", requiredCount: 2 }
+};
+
+// --- Helper Function ---
+function displayWelcomeMessage(pageType) {
+    const username = localStorage.getItem('nbaPlayoffsUsername');
+    const header = document.querySelector('.container header');
+    const h1 = header?.querySelector('h1');
+    if (username && h1) {
+        const existingWelcome = header.querySelector('.welcome-message');
+        if (!existingWelcome) {
+            const welcomeMessage = document.createElement('p');
+            welcomeMessage.classList.add('welcome-message');
+            welcomeMessage.textContent = `Welcome, ${username}! ${pageType === 'prediction' ? 'Here are your predictions' : 'Click the team you predict to win.'}`;
+            welcomeMessage.style.marginTop = '5px';
+            welcomeMessage.style.fontSize = '0.9em';
+            h1.insertAdjacentElement('afterend', welcomeMessage);
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const loginButton = document.getElementById('loginButton');
     const usernameInput = document.getElementById('username');
     const username = localStorage.getItem('nbaPlayoffsUsername');
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-
-    // --- Shared Data ---
-    const teamDetails = {
-        "LAL": { name: "Lakers", logo: "https://cdn.nba.com/logos/nba/1610612747/global/L/logo.svg", seed: 1 },
-        "NOP": { name: "Pelicans", logo: "https://cdn.nba.com/logos/nba/1610612740/global/L/logo.svg", seed: 8 },
-        "GSW": { name: "Warriors", logo: "https://cdn.nba.com/logos/nba/1610612744/global/L/logo.svg", seed: 4 },
-        "DEN": { name: "Nuggets", logo: "https://cdn.nba.com/logos/nba/1610612743/global/L/logo.svg", seed: 5 },
-        "LAC": { name: "Clippers", logo: "https://cdn.nba.com/logos/nba/1610612746/global/L/logo.svg", seed: 3 },
-        "DAL": { name: "Mavericks", logo: "https://cdn.nba.com/logos/nba/1610612742/global/L/logo.svg", seed: 6 },
-        "PHX": { name: "Suns", logo: "https://cdn.nba.com/logos/nba/1610612756/global/L/logo.svg", seed: 2 },
-        "MEM": { name: "Grizzlies", logo: "https://cdn.nba.com/logos/nba/1610612763/global/L/logo.svg", seed: 7 },
-        "BOS": { name: "Celtics", logo: "https://cdn.nba.com/logos/nba/1610612738/global/L/logo.svg", seed: 1 },
-        "ATL": { name: "Hawks", logo: "https://cdn.nba.com/logos/nba/1610612737/global/L/logo.svg", seed: 8 },
-        "MIL": { name: "Bucks", logo: "https://cdn.nba.com/logos/nba/1610612749/global/L/logo.svg", seed: 4 },
-        "MIA": { name: "Heat", logo: "https://cdn.nba.com/logos/nba/1610612748/global/L/logo.svg", seed: 5 },
-        "PHI": { name: "76ers", logo: "https://cdn.nba.com/logos/nba/1610612755/global/L/logo.svg", seed: 3 },
-        "BKN": { name: "Nets", logo: "https://cdn.nba.com/logos/nba/1610612751/global/L/logo.svg", seed: 6 },
-        "CLE": { name: "Cavaliers", logo: "https://cdn.nba.com/logos/nba/1610612739/global/L/logo.svg", seed: 2 },
-        "NYK": { name: "Knicks", logo: "https://cdn.nba.com/logos/nba/1610612752/global/L/logo.svg", seed: 7 }
-    };
-
-
-    const round1Matchups = [
-        { id: "W1v8", team1Abbr: "LAL", team2Abbr: "NOP", conference: "Western", matchupNum: 1 },
-        { id: "W4v5", team1Abbr: "GSW", team2Abbr: "DEN", conference: "Western", matchupNum: 2 },
-        { id: "W3v6", team1Abbr: "LAC", team2Abbr: "DAL", conference: "Western", matchupNum: 3 },
-        { id: "W2v7", team1Abbr: "PHX", team2Abbr: "MEM", conference: "Western", matchupNum: 4 },
-        { id: "E1v8", team1Abbr: "BOS", team2Abbr: "ATL", conference: "Eastern", matchupNum: 1 },
-        { id: "E4v5", team1Abbr: "MIL", team2Abbr: "MIA", conference: "Eastern", matchupNum: 2 },
-        { id: "E3v6", team1Abbr: "PHI", team2Abbr: "BKN", conference: "Eastern", matchupNum: 3 },
-        { id: "E2v7", team1Abbr: "CLE", team2Abbr: "NYK", conference: "Eastern", matchupNum: 4 }
-    ];
-
-    const roundSources = {
-        "R2W1": { round: 2, source1: "W1v8", source2: "W4v5", name: "Western Semifinal 1", next: "round2_matchup2W.html", prevRound: "round1Predictions", requiredCount: 8 },
-        "R2W2": { round: 2, source1: "W3v6", source2: "W2v7", name: "Western Semifinal 2", next: "round2_matchup1E.html", prevRound: "round1Predictions", requiredCount: 8 },
-        "R2E1": { round: 2, source1: "E1v8", source2: "E4v5", name: "Eastern Semifinal 1", next: "round2_matchup2E.html", prevRound: "round1Predictions", requiredCount: 8 },
-        "R2E2": { round: 2, source1: "E3v6", source2: "E2v7", name: "Eastern Semifinal 2", next: "round3_matchupW.html", prevRound: "round1Predictions", requiredCount: 8 },
-        "R3W": { round: 3, source1: "R2W1", source2: "R2W2", name: "Western Conference Final", next: "round3_matchupE.html", prevRound: "round2Predictions", requiredCount: 4 },
-        "R3E": { round: 3, source1: "R2E1", source2: "R2E2", name: "Eastern Conference Final", next: "round4_finals.html", prevRound: "round2Predictions", requiredCount: 4 },
-        "R4F": { round: 4, source1: "R3W", source2: "R3E", name: "NBA Finals", next: "predictions.html", prevRound: "round3Predictions", requiredCount: 2 }
-    };
-
-    // --- Helper Function ---
-    function displayWelcomeMessage(pageType) {
-        const header = document.querySelector('.container header');
-        const h1 = header?.querySelector('h1');
-        if (username && h1) {
-            const existingWelcome = header.querySelector('.welcome-message');
-            if (!existingWelcome) {
-                const welcomeMessage = document.createElement('p');
-                welcomeMessage.classList.add('welcome-message');
-                welcomeMessage.textContent = `Welcome, ${username}! ${pageType === 'prediction' ? 'Here are your predictions' : 'Click the team you predict to win.'}`;
-                welcomeMessage.style.marginTop = '5px';
-                welcomeMessage.style.fontSize = '0.9em';
-                h1.insertAdjacentElement('afterend', welcomeMessage);
-            }
-        }
-    }
 
     function handleNewStyleMatchupPage() {
         displayWelcomeMessage('matchup');
