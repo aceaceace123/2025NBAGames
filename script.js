@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "NYK": { name: "Knicks", logo: "https://cdn.nba.com/logos/nba/1610612752/global/L/logo.svg", seed: 7 }
     };
 
+
     const round1Matchups = [
         { id: "W1v8", team1Abbr: "LAL", team2Abbr: "NOP", conference: "Western", matchupNum: 1 },
         { id: "W4v5", team1Abbr: "GSW", team2Abbr: "DEN", conference: "Western", matchupNum: 2 },
