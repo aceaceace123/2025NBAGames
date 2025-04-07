@@ -1,0 +1,618 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    /* Assuming white background based on image */
+    color: #000;
+    /* Assuming black text */
+}
+
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+header h1 {
+    font-size: 28px;
+    margin: 20px 0;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 2em;
+    margin: 0 0 5px 0;
+    /* Adjust margins */
+}
+
+p {
+    /* Default paragraph style */
+    font-size: 0.9em;
+    color: #666;
+    /* Lighter text color */
+    margin: 0;
+    /* Reset margin for specific uses */
+}
+
+/* Keep main centered for login page, but bracket handles its own layout */
+main:not(#bracket-display):not(.new-style) {
+    /* Exclude bracket and new matchup style */
+    /* Apply centering unless it's the bracket or new matchup */
+    text-align: center;
+}
+
+
+.image-container {
+    position: relative;
+    /* Needed for absolute positioning of the login box */
+    display: inline-block;
+    /* Keep the container tight around the image */
+}
+
+/* General image styling */
+img {
+    display: block;
+    /* Remove extra space below image */
+    max-width: 100%;
+    /* Make image responsive */
+    height: auto;
+}
+
+.login-box {
+    position: absolute;
+    bottom: 10%;
+    /* Position from the bottom */
+    left: 50%;
+    transform: translateX(-50%);
+    /* Center horizontally */
+    background-color: rgba(255, 255, 255, 0.9);
+    /* White background with slight transparency */
+    padding: 15px 25px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    /* Use flexbox for alignment */
+    align-items: center;
+    /* Vertically align items */
+}
+
+.login-box label {
+    margin-right: 10px;
+    /* Space between label and input */
+    font-weight: bold;
+}
+
+.login-box input[type="text"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+/* Style for login button on index.html */
+.login-box button {
+    padding: 8px 15px;
+    margin-left: 10px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background-color: #eee;
+}
+
+.login-box button:hover {
+    background-color: #ddd;
+}
+
+/* --- Old Styles for individual matchup pages (COMMENTED OUT) --- */
+/*
+.matchup-page .matchup {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px auto;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    max-width: 600px;
+}
+
+.matchup-page .team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 40%;
+    cursor: pointer;
+    padding: 10px 5px;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    transition: border-color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.matchup-page .team img {
+    max-height: 50px;
+    max-width: 100%;
+    margin-bottom: 8px;
+}
+
+.matchup-page .team span {
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+.matchup-page .vs {
+    font-weight: bold;
+    color: #888;
+    font-size: 0.9em;
+}
+
+.matchup-page .team.selected {
+    border-color: #007bff;
+    background-color: #e7f3ff;
+    opacity: 1.0;
+}
+
+.matchup-page .team.not-selected {
+    opacity: 0.4;
+    background-color: #f8f9fa;
+    border-color: #eee;
+}
+*/
+
+/* --- New Styles for Split-Screen Matchup Pages --- */
+main.matchup-page.new-style {
+    text-align: left;
+    /* Override general centering */
+    padding: 0;
+    /* Remove padding if container handles it */
+}
+
+#split-matchup {
+    display: flex;
+    width: 100%;
+    height: 80vh;
+    overflow: hidden;
+}
+
+.team-section {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.team-section .team-logo {
+    width: 70%;
+    height: auto;
+    object-fit: contain;
+}
+
+.choice-button {
+    position: absolute;
+    z-index: 2;
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: rgba(255, 255, 255, 0.95);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    min-width: 100px;
+    text-align: center;
+    color: #333;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.choice-button:hover {
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    background-color: white;
+}
+
+.choice-button:active {
+    transform: translateX(-50%) translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Team-specific button styles */
+.team-section[data-team-abbr="LAL"] .choice-button {
+    border-bottom: 3px solid #FDB927;
+}
+
+.team-section[data-team-abbr="NOP"] .choice-button {
+    border-bottom: 3px solid #C8102E;
+}
+
+.team-section[data-team-abbr="GSW"] .choice-button {
+    border-bottom: 3px solid #FDB927;
+}
+
+.team-section[data-team-abbr="DEN"] .choice-button {
+    border-bottom: 3px solid #FEC524;
+}
+
+.team-section[data-team-abbr="LAC"] .choice-button {
+    border-bottom: 3px solid #1D428A;
+}
+
+.team-section[data-team-abbr="DAL"] .choice-button {
+    border-bottom: 3px solid #00538C;
+}
+
+.team-section[data-team-abbr="PHX"] .choice-button {
+    border-bottom: 3px solid #E56020;
+}
+
+.team-section[data-team-abbr="MEM"] .choice-button {
+    border-bottom: 3px solid #12173F;
+}
+
+.team-section[data-team-abbr="BOS"] .choice-button {
+    border-bottom: 3px solid #007A33;
+}
+
+.team-section[data-team-abbr="MIA"] .choice-button {
+    border-bottom: 3px solid #F9A01B;
+}
+
+.team-section[data-team-abbr="MIL"] .choice-button {
+    border-bottom: 3px solid #EEE1C6;
+}
+
+.team-section[data-team-abbr="PHI"] .choice-button {
+    border-bottom: 3px solid #ED174C;
+}
+
+.team-section[data-team-abbr="BKN"] .choice-button {
+    border-bottom: 3px solid #FFFFFF;
+}
+
+.team-section[data-team-abbr="ATL"] .choice-button {
+    border-bottom: 3px solid #C1D32F;
+}
+
+.team-section[data-team-abbr="CLE"] .choice-button {
+    border-bottom: 3px solid #FDBB30;
+}
+
+.team-section[data-team-abbr="NYK"] .choice-button {
+    border-bottom: 3px solid #F58426;
+}
+
+/* Team specific background colors */
+.team-section[data-team-abbr="LAL"] {
+    background-color: #552583;
+}
+
+.team-section[data-team-abbr="NOP"] {
+    background-color: #0C2340;
+}
+
+.team-section[data-team-abbr="GSW"] {
+    background-color: #1D428A;
+}
+
+.team-section[data-team-abbr="DEN"] {
+    background-color: #0E2240;
+}
+
+.team-section[data-team-abbr="LAC"] {
+    background-color: #C8102E;
+}
+
+.team-section[data-team-abbr="DAL"] {
+    background-color: #00538C;
+}
+
+.team-section[data-team-abbr="PHX"] {
+    background-color: #1D1160;
+}
+
+.team-section[data-team-abbr="MEM"] {
+    background-color: #5D76A9;
+}
+
+.team-section[data-team-abbr="BOS"] {
+    background-color: #007A33;
+}
+
+.team-section[data-team-abbr="MIA"] {
+    background-color: #98002E;
+}
+
+.team-section[data-team-abbr="MIL"] {
+    background-color: #00471B;
+}
+
+.team-section[data-team-abbr="PHI"] {
+    background-color: #006BB6;
+}
+
+.team-section[data-team-abbr="BKN"] {
+    background-color: #000000;
+}
+
+.team-section[data-team-abbr="ATL"] {
+    background-color: #E03A3E;
+}
+
+.team-section[data-team-abbr="CLE"] {
+    background-color: #860038;
+}
+
+.team-section[data-team-abbr="NYK"] {
+    background-color: #006BB6;
+}
+
+/* Styles for Predictions Text Summary */
+#predictions-summary {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-top: 20px;
+    text-align: left;
+    /* Align text left in summary */
+}
+
+#predictions-summary h2 {
+    font-size: 1.2em;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+#predictions-summary p {
+    font-size: 1em;
+    color: #333;
+    margin-bottom: 8px;
+    /* Space between prediction lines */
+}
+
+/* --- Visual Bracket Styles --- */
+#bracket-display {
+    display: flex;
+    justify-content: space-between;
+    /* Space out West, Finals, East */
+    margin-top: 20px;
+    padding: 50px 10px 20px 10px;
+    /* More top padding for title */
+    border: 1px solid #ccc;
+    background-color: #fdfdfd;
+    position: relative;
+    /* For absolute positioning title */
+    min-height: 500px;
+    /* Ensure enough height */
+    font-size: 0.8em;
+    /* Smaller font for bracket */
+    overflow-x: auto;
+    /* Enable horizontal scroll if needed */
+}
+
+#bracket-display h2 {
+    /* Title for the bracket */
+    text-align: center;
+    width: 100%;
+    margin-bottom: 20px;
+    position: absolute;
+    top: 15px;
+    left: 0;
+    font-size: 1.5em;
+    /* Adjust title size */
+}
+
+.bracket-region {
+    /* West or East */
+    display: flex;
+    justify-content: space-between;
+    /* Space out rounds within region */
+    width: 45%;
+    /* Take up most space */
+    position: relative;
+}
+
+.bracket-final-region {
+    /* Center column for champion */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* Vertically center */
+    align-items: center;
+    /* Horizontally center */
+    width: 10%;
+    /* Narrow column */
+    position: relative;
+}
+
+.bracket-round {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    /* Space matchups vertically */
+    height: 100%;
+    /* Fill region height */
+    align-items: center;
+    /* Center matchups horizontally */
+    width: auto;
+    /* Width determined by content */
+    padding: 0 15px;
+    /* Spacing between rounds */
+    box-sizing: border-box;
+}
+
+.bracket-matchup {
+    display: flex;
+    flex-direction: column;
+    /* Stack teams */
+    align-items: stretch;
+    /* Make teams fill width */
+    margin-bottom: 20px;
+    /* Space below matchup */
+    position: relative;
+    /* For connector lines */
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    padding: 5px;
+    border-radius: 3px;
+    min-width: 120px;
+    /* Ensure minimum width */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.bracket-team {
+    display: flex;
+    align-items: center;
+    padding: 4px 6px;
+    width: 100%;
+    /* Fill matchup width */
+    box-sizing: border-box;
+    background-color: #f8f9fa;
+    /* Light background for team */
+    border-bottom: 1px solid #eee;
+    /* Separator */
+}
+
+.bracket-team:last-child {
+    border-bottom: none;
+    /* No separator for the second team */
+}
+
+.bracket-team img {
+    width: 20px;
+    /* Smaller logos */
+    height: 20px;
+    margin-right: 6px;
+    object-fit: contain;
+    /* Prevent distortion */
+}
+
+.bracket-team span {
+    font-size: 0.95em;
+    white-space: nowrap;
+    /* Prevent wrapping */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Add ellipsis if name too long */
+}
+
+.bracket-team.winner {
+    /* Style for the winner shown advancing */
+    font-weight: bold;
+    background-color: #e7f3ff;
+    /* Highlight winner slightly */
+}
+
+/* Connectors will be drawn by JS using absolute positioning and borders/lines */
+.connector {
+    position: absolute;
+    border-color: #bbb;
+    border-style: solid;
+    border-width: 0;
+    /* Base */
+    z-index: 0;
+    /* Behind matchups but above background */
+}
+
+
+.bracket-champion {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: auto;
+    /* Explicitly center within the flex container */
+}
+
+.bracket-champion img {
+    width: 60px;
+    /* Larger logo for champ */
+    height: 60px;
+    margin-bottom: 8px;
+}
+
+.bracket-champion span {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #111;
+}
+
+.bracket-champion .title {
+    /* "CHAMPION" text */
+    font-size: 0.8em;
+    color: #555;
+    margin-top: 4px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Hide text summary by default if bracket is shown (JS will toggle) */
+#predictions-summary.hidden {
+    display: none;
+}
+
+/* Mobile-first responsive design */
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    header {
+        margin-bottom: 20px;
+    }
+
+    header h1 {
+        font-size: 20px;
+        margin: 15px 0;
+    }
+
+    .logo {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    .welcome-message {
+        font-size: 16px;
+        margin-bottom: 20px;
+        padding: 0 10px;
+    }
+
+    #split-matchup {
+        flex-direction: column;
+        height: calc(100vh - 150px);
+    }
+
+    .team-section {
+        flex: 1;
+        min-height: 40vh;
+    }
+
+    .team-section .team-logo {
+        width: 60%;
+    }
+
+    .choice-button {
+        padding: 8px 16px;
+        font-size: 16px;
+        min-width: 80px;
+    }
+}

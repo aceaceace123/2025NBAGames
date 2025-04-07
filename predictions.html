@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Predictions - NBA Playoffs</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .bracket-container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background: #f5f5f5;
+            margin: 20px;
+        }
+
+        .conference {
+            flex: 1;
+            max-width: 45%;
+        }
+
+        .round {
+            margin-bottom: 30px;
+        }
+
+        .matchup {
+            border: 1px solid #ddd;
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+        }
+
+        .team {
+            display: flex;
+            align-items: center;
+            padding: 5px;
+        }
+
+        .team img {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+
+        .team.winner {
+            background-color: #e8f5e9;
+            font-weight: bold;
+        }
+
+        .finals {
+            text-align: center;
+            margin: 0 20px;
+        }
+
+        .champion {
+            padding: 20px;
+            background: #ffd700;
+            border-radius: 10px;
+            margin-top: 100px;
+        }
+
+        .champion img {
+            width: 60px;
+            height: 60px;
+        }
+
+        .seed {
+            margin-right: 5px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">NIKA</div>
+            <h1>NBA Playoffs 2025 Predictions</h1>
+        </header>
+        <main>
+            <div class="bracket-container">
+                <!-- Western Conference -->
+                <div class="conference">
+                    <h2>Western Conference</h2>
+                    <!-- First Round -->
+                    <div class="round">
+                        <h3>First Round</h3>
+                        <div class="matchup">
+                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612747/global/L/logo.svg"
+                                    alt="Lakers"><span class="seed">(1)</span>Lakers</div>
+                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612740/global/L/logo.svg"
+                                    alt="Pelicans"><span class="seed">(8)</span>Pelicans</div>
+                        </div>
+                        <div class="matchup">
+                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612744/global/L/logo.svg"
+                                    alt="Warriors"><span class="seed">(4)</span>Warriors</div>
+                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612743/global/L/logo.svg"
+                                    alt="Nuggets"><span class="seed">(5)</span>Nuggets</div>
+                        </div>
+                        <div class="matchup">
+                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612746/global/L/logo.svg"
+                                    alt="Clippers"><span class="seed">(3)</span>Clippers</div>
+                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612742/global/L/logo.svg"
+                                    alt="Mavericks"><span class="seed">(6)</span>Mavericks</div>
+                        </div>
+                        <div class="matchup">
+                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612756/global/L/logo.svg"
+                                    alt="Suns"><span class="seed">(2)</span>Suns</div>
+                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612763/global/L/logo.svg"
+                                    alt="Grizzlies"><span class="seed">(7)</span>Grizzlies</div>
+                        </div>
+                    </div>
+
+                    <!-- Conference Semifinals -->
+                    <div class="round">
+                        <h3>Conference Semifinals</h3>
+                        <div class="matchup">
+                            <div class="team winner"><img
+                                    src="https://cdn.nba.com/logos/nba/1610612747/global/L/logo.svg" alt="Lakers"><span
+                                    class="seed">(1)</span>Lakers</div>
+                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612744/global/L/logo.svg"
+                                    alt="Warriors"><span class="seed">(4)</span>Warriors</div>
+                        </div>
+                        <div class="matchup">
+                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612746/global/L/logo.svg"
+                                    alt="Clippers"><span class="seed">(3)</span>Clippers</div>
+                            <div class="team winner"><img
+                                    src="https://cdn.nba.com/logos/nba/1610612756/global/L/logo.svg" alt="Suns"><span
+                                    class="seed">(2)</span>Suns</div>
+                        </div>
+                    </div>
+
+                    <!-- Conference Finals -->
+                    <div class="round">
+                        <h3>Conference Finals</h3>
+                        <div class="matchup">
+                            <div class="team winner"><img
+                                    src="https://cdn.nba.com/logos/nba/1610612747/global/L/logo.svg" alt="Lakers"><span
+                                    class="seed">(1)</span>Lakers</div>
+                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612756/global/L/logo.svg"
+                                    alt="Suns"><span class="seed">(2)</span>Suns</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Finals -->
+                <div class="finals">
+                    <h2>NBA Finals</h2>
+                    <div class="champion">
+                        <h3>NBA Champion</h3>
+                        <img src="https://cdn.nba.com/logos/nba/1610612747/global/L/logo.svg" alt="Lakers">
+                        <div>Lakers</div>
+                    </div>
+                </div>
+
+                <!-- Eastern Conference -->
+                <div class="conference">
+                    <h2>Eastern Conference</h2>
+                    <!-- First Round -->
+                    <div class="round">
+                        <h3>First Round</h3>
+                        <div class="matchup">
+                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612738/global/L/logo.svg"
+                                    alt="Celtics"><span class="seed">(1)</span>Celtics</div>
+                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612737/global/L/logo.svg"
+                                    alt="Hawks"><span class="seed">(8)</span>Hawks</div>
+                        </div>
+                        <div class="matchup">
+                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612749/global/L/logo.svg"
+                                    alt="Bucks"><span class="seed">(4)</span>Bucks</div>
+                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612748/global/L/logo.svg"
+                                    alt="Heat"><span class="seed">(5)</span>Heat</div>
+                        </div>
+                        <div class="matchup">
+                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612755/global/L/logo.svg"
+                                    alt="76ers"><span class="seed">(3)</span>76ers</div>
+                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612751/global/L/logo.svg"
+                                    alt="Nets"><span class="seed">(6)</span>Nets</div>
+                        </div>
+                        <div class="matchup">
+                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612739/global/L/logo.svg"
+                                    alt="Cavaliers"><span class="seed">(2)</span>Cavaliers</div>
+                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612752/global/L/logo.svg"
+                                    alt="Knicks"><span class="seed">(7)</span>Knicks</div>
+                        </div>
+                    </div>
+
+                    <!-- Conference Semifinals -->
+                    <div class="round">
+                        <h3>Conference Semifinals</h3>
+                        <div class="matchup">
+                            <div class="team winner"><img
+                                    src="https://cdn.nba.com/logos/nba/1610612738/global/L/logo.svg" alt="Celtics"><span
+                                    class="seed">(1)</span>Celtics</div>
+                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612749/global/L/logo.svg"
+                                    alt="Bucks"><span class="seed">(4)</span>Bucks</div>
+                        </div>
+                        <div class="matchup">
+                            <div class="team winner"><img
+                                    src="https://cdn.nba.com/logos/nba/1610612755/global/L/logo.svg" alt="76ers"><span
+                                    class="seed">(3)</span>76ers</div>
+                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612739/global/L/logo.svg"
+                                    alt="Cavaliers"><span class="seed">(2)</span>Cavaliers</div>
+                        </div>
+                    </div>
+
+                    <!-- Conference Finals -->
+                    <div class="round">
+                        <h3>Conference Finals</h3>
+                        <div class="matchup">
+                            <div class="team winner"><img
+                                    src="https://cdn.nba.com/logos/nba/1610612738/global/L/logo.svg" alt="Celtics"><span
+                                    class="seed">(1)</span>Celtics</div>
+                            <div class="team"><img src="https://cdn.nba.com/logos/nba/1610612755/global/L/logo.svg"
+                                    alt="76ers"><span class="seed">(3)</span>76ers</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
