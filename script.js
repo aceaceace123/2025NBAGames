@@ -40,6 +40,19 @@ const roundSources = {
 };
 
 // --- Helper Function ---
+function typeWriter(element, text, speed = 50) {
+    let i = 0;
+    element.textContent = ''; // Clear the element
+    function type() {
+        if (i < text.length) {
+            element.textContent += text.charAt(i);
+            i++;
+            setTimeout(type, speed);
+        }
+    }
+    type();
+}
+
 function displayWelcomeMessage(pageType) {
     const username = localStorage.getItem('nbaPlayoffsUsername');
     const header = document.querySelector('.container header');
@@ -49,10 +62,12 @@ function displayWelcomeMessage(pageType) {
         if (!existingWelcome) {
             const welcomeMessage = document.createElement('p');
             welcomeMessage.classList.add('welcome-message');
-            welcomeMessage.textContent = `Welcome, ${username}! ${pageType === 'prediction' ? 'Here are your predictions' : 'Click the team you predict to win.'}`;
             welcomeMessage.style.marginTop = '5px';
             welcomeMessage.style.fontSize = '0.9em';
             h1.insertAdjacentElement('afterend', welcomeMessage);
+
+            const messageText = `Welcome, ${username}! ${pageType === 'prediction' ? 'Here are your predictions' : 'Click the team you predict to win.'}`;
+            typeWriter(welcomeMessage, messageText);
         }
     }
 }
