@@ -100,12 +100,13 @@
 
         .champion {
             padding: 15px;
-            background: #ffd700;
             border-radius: 8px;
             margin-top: 10px;
             text-align: center;
             width: 100%;
             max-width: 160px;
+            border: 2px solid;
+            transition: all 0.3s ease;
         }
 
         .champion img {
@@ -467,6 +468,34 @@
 
                 if (champion && teamDetails[champion]) {
                     championDisplay.style.display = 'block';
+                    championDisplay.setAttribute('data-team-abbr', champion);
+
+                    // 設置隊伍特定的樣式
+                    const teamColors = {
+                        "LAL": { background: "#FDB927", border: "#552583", text: "#000000" },
+                        "NOP": { background: "#C8102E", border: "#0C2340", text: "#FFFFFF" },
+                        "GSW": { background: "#FDB927", border: "#1D428A", text: "#000000" },
+                        "DEN": { background: "#FEC524", border: "#0E2240", text: "#000000" },
+                        "LAC": { background: "#1D428A", border: "#C8102E", text: "#FFFFFF" },
+                        "DAL": { background: "#B8C4CA", border: "#00538C", text: "#000000" },
+                        "PHX": { background: "#E56020", border: "#1D1160", text: "#FFFFFF" },
+                        "MEM": { background: "#12173F", border: "#5D76A9", text: "#FFFFFF" },
+                        "BOS": { background: "#BA9653", border: "#007A33", text: "#FFFFFF" },
+                        "MIA": { background: "#F9A01B", border: "#98002E", text: "#000000" },
+                        "MIL": { background: "#EEE1C6", border: "#00471B", text: "#000000" },
+                        "PHI": { background: "#ED174C", border: "#006BB6", text: "#FFFFFF" },
+                        "BKN": { background: "#FFFFFF", border: "#000000", text: "#000000" },
+                        "ATL": { background: "#C1D32F", border: "#E03A3E", text: "#000000" },
+                        "CLE": { background: "#FDBB30", border: "#860038", text: "#000000" },
+                        "NYK": { background: "#F58426", border: "#006BB6", text: "#FFFFFF" }
+                    };
+
+                    const teamColor = teamColors[champion] || { background: "#FFFFFF", border: "#000000", text: "#000000" };
+
+                    championDisplay.style.backgroundColor = teamColor.background;
+                    championDisplay.style.borderColor = teamColor.border;
+                    championDisplay.style.color = teamColor.text;
+
                     championContent.innerHTML = `
                         <img src="${teamDetails[champion].logo}" alt="${teamDetails[champion].name}">
                         <div>${teamDetails[champion].name}</div>

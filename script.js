@@ -343,10 +343,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                     <div class="bracket-final-region"> <!-- Finals -->
-                         <div class="bracket-champion">
+                         <div class="bracket-champion" data-team-abbr="${champion.abbr}">
                               <img src="${champion.logo}" alt="${champion.name}">
                               <span>${champion.abbr}</span>
-                              <div class="title">CHAMPION</div>
+                              <div class="title">2025 NBA Champion</div>
                          </div>
                     </div>
                     <div class="bracket-region"> <!-- East -->

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Montserrat:wght@400;500;600;700&display=swap');
 
 body {
     font-family: sans-serif;
@@ -281,8 +281,9 @@ main.matchup-page.new-style {
     transform: translateX(-50%);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
-    font-weight: bold;
+    font-weight: 600;
     letter-spacing: 0.5px;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .choice-button:hover {
@@ -440,6 +441,7 @@ main.matchup-page.new-style {
     border-bottom: 1px solid #eee;
     padding-bottom: 5px;
     margin-bottom: 10px;
+    font-family: 'Libre Baskerville', serif;
 }
 
 #predictions-summary p {
@@ -447,6 +449,8 @@ main.matchup-page.new-style {
     color: #333;
     margin-bottom: 8px;
     /* Space between prediction lines */
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
 }
 
 /* --- Visual Bracket Styles --- */
@@ -544,12 +548,11 @@ main.matchup-page.new-style {
     align-items: center;
     padding: 4px 6px;
     width: 100%;
-    /* Fill matchup width */
     box-sizing: border-box;
     background-color: #f8f9fa;
-    /* Light background for team */
     border-bottom: 1px solid #eee;
-    /* Separator */
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
 }
 
 .bracket-team:last-child {
@@ -569,17 +572,14 @@ main.matchup-page.new-style {
 .bracket-team span {
     font-size: 0.95em;
     white-space: nowrap;
-    /* Prevent wrapping */
     overflow: hidden;
     text-overflow: ellipsis;
-    /* Add ellipsis if name too long */
+    font-family: 'Montserrat', sans-serif;
 }
 
 .bracket-team.winner {
-    /* Style for the winner shown advancing */
-    font-weight: bold;
+    font-weight: 600;
     background-color: #e7f3ff;
-    /* Highlight winner slightly */
 }
 
 /* Connectors will be drawn by JS using absolute positioning and borders/lines */
@@ -599,13 +599,12 @@ main.matchup-page.new-style {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: 10px;
-    background-color: #fff;
-    border: 1px solid #ccc;
+    padding: 15px;
+    border-width: 2px;
+    border-style: solid;
     border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin: auto;
-    /* Explicitly center within the flex container */
+    transition: all 0.3s ease;
 }
 
 .bracket-champion img {
@@ -616,18 +615,120 @@ main.matchup-page.new-style {
 }
 
 .bracket-champion span {
-    font-weight: bold;
+    font-weight: 700;
     font-size: 1.2em;
-    color: #111;
+    color: inherit;
+    font-family: 'Montserrat', sans-serif;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
 }
 
 .bracket-champion .title {
-    /* "CHAMPION" text */
     font-size: 0.8em;
-    color: #555;
     margin-top: 4px;
-    font-weight: bold;
+    font-weight: 600;
     text-transform: uppercase;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 0.05em;
+    color: inherit;
+    opacity: 0.9;
+}
+
+/* Champion box team-specific styles */
+.bracket-champion[data-team-abbr="LAL"] {
+    border-color: #552583;
+    box-shadow: 0 2px 4px rgba(85, 37, 131, 0.3);
+    background-color: #FDB927;
+}
+
+.bracket-champion[data-team-abbr="NOP"] {
+    border-color: #0C2340;
+    box-shadow: 0 2px 4px rgba(12, 35, 64, 0.3);
+    background-color: #C8102E;
+}
+
+.bracket-champion[data-team-abbr="GSW"] {
+    border-color: #1D428A;
+    box-shadow: 0 2px 4px rgba(29, 66, 138, 0.3);
+    background-color: #FDB927;
+}
+
+.bracket-champion[data-team-abbr="DEN"] {
+    border-color: #0E2240;
+    box-shadow: 0 2px 4px rgba(14, 34, 64, 0.3);
+    background-color: #FEC524;
+}
+
+.bracket-champion[data-team-abbr="LAC"] {
+    border-color: #C8102E;
+    box-shadow: 0 2px 4px rgba(200, 16, 46, 0.3);
+    background-color: #1D428A;
+}
+
+.bracket-champion[data-team-abbr="DAL"] {
+    border-color: #00538C;
+    box-shadow: 0 2px 4px rgba(0, 83, 140, 0.3);
+    background-color: #B8C4CA;
+}
+
+.bracket-champion[data-team-abbr="PHX"] {
+    border-color: #1D1160;
+    box-shadow: 0 2px 4px rgba(29, 17, 96, 0.3);
+    background-color: #E56020;
+}
+
+.bracket-champion[data-team-abbr="MEM"] {
+    border-color: #5D76A9;
+    box-shadow: 0 2px 4px rgba(93, 118, 169, 0.3);
+    background-color: #12173F;
+}
+
+.bracket-champion[data-team-abbr="BOS"] {
+    border-color: #007A33;
+    box-shadow: 0 2px 4px rgba(0, 122, 51, 0.3);
+    background-color: #BA9653;
+    color: #fff;
+}
+
+.bracket-champion[data-team-abbr="MIA"] {
+    border-color: #98002E;
+    box-shadow: 0 2px 4px rgba(152, 0, 46, 0.3);
+    background-color: #F9A01B;
+}
+
+.bracket-champion[data-team-abbr="MIL"] {
+    border-color: #00471B;
+    box-shadow: 0 2px 4px rgba(0, 71, 27, 0.3);
+    background-color: #EEE1C6;
+}
+
+.bracket-champion[data-team-abbr="PHI"] {
+    border-color: #006BB6;
+    box-shadow: 0 2px 4px rgba(0, 107, 182, 0.3);
+    background-color: #ED174C;
+}
+
+.bracket-champion[data-team-abbr="BKN"] {
+    border-color: #000000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    background-color: #FFFFFF;
+}
+
+.bracket-champion[data-team-abbr="ATL"] {
+    border-color: #E03A3E;
+    box-shadow: 0 2px 4px rgba(224, 58, 62, 0.3);
+    background-color: #C1D32F;
+}
+
+.bracket-champion[data-team-abbr="CLE"] {
+    border-color: #860038;
+    box-shadow: 0 2px 4px rgba(134, 0, 56, 0.3);
+    background-color: #FDBB30;
+}
+
+.bracket-champion[data-team-abbr="NYK"] {
+    border-color: #006BB6;
+    box-shadow: 0 2px 4px rgba(0, 107, 182, 0.3);
+    background-color: #F58426;
 }
 
 /* Hide text summary by default if bracket is shown (JS will toggle) */
