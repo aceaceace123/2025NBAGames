@@ -7,6 +7,8 @@
     <title>Your Predictions - NBA Playoffs</title>
     <link rel="stylesheet" href="style.css">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap');
+
         .container {
             max-width: 100%;
             padding: 10px;
@@ -148,6 +150,35 @@
             margin: 5px 0 !important;
         }
 
+        h1 {
+            font-family: 'Libre Baskerville', Baskerville, serif;
+            font-size: 1.5em;
+            margin: 15px 0;
+            display: inline-block;
+        }
+
+        .typewriter {
+            position: relative;
+            overflow: hidden;
+            border-right: 2px solid #000;
+            white-space: nowrap;
+            margin: 0;
+            letter-spacing: 0.05em;
+            animation: blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes blink-caret {
+
+            from,
+            to {
+                border-color: transparent
+            }
+
+            50% {
+                border-color: #000
+            }
+        }
+
         /* Mobile Responsive Styles */
         @media (max-width: 768px) {
             .bracket-container {
@@ -212,7 +243,7 @@
     <div class="container">
         <header>
             <div class="logo">@NIKA</div>
-            <h1>NBA Playoffs 2025 Predictions</h1>
+            <h1 id="main-title" class="typewriter conference-title"></h1>
         </header>
         <main>
             <div id="incomplete-message" class="incomplete-message" style="display: none;">
@@ -270,12 +301,34 @@
     </div>
     <script src="script.js"></script>
     <script>
+        // Function to create typewriter effect
+        function typewriterEffect(element, text, speed = 80) {
+            element.textContent = '';
+
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+
+            type();
+        }
+
         // Function to be called after script.js is loaded
         function initializePredictions() {
             const username = localStorage.getItem('nbaPlayoffsUsername');
             if (!username) {
                 window.location.href = 'index.html';
                 return;
+            }
+
+            // Add typewriter effect to the title
+            const titleElement = document.getElementById('main-title');
+            if (titleElement) {
+                typewriterEffect(titleElement, '2025 NBA PLAYOFFS', 80);
             }
 
             displayWelcomeMessage('prediction');

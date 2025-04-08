@@ -57,6 +57,24 @@ function displayWelcomeMessage(pageType) {
     }
 }
 
+// Add click animation to team elements
+function addTeamClickAnimation() {
+    const teams = document.querySelectorAll('.team');
+    teams.forEach(team => {
+        team.addEventListener('click', function () {
+            // Remove clicked class from all teams
+            teams.forEach(t => t.classList.remove('clicked'));
+            // Add clicked class to the clicked team
+            this.classList.add('clicked');
+
+            // Remove the class after animation completes
+            setTimeout(() => {
+                this.classList.remove('clicked');
+            }, 400); // Match the animation duration
+        });
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const loginButton = document.getElementById('loginButton');
     const usernameInput = document.getElementById('username');
@@ -387,5 +405,8 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (document.querySelector('.matchup-page.new-style')) {
         handleNewStyleMatchupPage();
     }
+
+    // Add this line to initialize click animations
+    addTeamClickAnimation();
 });
 
