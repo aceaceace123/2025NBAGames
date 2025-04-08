@@ -50,30 +50,32 @@
 
         .team {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
             padding: 6px;
             margin: 2px 0;
             border-radius: 4px;
-            text-align: center;
+            text-align: left;
         }
 
         .team img {
-            width: 40px;
-            height: 40px;
-            margin-bottom: 4px;
+            width: 36px;
+            height: 36px;
+            margin-right: 8px;
+            margin-bottom: 0;
         }
 
         .team-info {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
             font-size: 0.8em;
+            gap: 4px;
         }
 
         .seed {
             color: #666;
-            margin-bottom: 2px;
+            margin-bottom: 0;
         }
 
         .team-name {
@@ -113,6 +115,7 @@
         .champion h3 {
             margin: 5px 0;
             font-size: 0.9em;
+            white-space: pre-line;
         }
 
         .incomplete-message {
@@ -178,34 +181,28 @@
             }
 
             .team img {
-                width: 36px;
-                height: 36px;
+                width: 32px;
+                height: 32px;
+                margin-right: 6px;
             }
 
             .team-info {
                 font-size: 0.75em;
+                gap: 3px;
             }
         }
 
         /* Extra Small Devices */
         @media (max-width: 320px) {
             .team img {
-                width: 32px;
-                height: 32px;
-            }
-
-            .champion img {
-                width: 40px;
-                height: 40px;
-            }
-
-            h2,
-            .round h3 {
-                font-size: 0.8em;
+                width: 28px;
+                height: 28px;
+                margin-right: 4px;
             }
 
             .team-info {
                 font-size: 0.7em;
+                gap: 2px;
             }
         }
     </style>
@@ -246,7 +243,8 @@
                     <h2>NBA Finals</h2>
                     <div id="finals-matchup"></div>
                     <div id="champion-display" class="champion" style="display: none;">
-                        <h3>NBA Champion</h3>
+                        <h3>2025
+                            NBA Champion</h3>
                         <div id="champion-content"></div>
                     </div>
                 </div>
