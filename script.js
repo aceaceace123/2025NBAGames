@@ -388,3 +388,4 @@ document.addEventListener('DOMContentLoaded', () => {
         handleNewStyleMatchupPage();
     }
 });
+
