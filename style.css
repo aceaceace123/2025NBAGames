@@ -27,7 +27,7 @@ header h1 {
 }
 
 .logo {
-    font-size: 16px;
+    font-size: 12px;
     text-align: left;
     margin-bottom: 15px;
     padding-left: 20px;
@@ -90,6 +90,9 @@ img {
     max-width: 400px;
     width: 90%;
     padding: 25px;
+    background-image: url('images/basketballs.png');
+    background-size: cover;
+    background-position: center;
     background-color: rgba(255, 255, 255, 0.92);
     border-radius: 10px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
@@ -256,6 +259,8 @@ main.matchup-page.new-style {
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
 }
 
 .team-section .team-logo {
@@ -429,28 +434,27 @@ main.matchup-page.new-style {
 
 /* Styles for Predictions Text Summary */
 #predictions-summary {
-    border: 1px solid #ccc;
+    font-family: 'Montserrat', sans-serif;
+    max-width: 800px;
+    margin: 40px auto;
     padding: 20px;
-    margin-top: 20px;
-    text-align: left;
-    /* Align text left in summary */
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 #predictions-summary h2 {
-    font-size: 1.2em;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 5px;
-    margin-bottom: 10px;
-    font-family: 'Libre Baskerville', serif;
+    font-family: 'Libre Baskerville', Baskerville, serif;
+    color: #333;
+    margin-bottom: 20px;
 }
 
 #predictions-summary p {
-    font-size: 1em;
-    color: #333;
-    margin-bottom: 8px;
-    /* Space between prediction lines */
     font-family: 'Montserrat', sans-serif;
-    font-weight: 500;
+    font-weight: 400;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 15px;
 }
 
 /* --- Visual Bracket Styles --- */
@@ -825,6 +829,8 @@ main.matchup-page.new-style {
     text-align: left;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
 }
 
 .team:hover {
