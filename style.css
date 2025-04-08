@@ -86,7 +86,7 @@ img {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(0.6);
     max-width: 400px;
     width: 90%;
     padding: 25px;
@@ -102,7 +102,7 @@ img {
 }
 
 .login-box:hover {
-    transform: translate(-50%, -52%);
+    transform: translate(-50%, -52%) scale(0.6);
     box-shadow: 0 12px 36px rgba(0, 0, 0, 0.2);
     background-color: rgba(255, 255, 255, 0.96);
 }
