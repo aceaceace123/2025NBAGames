@@ -5,6 +5,7 @@ from datetime import datetime
 import os
 import databases
 import sqlalchemy
+from sqlalchemy import create_engine
 
 # Database URL from environment variable
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@localhost/dbname")
@@ -23,6 +24,10 @@ predictions = sqlalchemy.Table(
     sqlalchemy.Column("selected_team", sqlalchemy.String),
     sqlalchemy.Column("timestamp", sqlalchemy.DateTime),
 )
+
+# Create tables
+engine = create_engine(DATABASE_URL)
+metadata.create_all(engine)
 
 # Pydantic model for request validation
 class PredictionCreate(BaseModel):
@@ -44,6 +49,13 @@ app.add_middleware(
 
 @app.on_event("startup")
 async def startup():
+    # 確保表已創建
+    try:
+        metadata.create_all(engine)
+        print("Database tables created successfully")
+    except Exception as e:
+        print(f"Error creating tables: {e}")
+    
     await database.connect()
 
 @app.on_event("shutdown")
@@ -63,6 +75,7 @@ async def create_prediction(prediction: PredictionCreate):
         await database.execute(query)
         return {"status": "success"}
     except Exception as e:
+        print(f"Error saving prediction: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/predictions/{username}")
@@ -72,4 +85,5 @@ async def get_user_predictions(username: str):
         results = await database.fetch_all(query)
         return results
     except Exception as e:
+        print(f"Error fetching predictions: {e}")
         raise HTTPException(status_code=500, detail=str(e)) 
