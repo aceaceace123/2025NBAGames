@@ -1,12 +1,11 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from datetime import datetime
+from datetime import datetime, timezone
 import os
 import databases
 import sqlalchemy
 from sqlalchemy import create_engine
-from datetime import timezone
 
 # Database URL from environment variable
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@localhost/dbname")
@@ -70,18 +69,21 @@ async def shutdown():
 
 @app.post("/predictions")
 async def create_prediction(prediction: PredictionCreate):
-    # 確保時間戳帶有時區信息
-    if prediction.timestamp.tzinfo is None:
-        prediction.timestamp = prediction.timestamp.replace(tzinfo=timezone.utc)
-    
-    query = predictions.insert().values(
-        username=prediction.username,
-        matchup_id=prediction.matchup_id,
-        selected_team=prediction.selected_team,
-        timestamp=prediction.timestamp
-    )
-    
     try:
+        # Convert the timestamp to UTC if it has timezone info
+        if prediction.timestamp.tzinfo is not None:
+            prediction.timestamp = prediction.timestamp.astimezone(timezone.utc)
+        else:
+            # If no timezone info, assume UTC
+            prediction.timestamp = prediction.timestamp.replace(tzinfo=timezone.utc)
+        
+        query = predictions.insert().values(
+            username=prediction.username,
+            matchup_id=prediction.matchup_id,
+            selected_team=prediction.selected_team,
+            timestamp=prediction.timestamp
+        )
+        
         await database.execute(query)
         return {"status": "success"}
     except Exception as e:

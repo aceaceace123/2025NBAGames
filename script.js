@@ -95,7 +95,7 @@ async function savePrediction(matchupId, selectedTeamAbbr, storageKey) {
         const username = localStorage.getItem('nbaPlayoffsUsername');
         console.log('Attempting to save prediction with username:', username);
 
-        // 創建帶有時區信息的 ISO 格式時間字符串
+        // Create a timestamp with timezone information
         const now = new Date();
         const timestamp = now.toISOString();
         console.log('Timestamp with timezone:', timestamp);
@@ -124,7 +124,7 @@ async function savePrediction(matchupId, selectedTeamAbbr, storageKey) {
             throw new Error(`Failed to save prediction: ${errorText}`);
         }
 
-        // 如果成功，繼續更新本地存儲
+        // Update local storage if API call succeeds
         let storedPredictions = JSON.parse(localStorage.getItem(storageKey) || '{}');
         storedPredictions[matchupId] = selectedTeamAbbr;
         localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
@@ -132,7 +132,7 @@ async function savePrediction(matchupId, selectedTeamAbbr, storageKey) {
 
     } catch (error) {
         console.error('Error saving prediction:', error);
-        // 即使API調用失敗，也保存到本地存儲以保持用戶體驗
+        // Still update local storage even if API call fails to maintain user experience
         let storedPredictions = JSON.parse(localStorage.getItem(storageKey) || '{}');
         storedPredictions[matchupId] = selectedTeamAbbr;
         localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
