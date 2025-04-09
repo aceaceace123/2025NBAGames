@@ -93,23 +93,30 @@ function addTeamClickAnimation() {
 async function savePrediction(matchupId, selectedTeamAbbr, storageKey) {
     try {
         const username = localStorage.getItem('nbaPlayoffsUsername');
+        console.log('Attempting to save prediction with username:', username);
+
         const prediction = {
             username: username,
             matchup_id: matchupId,
             selected_team: selectedTeamAbbr,
             timestamp: new Date().toISOString()
         };
+        console.log('Prediction data:', prediction);
 
-        const response = await fetch('https://nba-predictions-api.onrender.com/predictions', {
+        console.log('Sending request to API...');
+        const response = await fetch('https://two025nbagames-1.onrender.com/predictions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(prediction)
         });
+        console.log('Response status:', response.status);
 
         if (!response.ok) {
-            throw new Error('Failed to save prediction');
+            const errorText = await response.text();
+            console.error('API Error Response:', errorText);
+            throw new Error(`Failed to save prediction: ${errorText}`);
         }
 
         // 如果成功，繼續更新本地存儲
