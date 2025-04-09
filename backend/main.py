@@ -46,7 +46,7 @@ app = FastAPI()
 # CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://aceaceace123.github.io"],  # Explicitly allow GitHub Pages domain
+    allow_origins=["*"],  # 允許所有來源訪問
     allow_credentials=True,  # Enable credentials
     allow_methods=["*"],  # Allow all methods
     allow_headers=["*"],  # Allow all headers
@@ -88,6 +88,17 @@ async def create_prediction(prediction: PredictionCreate):
         return {"status": "success"}
     except Exception as e:
         print(f"Error saving prediction: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/predictions/championship/all")
+async def get_all_championship_predictions():
+    """獲取所有用戶的冠軍預測(matchup_id=R4F)"""
+    query = predictions.select().where(predictions.c.matchup_id == "R4F")
+    try:
+        results = await database.fetch_all(query)
+        return results
+    except Exception as e:
+        print(f"Error fetching championship predictions: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/predictions/{username}")

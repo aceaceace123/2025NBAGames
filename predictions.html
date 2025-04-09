@@ -318,7 +318,8 @@
             <div class="modal-content">
                 <span class="close-button">&times;</span>
                 <h2>NBA Champion Predictions</h2>
-                <p>Distribution of all users' championship predictions</p>
+                <p>Distribution of all users' championship predictions from database</p>
+                <div id="stats-summary" style="text-align: center; margin: 10px 0; font-size: 0.9em;"></div>
                 <div class="chart-container">
                     <canvas id="predictions-chart"></canvas>
                 </div>
@@ -584,44 +585,30 @@
 
             async function loadChampionshipStats() {
                 try {
-                    const usernames = ['user1', 'user2', 'user3', 'user4', 'user5'];
-                    const currentUser = localStorage.getItem('nbaPlayoffsUsername');
-                    if (currentUser && !usernames.includes(currentUser)) {
-                        usernames.push(currentUser);
+                    // 使用新的API端點直接獲取所有冠軍預測
+                    const response = await fetch('https://two025nbagames-1.onrender.com/predictions/championship/all');
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch championship predictions data');
                     }
 
+                    const predictions = await response.json();
+                    console.log('Championship predictions:', predictions);
+
+                    // 處理獲取到的數據，統計每個冠軍隊伍的數量
                     const championCounts = {};
                     let totalPredictions = 0;
 
-                    const fetchPromises = usernames.map(username =>
-                        fetch(`https://two025nbagames-1.onrender.com/predictions/${username}`)
-                            .then(response => {
-                                if (!response.ok) {
-                                    console.warn(`Failed to fetch predictions for user ${username}`);
-                                    return [];
-                                }
-                                return response.json();
-                            })
-                            .catch(error => {
-                                console.error(`Error fetching predictions for user ${username}:`, error);
-                                return [];
-                            })
-                    );
-
-                    const allPredictions = await Promise.all(fetchPromises);
-
-                    allPredictions.forEach(userPredictions => {
-                        if (Array.isArray(userPredictions)) {
-                            const finalsPrediction = userPredictions.find(p => p.matchup_id === 'R4F');
-                            if (finalsPrediction && finalsPrediction.selected_team) {
-                                const team = finalsPrediction.selected_team;
-                                championCounts[team] = (championCounts[team] || 0) + 1;
-                                totalPredictions++;
-                            }
+                    predictions.forEach(prediction => {
+                        const team = prediction.selected_team;
+                        if (team) {
+                            championCounts[team] = (championCounts[team] || 0) + 1;
+                            totalPredictions++;
                         }
                     });
 
-                    if (totalPredictions === 0 && currentUser) {
+                    // 如果我們沒有獲取到任何預測，使用本地存儲的當前用戶數據
+                    if (totalPredictions === 0) {
+                        const currentUser = localStorage.getItem('nbaPlayoffsUsername');
                         const localFinalPrediction = JSON.parse(localStorage.getItem('round4Predictions') || '{}')['R4F'];
                         if (localFinalPrediction) {
                             championCounts[localFinalPrediction] = 1;
@@ -629,10 +616,12 @@
                         }
                     }
 
+                    // 如果仍然沒有數據，顯示錯誤訊息
                     if (totalPredictions === 0) {
                         throw new Error('No prediction data available');
                     }
 
+                    // 準備圓餅圖數據
                     const teamNames = Object.keys(championCounts);
                     const teamColors = teamNames.map(team => {
                         const colors = {
@@ -664,10 +653,16 @@
                         }]
                     };
 
+                    // 顯示預測總數摘要
+                    const statsSummary = document.getElementById('stats-summary');
+                    statsSummary.textContent = `Total predictions: ${totalPredictions} | Teams predicted: ${teamNames.length}`;
+
+                    // 如果已經有圖表，銷毀它
                     if (championshipChart) {
                         championshipChart.destroy();
                     }
 
+                    // 創建新的圓餅圖
                     const ctx = document.getElementById('predictions-chart').getContext('2d');
                     championshipChart = new Chart(ctx, {
                         type: 'pie',
