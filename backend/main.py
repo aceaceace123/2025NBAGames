@@ -6,6 +6,7 @@ import os
 import databases
 import sqlalchemy
 from sqlalchemy import create_engine
+from datetime import timezone
 
 # Database URL from environment variable
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@localhost/dbname")
@@ -22,7 +23,7 @@ predictions = sqlalchemy.Table(
     sqlalchemy.Column("username", sqlalchemy.String),
     sqlalchemy.Column("matchup_id", sqlalchemy.String),
     sqlalchemy.Column("selected_team", sqlalchemy.String),
-    sqlalchemy.Column("timestamp", sqlalchemy.DateTime),
+    sqlalchemy.Column("timestamp", sqlalchemy.DateTime(timezone=True)),
 )
 
 # Create tables
@@ -35,6 +36,11 @@ class PredictionCreate(BaseModel):
     matchup_id: str
     selected_team: str
     timestamp: datetime
+
+    class Config:
+        json_encoders = {
+            datetime: lambda v: v.isoformat()
+        }
 
 app = FastAPI()
 
@@ -64,6 +70,10 @@ async def shutdown():
 
 @app.post("/predictions")
 async def create_prediction(prediction: PredictionCreate):
+    # 確保時間戳帶有時區信息
+    if prediction.timestamp.tzinfo is None:
+        prediction.timestamp = prediction.timestamp.replace(tzinfo=timezone.utc)
+    
     query = predictions.insert().values(
         username=prediction.username,
         matchup_id=prediction.matchup_id,

@@ -95,11 +95,16 @@ async function savePrediction(matchupId, selectedTeamAbbr, storageKey) {
         const username = localStorage.getItem('nbaPlayoffsUsername');
         console.log('Attempting to save prediction with username:', username);
 
+        // 創建帶有時區信息的 ISO 格式時間字符串
+        const now = new Date();
+        const timestamp = now.toISOString();
+        console.log('Timestamp with timezone:', timestamp);
+
         const prediction = {
             username: username,
             matchup_id: matchupId,
             selected_team: selectedTeamAbbr,
-            timestamp: new Date().toISOString()
+            timestamp: timestamp
         };
         console.log('Prediction data:', prediction);
 
