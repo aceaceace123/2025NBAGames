@@ -95,10 +95,10 @@ async function savePrediction(matchupId, selectedTeamAbbr, storageKey) {
         const username = localStorage.getItem('nbaPlayoffsUsername');
         console.log('Attempting to save prediction with username:', username);
 
-        // Create a timestamp with timezone information
+        // Create timestamp without timezone information
         const now = new Date();
-        const timestamp = now.toISOString();
-        console.log('Timestamp with timezone:', timestamp);
+        const timestamp = now.toISOString().split('.')[0]; // Remove milliseconds and timezone
+        console.log('Timestamp:', timestamp);
 
         const prediction = {
             username: username,

@@ -70,18 +70,15 @@ async def shutdown():
 @app.post("/predictions")
 async def create_prediction(prediction: PredictionCreate):
     try:
-        # Convert the timestamp to UTC if it has timezone info
-        if prediction.timestamp.tzinfo is not None:
-            prediction.timestamp = prediction.timestamp.astimezone(timezone.utc)
-        else:
-            # If no timezone info, assume UTC
-            prediction.timestamp = prediction.timestamp.replace(tzinfo=timezone.utc)
+        # Always convert to UTC, stripping any existing timezone info first
+        naive_timestamp = prediction.timestamp.replace(tzinfo=None)
+        utc_timestamp = naive_timestamp.replace(tzinfo=timezone.utc)
         
         query = predictions.insert().values(
             username=prediction.username,
             matchup_id=prediction.matchup_id,
             selected_team=prediction.selected_team,
-            timestamp=prediction.timestamp
+            timestamp=utc_timestamp
         )
         
         await database.execute(query)
