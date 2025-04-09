@@ -33,13 +33,13 @@ class PredictionCreate(BaseModel):
 
 app = FastAPI()
 
-# 設定 CORS
+# 設定 CORS - 允許所有來源
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://aceaceace123.github.io"],  # 你的 GitHub Pages 網站
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=["*"],  # 允許所有來源
+    allow_credentials=False,  # 當 allow_origins=["*"] 時，這必須是 False
+    allow_methods=["*"],  # 允許所有方法
+    allow_headers=["*"],  # 允許所有標頭
 )
 
 @app.on_event("startup")
