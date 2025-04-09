@@ -90,6 +90,51 @@ function addTeamClickAnimation() {
     });
 }
 
+async function savePrediction(matchupId, selectedTeamAbbr) {
+    try {
+        const username = localStorage.getItem('username');
+        const prediction = {
+            username: username,
+            matchup_id: matchupId,
+            selected_team: selectedTeamAbbr,
+            timestamp: new Date().toISOString()
+        };
+
+        const response = await fetch('https://nba-predictions-api.onrender.com/predictions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(prediction)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to save prediction');
+        }
+
+        // 如果成功，繼續更新本地存儲
+        storedPredictions[matchupId] = selectedTeamAbbr;
+        localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
+        console.log('Updated predictions after selection:', JSON.parse(localStorage.getItem(storageKey)));
+
+    } catch (error) {
+        console.error('Error saving prediction:', error);
+        // 即使API調用失敗，也保存到本地存儲以保持用戶體驗
+        storedPredictions[matchupId] = selectedTeamAbbr;
+        localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
+    }
+}
+
+// 修改現有的 handleTeamClick 函數
+async function handleTeamClick(event) {
+    // ... existing code ...
+
+    // 在選擇團隊後保存預測
+    await savePrediction(matchupId, selectedTeamAbbr);
+
+    // ... existing code ...
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const loginButton = document.getElementById('loginButton');
     const usernameInput = document.getElementById('username');
@@ -200,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // --- Event Listener for Selection ---
         choiceButtons.forEach(button => {
-            button.addEventListener('click', () => {
+            button.addEventListener('click', async () => {
                 const selectedTeamAbbr = button.getAttribute('data-team-abbr');
                 teamSections.forEach(section => {
                     const sectionAbbr = section.getAttribute('data-team-abbr');
@@ -211,9 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         section.classList.add('not-selected');
                     }
                 });
-                storedPredictions[matchupId] = selectedTeamAbbr;
-                localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
-                console.log('Updated predictions after selection:', JSON.parse(localStorage.getItem(storageKey)));
+                await savePrediction(matchupId, selectedTeamAbbr);
 
                 // Navigate to next page after selection
                 let nextUrl = 'predictions.html'; // Default
