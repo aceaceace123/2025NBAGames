@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Predictions - NBA Playoffs</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap');
 
@@ -148,6 +149,63 @@
             font-size: 0.95em;
         }
 
+        #stats-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 15px;
+            background-color: #1d428a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            z-index: 100;
+        }
+
+        #stats-button:hover {
+            background-color: #0c2340;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            margin: 15px auto;
+        }
+
         .welcome-message {
             font-size: 0.8em !important;
             margin: 5px 0 !important;
@@ -182,7 +240,6 @@
             }
         }
 
-        /* Mobile Responsive Styles */
         @media (max-width: 768px) {
             .bracket-container {
                 flex-direction: column;
@@ -224,9 +281,15 @@
                 font-size: 0.75em;
                 gap: 3px;
             }
+
+            #stats-button {
+                top: 10px;
+                right: 10px;
+                padding: 6px 12px;
+                font-size: 0.8em;
+            }
         }
 
-        /* Extra Small Devices */
         @media (max-width: 320px) {
             .team img {
                 width: 28px;
@@ -248,6 +311,20 @@
             <div class="logo">@NIKA</div>
             <h1 id="main-title" class="typewriter conference-title"></h1>
         </header>
+
+        <button id="stats-button">View Championship Stats</button>
+
+        <div id="stats-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>NBA Champion Predictions</h2>
+                <p>Distribution of all users' championship predictions</p>
+                <div class="chart-container">
+                    <canvas id="predictions-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
         <main>
             <div id="incomplete-message" class="incomplete-message" style="display: none;">
                 <p>You haven't completed all your predictions yet. Please complete all matchups to see your full
@@ -255,24 +332,19 @@
                 <p>Click <a href="matchup1W.html">here</a> to continue making predictions.</p>
             </div>
             <div id="bracket-container" class="bracket-container" style="display: none;">
-                <!-- Western Conference -->
                 <div class="conference">
                     <h2>Western Conference</h2>
-                    <!-- First Round -->
                     <div class="round" id="west-round1">
                         <h3>First Round</h3>
                     </div>
-                    <!-- Conference Semifinals -->
                     <div class="round" id="west-round2">
                         <h3>Conference Semifinals</h3>
                     </div>
-                    <!-- Conference Finals -->
                     <div class="round" id="west-round3">
                         <h3>Conference Finals</h3>
                     </div>
                 </div>
 
-                <!-- Finals -->
                 <div class="finals">
                     <h2>NBA Finals</h2>
                     <div id="finals-matchup"></div>
@@ -283,18 +355,14 @@
                     </div>
                 </div>
 
-                <!-- Eastern Conference -->
                 <div class="conference">
                     <h2>Eastern Conference</h2>
-                    <!-- First Round -->
                     <div class="round" id="east-round1">
                         <h3>First Round</h3>
                     </div>
-                    <!-- Conference Semifinals -->
                     <div class="round" id="east-round2">
                         <h3>Conference Semifinals</h3>
                     </div>
-                    <!-- Conference Finals -->
                     <div class="round" id="east-round3">
                         <h3>Conference Finals</h3>
                     </div>
@@ -304,7 +372,6 @@
     </div>
     <script src="script.js"></script>
     <script>
-        // Function to create typewriter effect
         function typewriterEffect(element, text, speed = 80) {
             element.textContent = '';
 
@@ -320,7 +387,6 @@
             type();
         }
 
-        // Function to be called after script.js is loaded
         function initializePredictions() {
             const username = localStorage.getItem('nbaPlayoffsUsername');
             if (!username) {
@@ -328,7 +394,6 @@
                 return;
             }
 
-            // Add typewriter effect to the title
             const titleElement = document.getElementById('main-title');
             if (titleElement) {
                 typewriterEffect(titleElement, '2025 NBA PLAYOFFS', 80);
@@ -367,7 +432,6 @@
             incompleteMessage.style.display = 'none';
             bracketContainer.style.display = 'flex';
 
-            // Helper function to create team element
             function createTeamElement(teamAbbr, isWinner = false) {
                 const team = teamDetails[teamAbbr];
                 if (!team) {
@@ -387,7 +451,6 @@
                 return div;
             }
 
-            // Helper function to create matchup element
             function createMatchupElement(team1Abbr, team2Abbr, winnerAbbr = null) {
                 const matchupDiv = document.createElement('div');
                 matchupDiv.className = 'matchup';
@@ -403,14 +466,12 @@
                 return matchupDiv;
             }
 
-            // Populate Western Conference First Round
             const westRound1 = document.getElementById('west-round1');
             round1Matchups.filter(m => m.conference === "Western").forEach(matchup => {
                 const winner = round1Predictions[matchup.id];
                 westRound1.appendChild(createMatchupElement(matchup.team1Abbr, matchup.team2Abbr, winner));
             });
 
-            // Populate Eastern Conference First Round
             const eastRound1 = document.getElementById('east-round1');
             round1Matchups.filter(m => m.conference === "Eastern").forEach(matchup => {
                 const winner = round1Predictions[matchup.id];
@@ -418,7 +479,6 @@
             });
 
             if (isComplete.round2) {
-                // Populate Western Conference Semifinals
                 const westRound2 = document.getElementById('west-round2');
                 ['R2W1', 'R2W2'].forEach(matchupId => {
                     const sourceData = roundSources[matchupId];
@@ -428,7 +488,6 @@
                     westRound2.appendChild(createMatchupElement(team1, team2, winner));
                 });
 
-                // Populate Eastern Conference Semifinals
                 const eastRound2 = document.getElementById('east-round2');
                 ['R2E1', 'R2E2'].forEach(matchupId => {
                     const sourceData = roundSources[matchupId];
@@ -440,7 +499,6 @@
             }
 
             if (isComplete.round3) {
-                // Populate Conference Finals
                 const westRound3 = document.getElementById('west-round3');
                 const eastRound3 = document.getElementById('east-round3');
 
@@ -457,7 +515,6 @@
             }
 
             if (isComplete.round4) {
-                // Populate Finals
                 const finalsMatchup = document.getElementById('finals-matchup');
                 const championDisplay = document.getElementById('champion-display');
                 const championContent = document.getElementById('champion-content');
@@ -472,7 +529,6 @@
                     championDisplay.style.display = 'block';
                     championDisplay.setAttribute('data-team-abbr', champion);
 
-                    // 設置隊伍特定的樣式
                     const teamColors = {
                         "LAL": { background: "#FDB927", border: "#552583", text: "#000000" },
                         "NOP": { background: "#C8102E", border: "#0C2340", text: "#FFFFFF" },
@@ -504,9 +560,155 @@
                     `;
                 }
             }
+
+            const statsButton = document.getElementById('stats-button');
+            const statsModal = document.getElementById('stats-modal');
+            const closeButton = document.querySelector('.close-button');
+
+            statsButton.addEventListener('click', function () {
+                statsModal.style.display = 'flex';
+                loadChampionshipStats();
+            });
+
+            closeButton.addEventListener('click', function () {
+                statsModal.style.display = 'none';
+            });
+
+            window.addEventListener('click', function (event) {
+                if (event.target === statsModal) {
+                    statsModal.style.display = 'none';
+                }
+            });
+
+            let championshipChart = null;
+
+            async function loadChampionshipStats() {
+                try {
+                    const usernames = ['user1', 'user2', 'user3', 'user4', 'user5'];
+                    const currentUser = localStorage.getItem('nbaPlayoffsUsername');
+                    if (currentUser && !usernames.includes(currentUser)) {
+                        usernames.push(currentUser);
+                    }
+
+                    const championCounts = {};
+                    let totalPredictions = 0;
+
+                    const fetchPromises = usernames.map(username =>
+                        fetch(`https://two025nbagames-1.onrender.com/predictions/${username}`)
+                            .then(response => {
+                                if (!response.ok) {
+                                    console.warn(`Failed to fetch predictions for user ${username}`);
+                                    return [];
+                                }
+                                return response.json();
+                            })
+                            .catch(error => {
+                                console.error(`Error fetching predictions for user ${username}:`, error);
+                                return [];
+                            })
+                    );
+
+                    const allPredictions = await Promise.all(fetchPromises);
+
+                    allPredictions.forEach(userPredictions => {
+                        if (Array.isArray(userPredictions)) {
+                            const finalsPrediction = userPredictions.find(p => p.matchup_id === 'R4F');
+                            if (finalsPrediction && finalsPrediction.selected_team) {
+                                const team = finalsPrediction.selected_team;
+                                championCounts[team] = (championCounts[team] || 0) + 1;
+                                totalPredictions++;
+                            }
+                        }
+                    });
+
+                    if (totalPredictions === 0 && currentUser) {
+                        const localFinalPrediction = JSON.parse(localStorage.getItem('round4Predictions') || '{}')['R4F'];
+                        if (localFinalPrediction) {
+                            championCounts[localFinalPrediction] = 1;
+                            totalPredictions = 1;
+                        }
+                    }
+
+                    if (totalPredictions === 0) {
+                        throw new Error('No prediction data available');
+                    }
+
+                    const teamNames = Object.keys(championCounts);
+                    const teamColors = teamNames.map(team => {
+                        const colors = {
+                            "LAL": "#552583",
+                            "NOP": "#C8102E",
+                            "GSW": "#1D428A",
+                            "DEN": "#0E2240",
+                            "LAC": "#1D428A",
+                            "DAL": "#00538C",
+                            "PHX": "#1D1160",
+                            "MEM": "#5D76A9",
+                            "BOS": "#007A33",
+                            "MIA": "#98002E",
+                            "MIL": "#00471B",
+                            "PHI": "#006BB6",
+                            "BKN": "#000000",
+                            "ATL": "#E03A3E",
+                            "CLE": "#860038",
+                            "NYK": "#006BB6"
+                        };
+                        return colors[team] || "#777777";
+                    });
+
+                    const data = {
+                        labels: teamNames.map(abbr => teamDetails[abbr] ? teamDetails[abbr].name : abbr),
+                        datasets: [{
+                            data: teamNames.map(team => championCounts[team]),
+                            backgroundColor: teamColors
+                        }]
+                    };
+
+                    if (championshipChart) {
+                        championshipChart.destroy();
+                    }
+
+                    const ctx = document.getElementById('predictions-chart').getContext('2d');
+                    championshipChart = new Chart(ctx, {
+                        type: 'pie',
+                        data: data,
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'right',
+                                    labels: {
+                                        boxWidth: 20,
+                                        font: {
+                                            size: 12
+                                        }
+                                    }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function (context) {
+                                            const value = context.raw;
+                                            const percentage = Math.round((value / totalPredictions) * 100);
+                                            return `${context.label}: ${value} (${percentage}%)`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                } catch (error) {
+                    console.error('Error loading championship stats:', error);
+                    document.getElementById('predictions-chart').innerHTML = `
+                        <div style="text-align: center; color: #d32f2f; padding: 20px;">
+                            Failed to load prediction statistics. Please try again later.
+                        </div>
+                    `;
+                }
+            }
         }
 
-        // Call the initialization function after the page loads
         document.addEventListener('DOMContentLoaded', initializePredictions);
     </script>
 </body>
