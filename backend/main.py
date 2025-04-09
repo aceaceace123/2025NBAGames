@@ -71,32 +71,17 @@ async def shutdown():
 @app.post("/predictions")
 async def create_prediction(prediction: PredictionCreate):
     try:
-        print(f"Received timestamp: {prediction.timestamp}")
+        print(f"Received prediction: {prediction}")
         
-        # Parse the timestamp string and convert to UTC
-        if isinstance(prediction.timestamp, str):
-            try:
-                # Parse ISO format string
-                timestamp = datetime.fromisoformat(prediction.timestamp)
-            except ValueError:
-                # If fromisoformat fails, try strptime
-                timestamp = datetime.strptime(prediction.timestamp, "%Y-%m-%dT%H:%M:%S")
-        else:
-            timestamp = prediction.timestamp
-
-        # Ensure UTC timezone
-        if timestamp.tzinfo is None:
-            timestamp = timestamp.replace(tzinfo=timezone.utc)
-        else:
-            timestamp = timestamp.astimezone(timezone.utc)
-
-        print(f"Processed timestamp: {timestamp}")
+        # 簡化時間戳處理 - 直接使用當前UTC時間，不嘗試轉換輸入的時間戳
+        current_time = datetime.utcnow()
+        print(f"Using current UTC time: {current_time}")
         
         query = predictions.insert().values(
             username=prediction.username,
             matchup_id=prediction.matchup_id,
             selected_team=prediction.selected_team,
-            timestamp=timestamp
+            timestamp=current_time
         )
         
         await database.execute(query)
