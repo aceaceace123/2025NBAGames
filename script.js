@@ -335,11 +335,41 @@ document.addEventListener('DOMContentLoaded', () => {
             const storedR3 = JSON.parse(localStorage.getItem('round3Predictions') || '{}');
             const storedR4 = JSON.parse(localStorage.getItem('round4Predictions') || '{}');
 
+            console.log('Current username on predictions page:', localStorage.getItem('nbaPlayoffsUsername'));
+            console.log('Round 1 Predictions:', storedR1);
+            console.log('Round 2 Predictions:', storedR2);
+            console.log('Round 3 Predictions:', storedR3);
+            console.log('Round 4 Predictions:', storedR4);
+
+            // 嘗試從後端獲取預測數據
+            const username = localStorage.getItem('nbaPlayoffsUsername');
+            if (username) {
+                console.log('Attempting to fetch predictions from API for user:', username);
+                fetch(`https://two025nbagames-1.onrender.com/predictions/${username}`)
+                    .then(response => {
+                        console.log('API Response status:', response.status);
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('API Response data:', data);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching predictions:', error);
+                    });
+            }
+
             const r1Complete = Object.keys(storedR1).length === 8;
             const r2Complete = Object.keys(storedR2).length === 4;
             const r3Complete = Object.keys(storedR3).length === 2;
             const r4Complete = Object.keys(storedR4).length === 1;
             const allComplete = r1Complete && r2Complete && r3Complete && r4Complete;
+
+            console.log('Completion Status:', {
+                round1: r1Complete,
+                round2: r2Complete,
+                round3: r3Complete,
+                round4: r4Complete
+            });
 
             if (allComplete) {
                 // --- Generate Visual Bracket ---
