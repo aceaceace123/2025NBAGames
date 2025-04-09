@@ -7,6 +7,7 @@
     <title>Your Predictions - NBA Playoffs</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap');
 
@@ -312,14 +313,13 @@
             <h1 id="main-title" class="typewriter conference-title"></h1>
         </header>
 
-        <button id="stats-button">View Championship Stats</button>
+        <button id="stats-button">See others' predictions</button>
 
         <div id="stats-modal" class="modal">
             <div class="modal-content">
                 <span class="close-button">&times;</span>
                 <h2>NBA Champion Predictions</h2>
                 <p>Distribution of all users' championship predictions from database</p>
-                <div id="stats-summary" style="text-align: center; margin: 10px 0; font-size: 0.9em;"></div>
                 <div class="chart-container">
                     <canvas id="predictions-chart"></canvas>
                 </div>
@@ -653,14 +653,13 @@
                         }]
                     };
 
-                    // 顯示預測總數摘要
-                    const statsSummary = document.getElementById('stats-summary');
-                    statsSummary.textContent = `Total predictions: ${totalPredictions} | Teams predicted: ${teamNames.length}`;
-
                     // 如果已經有圖表，銷毀它
                     if (championshipChart) {
                         championshipChart.destroy();
                     }
+
+                    // 註冊數據標籤插件
+                    Chart.register(ChartDataLabels);
 
                     // 創建新的圓餅圖
                     const ctx = document.getElementById('predictions-chart').getContext('2d');
@@ -687,6 +686,19 @@
                                             const percentage = Math.round((value / totalPredictions) * 100);
                                             return `${context.label}: ${value} (${percentage}%)`;
                                         }
+                                    }
+                                },
+                                datalabels: {
+                                    formatter: (value, ctx) => {
+                                        const dataset = ctx.chart.data.datasets[0];
+                                        const sum = dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = Math.round((value / sum) * 100) + '%';
+                                        return percentage;
+                                    },
+                                    color: '#fff',
+                                    font: {
+                                        weight: 'bold',
+                                        size: 14
                                     }
                                 }
                             }
