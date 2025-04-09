@@ -256,6 +256,9 @@ document.addEventListener('DOMContentLoaded', () => {
         choiceButtons.forEach(button => {
             button.addEventListener('click', async () => {
                 const selectedTeamAbbr = button.getAttribute('data-team-abbr');
+                console.log('Selected team:', selectedTeamAbbr);
+                console.log('Current username:', localStorage.getItem('nbaPlayoffsUsername'));
+
                 teamSections.forEach(section => {
                     const sectionAbbr = section.getAttribute('data-team-abbr');
                     section.classList.remove('selected', 'not-selected');
@@ -299,8 +302,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (loginButton && usernameInput) {
             loginButton.addEventListener('click', () => {
                 const usernameValue = usernameInput.value.trim();
+                console.log('Login attempt with username:', usernameValue);
                 if (usernameValue) {
                     localStorage.setItem('nbaPlayoffsUsername', usernameValue);
+                    console.log('Username saved:', localStorage.getItem('nbaPlayoffsUsername'));
                     localStorage.removeItem('round1Predictions');
                     localStorage.removeItem('round2Predictions');
                     localStorage.removeItem('round3Predictions');
