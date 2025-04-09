@@ -36,7 +36,7 @@ app = FastAPI()
 # 設定 CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://your-github-username.github.io"],  # 替換成你的 GitHub Pages URL
+    allow_origins=["https://aceaceace123.github.io"],  # 你的 GitHub Pages 網站
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

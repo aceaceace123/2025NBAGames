@@ -90,9 +90,9 @@ function addTeamClickAnimation() {
     });
 }
 
-async function savePrediction(matchupId, selectedTeamAbbr) {
+async function savePrediction(matchupId, selectedTeamAbbr, storageKey) {
     try {
-        const username = localStorage.getItem('username');
+        const username = localStorage.getItem('nbaPlayoffsUsername');
         const prediction = {
             username: username,
             matchup_id: matchupId,
@@ -113,6 +113,7 @@ async function savePrediction(matchupId, selectedTeamAbbr) {
         }
 
         // 如果成功，繼續更新本地存儲
+        let storedPredictions = JSON.parse(localStorage.getItem(storageKey) || '{}');
         storedPredictions[matchupId] = selectedTeamAbbr;
         localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
         console.log('Updated predictions after selection:', JSON.parse(localStorage.getItem(storageKey)));
@@ -120,6 +121,7 @@ async function savePrediction(matchupId, selectedTeamAbbr) {
     } catch (error) {
         console.error('Error saving prediction:', error);
         // 即使API調用失敗，也保存到本地存儲以保持用戶體驗
+        let storedPredictions = JSON.parse(localStorage.getItem(storageKey) || '{}');
         storedPredictions[matchupId] = selectedTeamAbbr;
         localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
     }
@@ -130,7 +132,7 @@ async function handleTeamClick(event) {
     // ... existing code ...
 
     // 在選擇團隊後保存預測
-    await savePrediction(matchupId, selectedTeamAbbr);
+    await savePrediction(matchupId, selectedTeamAbbr, storageKey);
 
     // ... existing code ...
 }
@@ -256,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         section.classList.add('not-selected');
                     }
                 });
-                await savePrediction(matchupId, selectedTeamAbbr);
+                await savePrediction(matchupId, selectedTeamAbbr, storageKey);
 
                 // Navigate to next page after selection
                 let nextUrl = 'predictions.html'; // Default
