@@ -38,7 +38,7 @@ class PredictionCreate(BaseModel):
 
     class Config:
         json_encoders = {
-            datetime: lambda v: v.isoformat()
+            datetime: lambda v: v.isoformat() #將datetime手動轉成字串
         }
 
 app = FastAPI()
@@ -46,7 +46,7 @@ app = FastAPI()
 # CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 允許所有來源訪問
+    allow_origins=["https://aceaceace123.github.io"],  # 允許來源訪問
     allow_credentials=True,  # Enable credentials
     allow_methods=["*"],  # Allow all methods
     allow_headers=["*"],  # Allow all headers
@@ -91,22 +91,24 @@ async def create_prediction(prediction: PredictionCreate):
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/predictions/championship/all")
-async def get_all_championship_predictions():
-    """獲取所有用戶的冠軍預測(matchup_id=R4F)"""
-    query = predictions.select().where(predictions.c.matchup_id == "R4F")
+async def get_championship_predictions():
     try:
+        # 只獲取冠軍預測（matchup_id 為 R4F）
+        query = predictions.select().where(predictions.c.matchup_id == "R4F")
         results = await database.fetch_all(query)
-        return results
+        
+        # 將結果轉換為字典列表
+        predictions_list = []
+        for row in results:
+            predictions_list.append({
+                "username": row.username,
+                "matchup_id": row.matchup_id,
+                "selected_team": row.selected_team,
+                "timestamp": row.timestamp.isoformat() if row.timestamp else None
+            })
+        
+        return predictions_list
     except Exception as e:
         print(f"Error fetching championship predictions: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/predictions/{username}")
-async def get_user_predictions(username: str):
-    query = predictions.select().where(predictions.c.username == username)
-    try:
-        results = await database.fetch_all(query)
-        return results
-    except Exception as e:
-        print(f"Error fetching predictions: {e}")
-        raise HTTPException(status_code=500, detail=str(e)) 

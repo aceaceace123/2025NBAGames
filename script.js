@@ -1,32 +1,32 @@
 // --- Shared Data ---
 const teamDetails = {
-    "LAL": { name: "Lakers", logo: "https://cdn.nba.com/logos/nba/1610612747/global/L/logo.svg", seed: 1 },
-    "NOP": { name: "Pelicans", logo: "https://cdn.nba.com/logos/nba/1610612740/global/L/logo.svg", seed: 8 },
-    "GSW": { name: "Warriors", logo: "https://cdn.nba.com/logos/nba/1610612744/global/L/logo.svg", seed: 4 },
-    "DEN": { name: "Nuggets", logo: "https://cdn.nba.com/logos/nba/1610612743/global/L/logo.svg", seed: 5 },
-    "LAC": { name: "Clippers", logo: "https://cdn.nba.com/logos/nba/1610612746/global/L/logo.svg", seed: 3 },
-    "DAL": { name: "Mavericks", logo: "https://cdn.nba.com/logos/nba/1610612742/global/L/logo.svg", seed: 6 },
-    "PHX": { name: "Suns", logo: "https://cdn.nba.com/logos/nba/1610612756/global/L/logo.svg", seed: 2 },
-    "MEM": { name: "Grizzlies", logo: "https://cdn.nba.com/logos/nba/1610612763/global/L/logo.svg", seed: 7 },
-    "BOS": { name: "Celtics", logo: "https://cdn.nba.com/logos/nba/1610612738/global/L/logo.svg", seed: 1 },
-    "ATL": { name: "Hawks", logo: "https://cdn.nba.com/logos/nba/1610612737/global/L/logo.svg", seed: 8 },
-    "MIL": { name: "Bucks", logo: "https://cdn.nba.com/logos/nba/1610612749/global/L/logo.svg", seed: 4 },
-    "MIA": { name: "Heat", logo: "https://cdn.nba.com/logos/nba/1610612748/global/L/logo.svg", seed: 5 },
-    "PHI": { name: "76ers", logo: "https://cdn.nba.com/logos/nba/1610612755/global/L/logo.svg", seed: 3 },
-    "BKN": { name: "Nets", logo: "https://cdn.nba.com/logos/nba/1610612751/global/L/logo.svg", seed: 6 },
-    "CLE": { name: "Cavaliers", logo: "https://cdn.nba.com/logos/nba/1610612739/global/L/logo.svg", seed: 2 },
-    "NYK": { name: "Knicks", logo: "https://cdn.nba.com/logos/nba/1610612752/global/L/logo.svg", seed: 7 }
+    "OKC": { name: "Thunder", logo: "https://cdn.nba.com/logos/nba/1610612760/global/L/logo.svg", seed: 1, conference: 'Western' },
+    "MIN": { name: "Timberwolves", logo: "https://cdn.nba.com/logos/nba/1610612750/global/L/logo.svg", seed: 8, conference: 'Western' },
+    "DEN": { name: "Nuggets", logo: "https://cdn.nba.com/logos/nba/1610612743/global/L/logo.svg", seed: 4, conference: 'Western' },
+    "LAC": { name: "Clippers", logo: "https://cdn.nba.com/logos/nba/1610612746/global/L/logo.svg", seed: 5, conference: 'Western' },
+    "LAL": { name: "Lakers", logo: "https://cdn.nba.com/logos/nba/1610612747/global/L/logo.svg", seed: 3, conference: 'Western' },
+    "GSW": { name: "Warriors", logo: "https://cdn.nba.com/logos/nba/1610612744/global/L/logo.svg", seed: 6, conference: 'Western' },
+    "HOU": { name: "Rockets", logo: "https://cdn.nba.com/logos/nba/1610612745/global/L/logo.svg", seed: 2, conference: 'Western' },
+    "MEM": { name: "Grizzlies", logo: "https://cdn.nba.com/logos/nba/1610612763/global/L/logo.svg", seed: 7, conference: 'Western' },
+    "CLE": { name: "Cavaliers", logo: "https://cdn.nba.com/logos/nba/1610612739/global/L/logo.svg", seed: 1, conference: 'Eastern' },
+    "ATL": { name: "Hawks", logo: "https://cdn.nba.com/logos/nba/1610612737/global/L/logo.svg", seed: 8, conference: 'Eastern' },
+    "IND": { name: "Pacers", logo: "https://cdn.nba.com/logos/nba/1610612754/global/L/logo.svg", seed: 4, conference: 'Eastern' },
+    "MIL": { name: "Bucks", logo: "https://cdn.nba.com/logos/nba/1610612749/global/L/logo.svg", seed: 5, conference: 'Eastern' },
+    "NYK": { name: "Knicks", logo: "https://cdn.nba.com/logos/nba/1610612752/global/L/logo.svg", seed: 3, conference: 'Eastern' },
+    "DET": { name: "Pistons", logo: "https://cdn.nba.com/logos/nba/1610612765/global/L/logo.svg", seed: 6, conference: 'Eastern' },
+    "BOS": { name: "Celtics", logo: "https://cdn.nba.com/logos/nba/1610612738/global/L/logo.svg", seed: 2, conference: 'Eastern' },
+    "ORL": { name: "Magic", logo: "https://cdn.nba.com/logos/nba/1610612753/global/L/logo.svg", seed: 7, conference: 'Eastern' }
 };
 
 const round1Matchups = [
-    { id: "W1v8", team1Abbr: "LAL", team2Abbr: "NOP", conference: "Western", matchupNum: 1 },
-    { id: "W4v5", team1Abbr: "GSW", team2Abbr: "DEN", conference: "Western", matchupNum: 2 },
-    { id: "W3v6", team1Abbr: "LAC", team2Abbr: "DAL", conference: "Western", matchupNum: 3 },
-    { id: "W2v7", team1Abbr: "PHX", team2Abbr: "MEM", conference: "Western", matchupNum: 4 },
-    { id: "E1v8", team1Abbr: "BOS", team2Abbr: "ATL", conference: "Eastern", matchupNum: 1 },
-    { id: "E4v5", team1Abbr: "MIL", team2Abbr: "MIA", conference: "Eastern", matchupNum: 2 },
-    { id: "E3v6", team1Abbr: "PHI", team2Abbr: "BKN", conference: "Eastern", matchupNum: 3 },
-    { id: "E2v7", team1Abbr: "CLE", team2Abbr: "NYK", conference: "Eastern", matchupNum: 4 }
+    { id: "W1v8", team1Abbr: "OKC", team2Abbr: "MIN", conference: "Western", matchupNum: 1 },
+    { id: "W4v5", team1Abbr: "DEN", team2Abbr: "LAC", conference: "Western", matchupNum: 2 },
+    { id: "W3v6", team1Abbr: "LAL", team2Abbr: "GSW", conference: "Western", matchupNum: 3 },
+    { id: "W2v7", team1Abbr: "HOU", team2Abbr: "MEM", conference: "Western", matchupNum: 4 },
+    { id: "E1v8", team1Abbr: "CLE", team2Abbr: "ATL", conference: "Eastern", matchupNum: 1 },
+    { id: "E4v5", team1Abbr: "IND", team2Abbr: "MIL", conference: "Eastern", matchupNum: 2 },
+    { id: "E3v6", team1Abbr: "NYK", team2Abbr: "DET", conference: "Eastern", matchupNum: 3 },
+    { id: "E2v7", team1Abbr: "BOS", team2Abbr: "ORL", conference: "Eastern", matchupNum: 4 }
 ];
 
 const roundSources = {
@@ -427,10 +427,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h2>Your Predicted Bracket</h2>
                     <div class="bracket-region"> <!-- West -->
                         <div class="bracket-round"> <!-- R1 West -->
-                            ${createMatchupHTML(teamDetails['LAL'], teamDetails['NOP'], r1Winners['W1v8'].abbr)}
-                            ${createMatchupHTML(teamDetails['GSW'], teamDetails['DEN'], r1Winners['W4v5'].abbr)}
-                            ${createMatchHTML(teamDetails['LAC'], teamDetails['DAL'], r1Winners['W3v6'].abbr)}
-                            ${createMatchupHTML(teamDetails['PHX'], teamDetails['MEM'], r1Winners['W2v7'].abbr)}
+                            ${createMatchupHTML(teamDetails['OKC'], teamDetails['MIN'], r1Winners['W1v8'].abbr)}
+                            ${createMatchupHTML(teamDetails['DEN'], teamDetails['LAC'], r1Winners['W4v5'].abbr)}
+                            ${createMatchupHTML(teamDetails['LAL'], teamDetails['GSW'], r1Winners['W3v6'].abbr)}
+                            ${createMatchupHTML(teamDetails['HOU'], teamDetails['MEM'], r1Winners['W2v7'].abbr)}
                         </div>
                         <div class="bracket-round"> <!-- R2 West -->
                              ${createMatchupHTML(r1Winners['W1v8'], r1Winners['W4v5'], r2Winners['R2W1'].abbr)}
@@ -452,14 +452,14 @@ document.addEventListener('DOMContentLoaded', () => {
                               ${createMatchupHTML(r2Winners['R2E1'], r2Winners['R2E2'], r3Winners['R3E'].abbr)}
                          </div>
                          <div class="bracket-round"> <!-- R2 East -->
-                              ${createMatchHTML(r1Winners['E1v8'], r1Winners['E4v5'], r2Winners['R2E1'].abbr)}
-                              ${createMatchHTML(r1Winners['E3v6'], r1Winners['E2v7'], r2Winners['R2E2'].abbr)}
+                              ${createMatchupHTML(r1Winners['E1v8'], r1Winners['E4v5'], r2Winners['R2E1'].abbr)}
+                              ${createMatchupHTML(r1Winners['E3v6'], r1Winners['E2v7'], r2Winners['R2E2'].abbr)}
                          </div>
                          <div class="bracket-round"> <!-- R1 East -->
-                            ${createMatchupHTML(teamDetails['BOS'], teamDetails['ATL'], r1Winners['E1v8'].abbr)}
-                            ${createMatchHTML(teamDetails['MIL'], teamDetails['MIA'], r1Winners['E4v5'].abbr)}
-                            ${createMatchHTML(teamDetails['PHI'], teamDetails['BKN'], r1Winners['E3v6'].abbr)}
-                            ${createMatchupHTML(teamDetails['CLE'], teamDetails['NYK'], r1Winners['E2v7'].abbr)}
+                            ${createMatchupHTML(teamDetails['CLE'], teamDetails['ATL'], r1Winners['E1v8'].abbr)}
+                            ${createMatchupHTML(teamDetails['IND'], teamDetails['MIL'], r1Winners['E4v5'].abbr)}
+                            ${createMatchupHTML(teamDetails['NYK'], teamDetails['DET'], r1Winners['E3v6'].abbr)}
+                            ${createMatchupHTML(teamDetails['BOS'], teamDetails['ORL'], r1Winners['E2v7'].abbr)}
                         </div>
                     </div>
                  `;
@@ -522,4 +522,68 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add this line to initialize click animations
     addTeamClickAnimation();
 });
+
+function updatePieChart(predictions) {
+    const pieChart = document.getElementById('pieChart');
+    if (!pieChart) return;
+
+    // 計算每個球隊的預測次數
+    const teamCounts = {};
+    predictions.forEach(prediction => {
+        const team = prediction.selected_team;
+        teamCounts[team] = (teamCounts[team] || 0) + 1;
+    });
+
+    // 將數據轉換為 Chart.js 格式
+    const labels = Object.keys(teamCounts).map(team => teamDetails[team].name);
+    const data = Object.values(teamCounts);
+    const backgroundColors = Object.keys(teamCounts).map(team => {
+        const color = getComputedStyle(document.querySelector(`.team-section[data-team-abbr="${team}"]`)).backgroundColor;
+        return color || '#CCCCCC';
+    });
+
+    // 銷毀現有的圖表實例
+    if (window.pieChartInstance) {
+        window.pieChartInstance.destroy();
+    }
+
+    // 創建新的圖表
+    const ctx = pieChart.getContext('2d');
+    window.pieChartInstance = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: backgroundColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        font: {
+                            size: 12
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            const label = context.label || '';
+                            const value = context.raw || 0;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = Math.round((value / total) * 100);
+                            return `${label}: ${value} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
 

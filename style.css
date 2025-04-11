@@ -907,3 +907,224 @@ main.matchup-page.new-style {
     text-align: center;
     letter-spacing: 0.02em;
 }
+
+/* Team Colors */
+.team-section[data-team-abbr="OKC"] {
+    background-color: #007AC1;
+}
+
+/* Thunder Blue */
+.team-section[data-team-abbr="MIN"] {
+    background-color: #0C2340;
+}
+
+/* Timberwolves Navy */
+.team-section[data-team-abbr="DEN"] {
+    background-color: #0E2240;
+}
+
+/* Nuggets Navy */
+.team-section[data-team-abbr="LAC"] {
+    background-color: #C8102E;
+}
+
+/* Clippers Red */
+.team-section[data-team-abbr="LAL"] {
+    background-color: #552583;
+}
+
+/* Lakers Purple */
+.team-section[data-team-abbr="GSW"] {
+    background-color: #1D428A;
+}
+
+/* Warriors Blue */
+.team-section[data-team-abbr="HOU"] {
+    background-color: #CE1141;
+}
+
+/* Rockets Red */
+.team-section[data-team-abbr="MEM"] {
+    background-color: #5D76A9;
+}
+
+/* Grizzlies Blue */
+.team-section[data-team-abbr="CLE"] {
+    background-color: #860038;
+}
+
+/* Cavaliers Wine */
+.team-section[data-team-abbr="ATL"] {
+    background-color: #E03A3E;
+}
+
+/* Hawks Red */
+.team-section[data-team-abbr="IND"] {
+    background-color: #002D62;
+}
+
+/* Pacers Blue */
+.team-section[data-team-abbr="MIL"] {
+    background-color: #00471B;
+}
+
+/* Bucks Green */
+.team-section[data-team-abbr="NYK"] {
+    background-color: #006BB6;
+}
+
+/* Knicks Blue */
+.team-section[data-team-abbr="DET"] {
+    background-color: #C8102E;
+}
+
+/* Pistons Red */
+.team-section[data-team-abbr="BOS"] {
+    background-color: #007A33;
+}
+
+/* Celtics Green */
+.team-section[data-team-abbr="ORL"] {
+    background-color: #0077C0;
+}
+
+/* Magic Blue */
+
+/* Hover effects for team colors */
+.team-section[data-team-abbr="OKC"]:hover {
+    background-color: #EF3B24;
+}
+
+/* Thunder Orange */
+.team-section[data-team-abbr="MIN"]:hover {
+    background-color: #78BE20;
+}
+
+/* Timberwolves Green */
+.team-section[data-team-abbr="DEN"]:hover {
+    background-color: #FEC524;
+}
+
+/* Nuggets Gold */
+.team-section[data-team-abbr="LAC"]:hover {
+    background-color: #1D428A;
+}
+
+/* Clippers Blue */
+.team-section[data-team-abbr="LAL"]:hover {
+    background-color: #FDB927;
+}
+
+/* Lakers Gold */
+.team-section[data-team-abbr="GSW"]:hover {
+    background-color: #FFC72C;
+}
+
+/* Warriors Yellow */
+.team-section[data-team-abbr="HOU"]:hover {
+    background-color: #000000;
+}
+
+/* Rockets Black */
+.team-section[data-team-abbr="MEM"]:hover {
+    background-color: #12173F;
+}
+
+/* Grizzlies Navy */
+.team-section[data-team-abbr="CLE"]:hover {
+    background-color: #FDBB30;
+}
+
+/* Cavaliers Gold */
+.team-section[data-team-abbr="ATL"]:hover {
+    background-color: #C1D32F;
+}
+
+/* Hawks Volt */
+.team-section[data-team-abbr="IND"]:hover {
+    background-color: #FDBB30;
+}
+
+/* Pacers Gold */
+.team-section[data-team-abbr="MIL"]:hover {
+    background-color: #EEE1C6;
+}
+
+/* Bucks Cream */
+.team-section[data-team-abbr="NYK"]:hover {
+    background-color: #F58426;
+}
+
+/* Knicks Orange */
+.team-section[data-team-abbr="DET"]:hover {
+    background-color: #1D42BA;
+}
+
+/* Pistons Blue */
+.team-section[data-team-abbr="BOS"]:hover {
+    background-color: #BA9653;
+}
+
+/* Celtics Gold */
+.team-section[data-team-abbr="ORL"]:hover {
+    background-color: #C4CED4;
+}
+
+/* Magic Silver */
+
+/* 基本樣式保持不變 */
+.matchup-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 修改手機裝置上的顯示方式 */
+@media (max-width: 768px) {
+    .matchup-container {
+        flex-direction: row;
+        height: calc(100vh - 100px);
+        /* 減去頭部和其他元素的高度 */
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .team-section {
+        flex: 1;
+        height: 100%;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        padding: 20px;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .choice-button {
+        position: absolute;
+        bottom: 20px;
+        width: 80%;
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    /* 當選中時的效果 */
+    .team-section.selected {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+
+    .team-section.not-selected {
+        opacity: 0.5;
+        transform: scale(0.95);
+    }
+}
