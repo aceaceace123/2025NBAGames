@@ -92,7 +92,7 @@ function addTeamClickAnimation() {
 
 async function savePrediction(matchupId, selectedTeamAbbr, storageKey) {
     try {
-        const username = localStorage.getItem('nbaPlayoffsUsername');
+        const username = localStorage.getItem('nbaPlayoffsUsername') || 'anonymous';
         console.log('Attempting to save prediction with username:', username);
 
         // Format timestamp in YYYY-MM-DDTHH:mm:ss format
@@ -129,6 +129,9 @@ async function savePrediction(matchupId, selectedTeamAbbr, storageKey) {
             console.error('API Error Response:', errorText);
             throw new Error(`Failed to save prediction: ${errorText}`);
         }
+
+        const responseData = await response.json();
+        console.log('Prediction saved to database successfully:', responseData);
 
         // Update local storage if API call succeeds
         let storedPredictions = JSON.parse(localStorage.getItem(storageKey) || '{}');
