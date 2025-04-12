@@ -1,4 +1,11 @@
 :root {
+    --primary-font: 'Arial', sans-serif;
+    --primary-color: #333;
+    --secondary-color: #666;
+    --highlight-color: #0077B6;
+    --background-color: #f5f5f5;
+    --container-bg: #fff;
+    --shadow-color: rgba(0, 0, 0, 0.1);
     --left-team-color: #552583;
     /* 默認 Lakers Purple */
     --right-team-color: #007AC1;
@@ -899,14 +906,14 @@ main.matchup-page.new-style {
 }
 
 .left-team {
-    background-color: var(--left-team-color, #552583);
-    /* Lakers Purple */
+    background-color: var(--left-team-color);
+    /* No fixed fallback color */
     transition: background-color 0.5s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .right-team {
-    background-color: var(--right-team-color, #007AC1);
-    /* Thunder Blue */
+    background-color: var(--right-team-color);
+    /* No fixed fallback color */
     transition: background-color 0.5s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -971,8 +978,8 @@ main.matchup-page.new-style {
 }
 
 .left-bar {
-    background-color: var(--left-team-color, #552583);
-    /* Lakers Purple */
+    background-color: var(--left-team-color);
+    /* No fixed fallback color */
     margin-right: 2px;
     text-align: right;
     border-top-left-radius: 3px;
@@ -981,8 +988,8 @@ main.matchup-page.new-style {
 }
 
 .right-bar {
-    background-color: var(--right-team-color, #007AC1);
-    /* Thunder Blue */
+    background-color: var(--right-team-color);
+    /* No fixed fallback color */
     margin-left: 2px;
     text-align: left;
     border-top-right-radius: 3px;
@@ -1001,14 +1008,14 @@ main.matchup-page.new-style {
 }
 
 .left-value {
-    color: var(--left-team-color, #552583);
-    /* Lakers Purple */
+    color: var(--left-team-color);
+    /* No fixed fallback color */
     margin-right: 10px;
 }
 
 .right-value {
-    color: var(--right-team-color, #007AC1);
-    /* Thunder Blue */
+    color: var(--right-team-color);
+    /* No fixed fallback color */
     margin-left: 10px;
 }
 

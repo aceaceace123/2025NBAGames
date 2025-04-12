@@ -64,15 +64,38 @@
             // 创建按钮HTML
             const buttonsContainer = document.querySelector('.team-buttons-container');
             buttonsContainer.innerHTML = `
-                <button class="team-button left-team" data-team="${team1Abbr}">
+                <button class="team-button left-team" data-team="${team1Abbr}" style="background-color: ${getTeamColor(team1Abbr)};">
                     <div class="team-logo-bg"></div>
                     <span>${team1Abbr} (${team1.seed})</span>
                 </button>
-                <button class="team-button right-team" data-team="${team2Abbr}">
+                <button class="team-button right-team" data-team="${team2Abbr}" style="background-color: ${getTeamColor(team2Abbr)};">
                     <div class="team-logo-bg"></div>
                     <span>${team2Abbr} (${team2.seed})</span>
                 </button>
             `;
+
+            // 獲取球隊顏色的輔助函數
+            function getTeamColor(teamAbbr) {
+                switch (teamAbbr) {
+                    case 'OKC': return '#007AC1'; // Thunder Blue
+                    case 'MIN': return '#0C2340'; // Timberwolves Navy
+                    case 'DEN': return '#0E2240'; // Nuggets Navy
+                    case 'LAC': return '#C8102E'; // Clippers Red
+                    case 'LAL': return '#552583'; // Lakers Purple
+                    case 'GSW': return '#1D428A'; // Warriors Blue
+                    case 'HOU': return '#CE1141'; // Rockets Red
+                    case 'MEM': return '#5D76A9'; // Grizzlies Blue
+                    case 'CLE': return '#860038'; // Cavaliers Wine
+                    case 'ATL': return '#E03A3E'; // Hawks Red
+                    case 'IND': return '#002D62'; // Pacers Blue
+                    case 'MIL': return '#00471B'; // Bucks Green
+                    case 'NYK': return '#006BB6'; // Knicks Blue
+                    case 'DET': return '#C8102E'; // Pistons Red
+                    case 'BOS': return '#007A33'; // Celtics Green
+                    case 'ORL': return '#0077C0'; // Magic Blue
+                    default: return '#333333';    // Default dark gray
+                }
+            }
 
             // 设置球队标志背景和颜色
             const leftTeamBtn = document.querySelector('.left-team');

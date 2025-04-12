@@ -954,7 +954,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 更新長條圖和數值顏色
     function updateBarColors(leftTeamAbbr, rightTeamAbbr) {
-        console.log(`Updating colors for: ${leftTeamAbbr} vs ${rightTeamAbbr}`);
+        console.log(`Updating colors for teams: ${leftTeamAbbr} vs ${rightTeamAbbr}`);
         const leftBars = document.querySelectorAll('.left-bar');
         const rightBars = document.querySelectorAll('.right-bar');
         const leftValues = document.querySelectorAll('.left-value');
@@ -965,76 +965,54 @@ document.addEventListener('DOMContentLoaded', function () {
         const rightTeamBtn = document.querySelector('.right-team');
 
         // 獲取球隊對應的顏色
-        let leftColor = '#552583'; // 默認 Lakers Purple
-        let rightColor = '#007AC1'; // 默認 Thunder Blue
+        let leftColor = getTeamColorByAbbr(leftTeamAbbr) || '#552583'; // 默認 Lakers Purple
+        let rightColor = getTeamColorByAbbr(rightTeamAbbr) || '#007AC1'; // 默認 Thunder Blue
 
-        // 設置左側球隊顏色
-        switch (leftTeamAbbr) {
-            case 'OKC': leftColor = '#007AC1'; break; // Thunder Blue
-            case 'MIN': leftColor = '#0C2340'; break; // Timberwolves Navy
-            case 'DEN': leftColor = '#0E2240'; break; // Nuggets Navy
-            case 'LAC': leftColor = '#C8102E'; break; // Clippers Red
-            case 'LAL': leftColor = '#552583'; break; // Lakers Purple
-            case 'GSW': leftColor = '#1D428A'; break; // Warriors Blue
-            case 'HOU': leftColor = '#CE1141'; break; // Rockets Red
-            case 'MEM': leftColor = '#5D76A9'; break; // Grizzlies Blue
-            case 'CLE': leftColor = '#860038'; break; // Cavaliers Wine
-            case 'ATL': leftColor = '#E03A3E'; break; // Hawks Red
-            case 'IND': leftColor = '#002D62'; break; // Pacers Blue
-            case 'MIL': leftColor = '#00471B'; break; // Bucks Green
-            case 'NYK': leftColor = '#006BB6'; break; // Knicks Blue
-            case 'DET': leftColor = '#C8102E'; break; // Pistons Red
-            case 'BOS': leftColor = '#007A33'; break; // Celtics Green
-            case 'ORL': leftColor = '#0077C0'; break; // Magic Blue
-        }
+        console.log(`Colors selected - Left team (${leftTeamAbbr}): ${leftColor}, Right team (${rightTeamAbbr}): ${rightColor}`);
 
-        // 設置右側球隊顏色
-        switch (rightTeamAbbr) {
-            case 'OKC': rightColor = '#007AC1'; break; // Thunder Blue
-            case 'MIN': rightColor = '#0C2340'; break; // Timberwolves Navy
-            case 'DEN': rightColor = '#0E2240'; break; // Nuggets Navy
-            case 'LAC': rightColor = '#C8102E'; break; // Clippers Red
-            case 'LAL': rightColor = '#552583'; break; // Lakers Purple
-            case 'GSW': rightColor = '#1D428A'; break; // Warriors Blue
-            case 'HOU': rightColor = '#CE1141'; break; // Rockets Red
-            case 'MEM': rightColor = '#5D76A9'; break; // Grizzlies Blue
-            case 'CLE': rightColor = '#860038'; break; // Cavaliers Wine
-            case 'ATL': rightColor = '#E03A3E'; break; // Hawks Red
-            case 'IND': rightColor = '#002D62'; break; // Pacers Blue
-            case 'MIL': rightColor = '#00471B'; break; // Bucks Green
-            case 'NYK': rightColor = '#006BB6'; break; // Knicks Blue
-            case 'DET': rightColor = '#C8102E'; break; // Pistons Red
-            case 'BOS': rightColor = '#007A33'; break; // Celtics Green
-            case 'ORL': rightColor = '#0077C0'; break; // Magic Blue
-        }
-
-        console.log(`Colors selected: left=${leftColor}, right=${rightColor}`);
-
-        // 加入漸變效果的CSS
+        // 同時設置CSS變量和直接樣式，以確保顏色正確應用
         document.documentElement.style.setProperty('--left-team-color', leftColor);
         document.documentElement.style.setProperty('--right-team-color', rightColor);
 
         // 直接設置按鈕背景顏色
         if (leftTeamBtn) {
+            console.log(`Applying ${leftColor} to left button for team ${leftTeamAbbr}`);
             leftTeamBtn.style.backgroundColor = leftColor;
+            // 確保標籤文字可讀
+            const leftSpan = leftTeamBtn.querySelector('span');
+            if (leftSpan) {
+                leftSpan.style.color = 'white';
+                leftSpan.style.textShadow = '0 0 5px rgba(0, 0, 0, 0.7)';
+            }
+        } else {
+            console.warn(`Left team button not found for team ${leftTeamAbbr}`);
         }
 
         if (rightTeamBtn) {
+            console.log(`Applying ${rightColor} to right button for team ${rightTeamAbbr}`);
             rightTeamBtn.style.backgroundColor = rightColor;
+            // 確保標籤文字可讀
+            const rightSpan = rightTeamBtn.querySelector('span');
+            if (rightSpan) {
+                rightSpan.style.color = 'white';
+                rightSpan.style.textShadow = '0 0 5px rgba(0, 0, 0, 0.7)';
+            }
+        } else {
+            console.warn(`Right team button not found for team ${rightTeamAbbr}`);
         }
 
-        // 應用顏色到長條圖（帶有過渡效果）
+        // 直接設置長條圖背景顏色
         leftBars.forEach(bar => {
-            bar.style.transition = 'background-color 0.5s ease-in-out';
+            bar.style.transition = 'background-color 0.5s ease-in-out, width 0.5s ease-out';
             bar.style.backgroundColor = leftColor;
         });
 
         rightBars.forEach(bar => {
-            bar.style.transition = 'background-color 0.5s ease-in-out';
+            bar.style.transition = 'background-color 0.5s ease-in-out, width 0.5s ease-out';
             bar.style.backgroundColor = rightColor;
         });
 
-        // 應用顏色到數值（帶有過渡效果）
+        // 直接設置數值顏色
         leftValues.forEach(value => {
             value.style.transition = 'color 0.5s ease-in-out';
             value.style.color = leftColor;
@@ -1044,6 +1022,29 @@ document.addEventListener('DOMContentLoaded', function () {
             value.style.transition = 'color 0.5s ease-in-out';
             value.style.color = rightColor;
         });
+
+        console.log(`Team colors have been applied successfully`);
+
+        // 如果統計容器存在，立即更新統計數據顯示
+        const statsContainer = document.querySelector('.stats-container');
+        if (statsContainer) {
+            // 重新觸發已有統計數據的顏色更新
+            const rows = document.querySelectorAll('.stats-row');
+            if (rows.length > 0) {
+                console.log('找到現有統計行，直接更新顏色');
+                rows.forEach(row => {
+                    const leftBarEl = row.querySelector('.left-bar');
+                    const rightBarEl = row.querySelector('.right-bar');
+                    const leftValueEl = row.querySelector('.left-value');
+                    const rightValueEl = row.querySelector('.right-value');
+
+                    if (leftBarEl) leftBarEl.style.backgroundColor = leftColor;
+                    if (rightBarEl) rightBarEl.style.backgroundColor = rightColor;
+                    if (leftValueEl) leftValueEl.style.color = leftColor;
+                    if (rightValueEl) rightValueEl.style.color = rightColor;
+                });
+            }
+        }
     }
 
     // 其他頁面初始化邏輯...
@@ -1240,6 +1241,22 @@ function updateMatchupStatsUI(statsData, containerId = '.stats-container') {
 
     statsContainer.innerHTML = ''; // 清空現有內容
 
+    // 獲取左右隊伍的顏色
+    const leftTeamBtn = document.querySelector('.left-team');
+    const rightTeamBtn = document.querySelector('.right-team');
+    let leftTeamColor = '#552583'; // 默認 Lakers Purple
+    let rightTeamColor = '#007AC1'; // 默認 Thunder Blue
+
+    if (leftTeamBtn) {
+        const teamAbbr = leftTeamBtn.getAttribute('data-team');
+        leftTeamColor = getTeamColorByAbbr(teamAbbr) || leftTeamColor;
+    }
+
+    if (rightTeamBtn) {
+        const teamAbbr = rightTeamBtn.getAttribute('data-team');
+        rightTeamColor = getTeamColorByAbbr(teamAbbr) || rightTeamColor;
+    }
+
     // 按順序添加所有統計數據行
     const statKeys = ["PTS", "REB", "AST", "STL", "BLK", "TO", "FG%", "3P%", "FT%"];
 
@@ -1273,16 +1290,16 @@ function updateMatchupStatsUI(statsData, containerId = '.stats-container') {
         leftWidth = Math.max(33, Math.min(67, leftWidth));
         rightWidth = Math.max(33, Math.min(67, rightWidth));
 
-        // 創建統計行的HTML
+        // 創建統計行的HTML，直接使用內聯樣式設置顏色
         const rowHTML = `
             <div class="stats-row">
-                <div class="left-value">${typeof leftValue === 'number' && stat.includes('%') ? leftValue.toFixed(1) : leftValue}</div>
+                <div class="left-value" style="color: ${leftTeamColor}">${typeof leftValue === 'number' && stat.includes('%') ? leftValue.toFixed(1) : leftValue}</div>
                 <div class="bar-container">
-                    <div class="left-bar" style="width: ${leftWidth}%"></div>
+                    <div class="left-bar" style="width: ${leftWidth}%; background-color: ${leftTeamColor}"></div>
                     <div class="stat-label">${stat}</div>
-                    <div class="right-bar" style="width: ${rightWidth}%"></div>
+                    <div class="right-bar" style="width: ${rightWidth}%; background-color: ${rightTeamColor}"></div>
                 </div>
-                <div class="right-value">${typeof rightValue === 'number' && stat.includes('%') ? rightValue.toFixed(1) : rightValue}</div>
+                <div class="right-value" style="color: ${rightTeamColor}">${typeof rightValue === 'number' && stat.includes('%') ? rightValue.toFixed(1) : rightValue}</div>
             </div>
         `;
 
@@ -1297,6 +1314,29 @@ function updateMatchupStatsUI(statsData, containerId = '.stats-container') {
             row.style.opacity = '1';
         }, 100 * index);
     });
+}
+
+// 輔助函數：根據球隊縮寫獲取顏色
+function getTeamColorByAbbr(teamAbbr) {
+    switch (teamAbbr) {
+        case 'OKC': return '#007AC1'; // Thunder Blue
+        case 'MIN': return '#0C2340'; // Timberwolves Navy
+        case 'DEN': return '#0E2240'; // Nuggets Navy
+        case 'LAC': return '#C8102E'; // Clippers Red
+        case 'LAL': return '#552583'; // Lakers Purple
+        case 'GSW': return '#1D428A'; // Warriors Blue
+        case 'HOU': return '#CE1141'; // Rockets Red
+        case 'MEM': return '#5D76A9'; // Grizzlies Blue
+        case 'CLE': return '#860038'; // Cavaliers Wine
+        case 'ATL': return '#E03A3E'; // Hawks Red
+        case 'IND': return '#002D62'; // Pacers Blue
+        case 'MIL': return '#00471B'; // Bucks Green
+        case 'NYK': return '#006BB6'; // Knicks Blue
+        case 'DET': return '#C8102E'; // Pistons Red
+        case 'BOS': return '#007A33'; // Celtics Green
+        case 'ORL': return '#0077C0'; // Magic Blue
+        default: return null;
+    }
 }
 
 /**
@@ -1342,4 +1382,91 @@ function debugMatchupStats() {
             console.error('測試時出錯:', error);
         });
 }
+
+// 診斷函數：檢查所有球隊顏色應用是否正確
+function debugTeamColors() {
+    const leftTeamBtn = document.querySelector('.left-team');
+    const rightTeamBtn = document.querySelector('.right-team');
+
+    if (!leftTeamBtn || !rightTeamBtn) {
+        console.log('找不到球隊按鈕，無法進行顏色診斷');
+        return;
+    }
+
+    const leftTeamAbbr = leftTeamBtn.getAttribute('data-team');
+    const rightTeamAbbr = rightTeamBtn.getAttribute('data-team');
+
+    if (!leftTeamAbbr || !rightTeamAbbr) {
+        console.log('球隊按鈕缺少data-team屬性，無法識別球隊');
+        return;
+    }
+
+    console.log('=== 球隊顏色診斷開始 ===');
+    console.log(`左隊：${leftTeamAbbr}，右隊：${rightTeamAbbr}`);
+
+    // 檢查CSS變量
+    const rootStyle = getComputedStyle(document.documentElement);
+    const leftColorVar = rootStyle.getPropertyValue('--left-team-color').trim();
+    const rightColorVar = rootStyle.getPropertyValue('--right-team-color').trim();
+
+    console.log(`CSS變量 --left-team-color: "${leftColorVar}"`);
+    console.log(`CSS變量 --right-team-color: "${rightColorVar}"`);
+
+    // 檢查按鈕顏色
+    const leftBtnColor = getComputedStyle(leftTeamBtn).backgroundColor;
+    const rightBtnColor = getComputedStyle(rightTeamBtn).backgroundColor;
+
+    console.log(`左隊按鈕實際顏色: "${leftBtnColor}"`);
+    console.log(`右隊按鈕實際顏色: "${rightBtnColor}"`);
+
+    // 檢查統計條顏色
+    const leftBars = document.querySelectorAll('.left-bar');
+    const rightBars = document.querySelectorAll('.right-bar');
+
+    if (leftBars.length > 0) {
+        const leftBarColor = getComputedStyle(leftBars[0]).backgroundColor;
+        console.log(`左隊統計條顏色: "${leftBarColor}"`);
+    } else {
+        console.log('找不到左隊統計條');
+    }
+
+    if (rightBars.length > 0) {
+        const rightBarColor = getComputedStyle(rightBars[0]).backgroundColor;
+        console.log(`右隊統計條顏色: "${rightBarColor}"`);
+    } else {
+        console.log('找不到右隊統計條');
+    }
+
+    console.log('=== 球隊顏色診斷結束 ===');
+
+    // 如果發現問題，再次强制應用顏色
+    if (leftTeamAbbr && rightTeamAbbr) {
+        console.log('重新強制應用球隊顏色...');
+        updateBarColors(leftTeamAbbr, rightTeamAbbr);
+    }
+}
+
+// 在頁面加載時運行診斷
+document.addEventListener('DOMContentLoaded', function () {
+    // 原有的DOMContentLoaded處理邏輯保持不變
+
+    // 在頁面加載500毫秒後運行球隊顏色診斷，確保所有樣式已經應用
+    setTimeout(debugTeamColors, 500);
+});
+
+// 自動補救措施：如果在頁面加載2秒後發現問題，再次嘗試應用顏色
+setTimeout(function () {
+    const leftTeamBtn = document.querySelector('.left-team');
+    const rightTeamBtn = document.querySelector('.right-team');
+
+    if (leftTeamBtn && rightTeamBtn) {
+        const leftTeamAbbr = leftTeamBtn.getAttribute('data-team');
+        const rightTeamAbbr = rightTeamBtn.getAttribute('data-team');
+
+        if (leftTeamAbbr && rightTeamAbbr) {
+            console.log('自動補救：2秒後再次應用球隊顏色...');
+            updateBarColors(leftTeamAbbr, rightTeamAbbr);
+        }
+    }
+}, 2000);
 
