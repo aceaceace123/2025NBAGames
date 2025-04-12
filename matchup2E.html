@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Round 1 / Matchup 2E - NBA Playoffs</title>
+    <title>Eastern Conference First Round - Matchup 2</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -12,20 +12,116 @@
     <div class="container">
         <header>
             <div class="logo">@NIKA</div>
-            <!-- Username welcome message will be added by script.js -->
-            <h1 class="conference-title">Eastern Conference First Round - Matchup 2</h1>
+            <h1>Eastern Conference First Round - Matchup 2</h1>
+            <div class="welcome-message">Welcome, Nika! Click the team you predict to win.</div>
         </header>
-        <main class="matchup-page new-style">
-            <div id="split-matchup">
-                <div class="team-section" id="E4v5-section" data-team-abbr="TBD1">
-                    <button class="choice-button">TBD1</button>
+
+        <main class="matchup-page stats-comparison">
+            <div class="team-buttons-container">
+                <button class="team-button left-team" data-team="IND">
+                    <div class="team-logo-bg"></div>
+                    <span>IND (4)</span>
+                </button>
+                <button class="team-button right-team" data-team="MIL">
+                    <div class="team-logo-bg"></div>
+                    <span>MIL (5)</span>
+                </button>
+            </div>
+
+            <div class="stats-container">
+                <div class="stats-row">
+                    <div class="left-value">99</div>
+                    <div class="bar-container">
+                        <div class="left-bar" style="width: 47%"></div>
+                        <div class="stat-label">PTS</div>
+                        <div class="right-bar" style="width: 53%"></div>
+                    </div>
+                    <div class="right-value">112</div>
                 </div>
-                <div class="team-section" id="E2v7-section" data-team-abbr="TBD2">
-                    <button class="choice-button">TBD2</button>
+
+                <div class="stats-row">
+                    <div class="left-value">38</div>
+                    <div class="bar-container">
+                        <div class="left-bar" style="width: 46%"></div>
+                        <div class="stat-label">REB</div>
+                        <div class="right-bar" style="width: 54%"></div>
+                    </div>
+                    <div class="right-value">45</div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="left-value">26</div>
+                    <div class="bar-container">
+                        <div class="left-bar" style="width: 46%"></div>
+                        <div class="stat-label">AST</div>
+                        <div class="right-bar" style="width: 54%"></div>
+                    </div>
+                    <div class="right-value">30</div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="left-value">7</div>
+                    <div class="bar-container">
+                        <div class="left-bar" style="width: 50%"></div>
+                        <div class="stat-label">STL</div>
+                        <div class="right-bar" style="width: 50%"></div>
+                    </div>
+                    <div class="right-value">7</div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="left-value">6</div>
+                    <div class="bar-container">
+                        <div class="left-bar" style="width: 43%"></div>
+                        <div class="stat-label">BLK</div>
+                        <div class="right-bar" style="width: 57%"></div>
+                    </div>
+                    <div class="right-value">8</div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="left-value">10</div>
+                    <div class="bar-container">
+                        <div class="left-bar" style="width: 53%"></div>
+                        <div class="stat-label">TO</div>
+                        <div class="right-bar" style="width: 47%"></div>
+                    </div>
+                    <div class="right-value">9</div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="left-value">49.9</div>
+                    <div class="bar-container">
+                        <div class="left-bar" style="width: 49%"></div>
+                        <div class="stat-label">FG%</div>
+                        <div class="right-bar" style="width: 51%"></div>
+                    </div>
+                    <div class="right-value">52.6</div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="left-value">35.7</div>
+                    <div class="bar-container">
+                        <div class="left-bar" style="width: 44%"></div>
+                        <div class="stat-label">3P%</div>
+                        <div class="right-bar" style="width: 56%"></div>
+                    </div>
+                    <div class="right-value">44.5</div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="left-value">75.4</div>
+                    <div class="bar-container">
+                        <div class="left-bar" style="width: 49%"></div>
+                        <div class="stat-label">FT%</div>
+                        <div class="right-bar" style="width: 51%"></div>
+                    </div>
+                    <div class="right-value">79.1</div>
                 </div>
             </div>
         </main>
     </div>
+
     <script src="script.js"></script>
 </body>
 

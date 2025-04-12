@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NBA Finals - NBA Playoffs</title>
+    <title>NBA Finals</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -12,21 +12,355 @@
     <div class="container">
         <header>
             <div class="logo">@NIKA</div>
-            <!-- Username welcome message will be added by script.js -->
-            <h1 class="conference-title">NBA Finals</h1>
+            <h1>NBA Finals</h1>
+            <div class="welcome-message">Welcome, Nika! Click the team you predict to win the championship.</div>
         </header>
-        <main class="matchup-page new-style">
-            <div id="split-matchup">
-                <div class="team-section" id="R3W-section" data-team-abbr="TBD1">
-                    <button class="choice-button">TBD1</button>
+
+        <main class="matchup-page stats-comparison">
+            <div class="team-buttons-container">
+                <!-- 按钮将通过JavaScript动态生成 -->
+            </div>
+
+            <div class="stats-container">
+                <div class="stats-row">
+                    <div class="left-value">109</div>
+                    <div class="bar-container">
+                        <div class="left-bar" style="width: 52%"></div>
+                        <div class="stat-label">PTS</div>
+                        <div class="right-bar" style="width: 48%"></div>
+                    </div>
+                    <div class="right-value">102</div>
                 </div>
-                <div class="team-section" id="R3E-section" data-team-abbr="TBD2">
-                    <button class="choice-button">TBD2</button>
+
+                <div class="stats-row">
+                    <div class="left-value">46</div>
+                    <div class="bar-container">
+                        <div class="left-bar" style="width: 55%"></div>
+                        <div class="stat-label">REB</div>
+                        <div class="right-bar" style="width: 45%"></div>
+                    </div>
+                    <div class="right-value">41</div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="left-value">25</div>
+                    <div class="bar-container">
+                        <div class="left-bar" style="width: 45%"></div>
+                        <div class="stat-label">AST</div>
+                        <div class="right-bar" style="width: 55%"></div>
+                    </div>
+                    <div class="right-value">29</div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="left-value">8</div>
+                    <div class="bar-container">
+                        <div class="left-bar" style="width: 50%"></div>
+                        <div class="stat-label">STL</div>
+                        <div class="right-bar" style="width: 50%"></div>
+                    </div>
+                    <div class="right-value">8</div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="left-value">7</div>
+                    <div class="bar-container">
+                        <div class="left-bar" style="width: 58%"></div>
+                        <div class="stat-label">BLK</div>
+                        <div class="right-bar" style="width: 42%"></div>
+                    </div>
+                    <div class="right-value">5</div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="left-value">11</div>
+                    <div class="bar-container">
+                        <div class="left-bar" style="width: 48%"></div>
+                        <div class="stat-label">TO</div>
+                        <div class="right-bar" style="width: 52%"></div>
+                    </div>
+                    <div class="right-value">12</div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="left-value">48.2</div>
+                    <div class="bar-container">
+                        <div class="left-bar" style="width: 53%"></div>
+                        <div class="stat-label">FG%</div>
+                        <div class="right-bar" style="width: 47%"></div>
+                    </div>
+                    <div class="right-value">44.6</div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="left-value">38.7</div>
+                    <div class="bar-container">
+                        <div class="left-bar" style="width: 52%"></div>
+                        <div class="stat-label">3P%</div>
+                        <div class="right-bar" style="width: 48%"></div>
+                    </div>
+                    <div class="right-value">35.8</div>
+                </div>
+
+                <div class="stats-row">
+                    <div class="left-value">78.5</div>
+                    <div class="bar-container">
+                        <div class="left-bar" style="width: 49%"></div>
+                        <div class="stat-label">FT%</div>
+                        <div class="right-bar" style="width: 51%"></div>
+                    </div>
+                    <div class="right-value">82.1</div>
                 </div>
             </div>
         </main>
     </div>
+
     <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            // 在頁面中定義一個局部的updateBarColors函數，以防全局函數不可用
+            function updateBarColors(leftTeamAbbr, rightTeamAbbr) {
+                console.log(`局部函數：更新顏色 ${leftTeamAbbr} vs ${rightTeamAbbr}`);
+                const leftBars = document.querySelectorAll('.left-bar');
+                const rightBars = document.querySelectorAll('.right-bar');
+                const leftValues = document.querySelectorAll('.left-value');
+                const rightValues = document.querySelectorAll('.right-value');
+
+                // 也更新按鈕顏色
+                const leftTeamBtn = document.querySelector('.left-team');
+                const rightTeamBtn = document.querySelector('.right-team');
+
+                // 獲取球隊對應的顏色
+                let leftColor = '#552583'; // 默認 Lakers Purple
+                let rightColor = '#007AC1'; // 默認 Thunder Blue
+
+                // 設置左側球隊顏色
+                switch (leftTeamAbbr) {
+                    case 'OKC': leftColor = '#007AC1'; break; // Thunder Blue
+                    case 'MIN': leftColor = '#0C2340'; break; // Timberwolves Navy
+                    case 'DEN': leftColor = '#0E2240'; break; // Nuggets Navy
+                    case 'LAC': leftColor = '#C8102E'; break; // Clippers Red
+                    case 'LAL': leftColor = '#552583'; break; // Lakers Purple
+                    case 'GSW': leftColor = '#1D428A'; break; // Warriors Blue
+                    case 'HOU': leftColor = '#CE1141'; break; // Rockets Red
+                    case 'MEM': leftColor = '#5D76A9'; break; // Grizzlies Blue
+                    case 'CLE': leftColor = '#860038'; break; // Cavaliers Wine
+                    case 'ATL': leftColor = '#E03A3E'; break; // Hawks Red
+                    case 'IND': leftColor = '#002D62'; break; // Pacers Blue
+                    case 'MIL': leftColor = '#00471B'; break; // Bucks Green
+                    case 'NYK': leftColor = '#006BB6'; break; // Knicks Blue
+                    case 'DET': leftColor = '#C8102E'; break; // Pistons Red
+                    case 'BOS': leftColor = '#007A33'; break; // Celtics Green
+                    case 'ORL': leftColor = '#0077C0'; break; // Magic Blue
+                }
+
+                // 設置右側球隊顏色
+                switch (rightTeamAbbr) {
+                    case 'OKC': rightColor = '#007AC1'; break; // Thunder Blue
+                    case 'MIN': rightColor = '#0C2340'; break; // Timberwolves Navy
+                    case 'DEN': rightColor = '#0E2240'; break; // Nuggets Navy
+                    case 'LAC': rightColor = '#C8102E'; break; // Clippers Red
+                    case 'LAL': rightColor = '#552583'; break; // Lakers Purple
+                    case 'GSW': rightColor = '#1D428A'; break; // Warriors Blue
+                    case 'HOU': rightColor = '#CE1141'; break; // Rockets Red
+                    case 'MEM': rightColor = '#5D76A9'; break; // Grizzlies Blue
+                    case 'CLE': rightColor = '#860038'; break; // Cavaliers Wine
+                    case 'ATL': rightColor = '#E03A3E'; break; // Hawks Red
+                    case 'IND': rightColor = '#002D62'; break; // Pacers Blue
+                    case 'MIL': rightColor = '#00471B'; break; // Bucks Green
+                    case 'NYK': rightColor = '#006BB6'; break; // Knicks Blue
+                    case 'DET': rightColor = '#C8102E'; break; // Pistons Red
+                    case 'BOS': rightColor = '#007A33'; break; // Celtics Green
+                    case 'ORL': rightColor = '#0077C0'; break; // Magic Blue
+                }
+
+                console.log(`選擇的顏色: 左=${leftColor}, 右=${rightColor}`);
+
+                // 加入漸變效果的CSS
+                document.documentElement.style.setProperty('--left-team-color', leftColor);
+                document.documentElement.style.setProperty('--right-team-color', rightColor);
+
+                // 直接設置按鈕背景顏色
+                if (leftTeamBtn) {
+                    leftTeamBtn.style.backgroundColor = leftColor;
+                }
+
+                if (rightTeamBtn) {
+                    rightTeamBtn.style.backgroundColor = rightColor;
+                }
+
+                // 應用顏色到長條圖（帶有過渡效果）
+                leftBars.forEach(bar => {
+                    bar.style.transition = 'background-color 0.5s ease-in-out';
+                    bar.style.backgroundColor = leftColor;
+                });
+
+                rightBars.forEach(bar => {
+                    bar.style.transition = 'background-color 0.5s ease-in-out';
+                    bar.style.backgroundColor = rightColor;
+                });
+
+                // 應用顏色到數值（帶有過渡效果）
+                leftValues.forEach(value => {
+                    value.style.transition = 'color 0.5s ease-in-out';
+                    value.style.color = leftColor;
+                });
+
+                rightValues.forEach(value => {
+                    value.style.transition = 'color 0.5s ease-in-out';
+                    value.style.color = rightColor;
+                });
+            }
+
+            // 从localStorage获取东西部决赛的获胜者
+            const round3Predictions = JSON.parse(localStorage.getItem('round3Predictions') || '{}');
+
+            // 检查是否完成了东西部决赛选择
+            if (!round3Predictions['R3W'] || !round3Predictions['R3E']) {
+                alert('请先完成东西部决赛的预测');
+                window.location.href = 'round3_matchupW.html';
+                return;
+            }
+
+            // 获取东西部冠军
+            const westChampion = round3Predictions['R3W'];
+            const eastChampion = round3Predictions['R3E'];
+
+            console.log(`Finals teams: ${westChampion} vs ${eastChampion}`);
+
+            // 获取球队详细信息
+            const westTeam = teamDetails[westChampion];
+            const eastTeam = teamDetails[eastChampion];
+
+            if (!westTeam || !eastTeam) {
+                console.error('无法获取球队信息');
+                return;
+            }
+
+            // 创建按钮HTML
+            const buttonsContainer = document.querySelector('.team-buttons-container');
+            buttonsContainer.innerHTML = `
+                <button class="team-button left-team" data-team="${westChampion}">
+                    <div class="team-logo-bg"></div>
+                    <span>${westChampion} (${westTeam.seed})</span>
+                </button>
+                <button class="team-button right-team" data-team="${eastChampion}">
+                    <div class="team-logo-bg"></div>
+                    <span>${eastChampion} (${eastTeam.seed})</span>
+                </button>
+            `;
+
+            // 立即设置按钮颜色和Logo
+            const leftTeamBtn = document.querySelector('.left-team');
+            const rightTeamBtn = document.querySelector('.right-team');
+
+            // 设置按钮背景颜色
+            if (leftTeamBtn && westChampion) {
+                // 设置颜色
+                let westColor = '#007AC1'; // 默认Thunder Blue
+                switch (westChampion) {
+                    case 'OKC': westColor = '#007AC1'; break; // Thunder Blue
+                    case 'MIN': westColor = '#0C2340'; break; // Timberwolves Navy
+                    case 'DEN': westColor = '#0E2240'; break; // Nuggets Navy
+                    case 'LAC': westColor = '#C8102E'; break; // Clippers Red
+                    case 'LAL': westColor = '#552583'; break; // Lakers Purple
+                    case 'GSW': westColor = '#1D428A'; break; // Warriors Blue
+                    case 'HOU': westColor = '#CE1141'; break; // Rockets Red
+                    case 'MEM': westColor = '#5D76A9'; break; // Grizzlies Blue
+                }
+                leftTeamBtn.style.backgroundColor = westColor;
+                document.documentElement.style.setProperty('--left-team-color', westColor);
+
+                // 设置Logo
+                const leftLogo = leftTeamBtn.querySelector('.team-logo-bg');
+                if (leftLogo && teamDetails[westChampion]) {
+                    leftLogo.style.backgroundImage = `url(${teamDetails[westChampion].logo})`;
+                }
+            }
+
+            if (rightTeamBtn && eastChampion) {
+                // 设置颜色
+                let eastColor = '#860038'; // 默认Cavaliers Wine
+                switch (eastChampion) {
+                    case 'CLE': eastColor = '#860038'; break; // Cavaliers Wine
+                    case 'ATL': eastColor = '#E03A3E'; break; // Hawks Red
+                    case 'IND': eastColor = '#002D62'; break; // Pacers Blue
+                    case 'MIL': eastColor = '#00471B'; break; // Bucks Green
+                    case 'NYK': eastColor = '#006BB6'; break; // Knicks Blue
+                    case 'DET': eastColor = '#C8102E'; break; // Pistons Red
+                    case 'BOS': eastColor = '#007A33'; break; // Celtics Green
+                    case 'ORL': eastColor = '#0077C0'; break; // Magic Blue
+                }
+                rightTeamBtn.style.backgroundColor = eastColor;
+                document.documentElement.style.setProperty('--right-team-color', eastColor);
+
+                // 设置Logo
+                const rightLogo = rightTeamBtn.querySelector('.team-logo-bg');
+                if (rightLogo && teamDetails[eastChampion]) {
+                    rightLogo.style.backgroundImage = `url(${teamDetails[eastChampion].logo})`;
+                }
+            }
+
+            // 更新条形图颜色
+            updateBarColors(westChampion, eastChampion);
+
+            // 添加动画效果
+            const rows = document.querySelectorAll('.stats-row');
+            console.log('找到的统计行数:', rows.length);
+            rows.forEach((row, index) => {
+                row.style.opacity = '0'; // 先确保不可见
+                setTimeout(() => {
+                    row.style.opacity = '1';
+                }, 100 * index);
+            });
+
+            // 为球队按钮添加事件监听器，处理用户点击
+            setTimeout(() => {
+                const teamButtons = document.querySelectorAll('.team-button');
+
+                if (teamButtons.length === 2) {
+                    teamButtons.forEach(button => {
+                        button.addEventListener('click', function () {
+                            const selectedTeam = this.getAttribute('data-team');
+                            console.log('选择的球队:', selectedTeam);
+
+                            // 保存预测结果
+                            const matchupId = 'R4F';
+                            const storageKey = 'round4Predictions';
+
+                            try {
+                                // 简化本地存储操作，确保保存成功
+                                let storedPredictions = JSON.parse(localStorage.getItem(storageKey) || '{}');
+                                storedPredictions[matchupId] = selectedTeam;
+                                localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
+                                console.log('本地预测已保存:', storedPredictions);
+
+                                // 再调用完整的保存函数
+                                savePrediction(matchupId, selectedTeam, storageKey);
+                            } catch (error) {
+                                console.error('保存预测时出错:', error);
+                            }
+
+                            // 添加视觉反馈，标记选中的球队
+                            teamButtons.forEach(btn => {
+                                btn.classList.remove('selected');
+                            });
+                            this.classList.add('selected');
+
+                            console.log('准备导航到预测页面...');
+                            // 直接导航到预测结果页面
+                            setTimeout(() => {
+                                console.log('立即导航到predictions.html');
+                                window.location.href = 'predictions.html';
+                            }, 500);
+                        });
+                    });
+                } else {
+                    console.error('未找到球队按钮!');
+                }
+            }, 200);
+        });
+    </script>
 </body>
 
 </html>

@@ -1,3 +1,10 @@
+:root {
+    --left-team-color: #552583;
+    /* 默認 Lakers Purple */
+    --right-team-color: #007AC1;
+    /* 默認 Thunder Blue */
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Montserrat:wght@400;500;600;700&display=swap');
 
 body {
@@ -307,10 +314,6 @@ main.matchup-page.new-style {
     border-bottom: 3px solid #FDB927;
 }
 
-.team-section[data-team-abbr="NOP"] .choice-button {
-    border-bottom: 3px solid #C8102E;
-}
-
 .team-section[data-team-abbr="GSW"] .choice-button {
     border-bottom: 3px solid #FDB927;
 }
@@ -323,14 +326,6 @@ main.matchup-page.new-style {
     border-bottom: 3px solid #1D428A;
 }
 
-.team-section[data-team-abbr="DAL"] .choice-button {
-    border-bottom: 3px solid #00538C;
-}
-
-.team-section[data-team-abbr="PHX"] .choice-button {
-    border-bottom: 3px solid #E56020;
-}
-
 .team-section[data-team-abbr="MEM"] .choice-button {
     border-bottom: 3px solid #12173F;
 }
@@ -339,20 +334,8 @@ main.matchup-page.new-style {
     border-bottom: 3px solid #007A33;
 }
 
-.team-section[data-team-abbr="MIA"] .choice-button {
-    border-bottom: 3px solid #F9A01B;
-}
-
 .team-section[data-team-abbr="MIL"] .choice-button {
     border-bottom: 3px solid #EEE1C6;
-}
-
-.team-section[data-team-abbr="PHI"] .choice-button {
-    border-bottom: 3px solid #ED174C;
-}
-
-.team-section[data-team-abbr="BKN"] .choice-button {
-    border-bottom: 3px solid #FFFFFF;
 }
 
 .team-section[data-team-abbr="ATL"] .choice-button {
@@ -367,13 +350,33 @@ main.matchup-page.new-style {
     border-bottom: 3px solid #F58426;
 }
 
+.team-section[data-team-abbr="OKC"] .choice-button {
+    border-bottom: 3px solid #007AC1;
+}
+
+.team-section[data-team-abbr="MIN"] .choice-button {
+    border-bottom: 3px solid #0C2340;
+}
+
+.team-section[data-team-abbr="HOU"] .choice-button {
+    border-bottom: 3px solid #CE1141;
+}
+
+.team-section[data-team-abbr="IND"] .choice-button {
+    border-bottom: 3px solid #002D62;
+}
+
+.team-section[data-team-abbr="DET"] .choice-button {
+    border-bottom: 3px solid #C8102E;
+}
+
+.team-section[data-team-abbr="ORL"] .choice-button {
+    border-bottom: 3px solid #0077C0;
+}
+
 /* Team specific background colors */
 .team-section[data-team-abbr="LAL"] {
     background-color: #552583;
-}
-
-.team-section[data-team-abbr="NOP"] {
-    background-color: #0C2340;
 }
 
 .team-section[data-team-abbr="GSW"] {
@@ -388,14 +391,6 @@ main.matchup-page.new-style {
     background-color: #C8102E;
 }
 
-.team-section[data-team-abbr="DAL"] {
-    background-color: #00538C;
-}
-
-.team-section[data-team-abbr="PHX"] {
-    background-color: #1D1160;
-}
-
 .team-section[data-team-abbr="MEM"] {
     background-color: #5D76A9;
 }
@@ -404,20 +399,8 @@ main.matchup-page.new-style {
     background-color: #007A33;
 }
 
-.team-section[data-team-abbr="MIA"] {
-    background-color: #98002E;
-}
-
 .team-section[data-team-abbr="MIL"] {
     background-color: #00471B;
-}
-
-.team-section[data-team-abbr="PHI"] {
-    background-color: #006BB6;
-}
-
-.team-section[data-team-abbr="BKN"] {
-    background-color: #000000;
 }
 
 .team-section[data-team-abbr="ATL"] {
@@ -430,6 +413,30 @@ main.matchup-page.new-style {
 
 .team-section[data-team-abbr="NYK"] {
     background-color: #006BB6;
+}
+
+.team-section[data-team-abbr="OKC"] {
+    background-color: #007AC1;
+}
+
+.team-section[data-team-abbr="MIN"] {
+    background-color: #0C2340;
+}
+
+.team-section[data-team-abbr="HOU"] {
+    background-color: #CE1141;
+}
+
+.team-section[data-team-abbr="IND"] {
+    background-color: #002D62;
+}
+
+.team-section[data-team-abbr="DET"] {
+    background-color: #C8102E;
+}
+
+.team-section[data-team-abbr="ORL"] {
+    background-color: #0077C0;
 }
 
 /* Styles for Predictions Text Summary */
@@ -644,12 +651,6 @@ main.matchup-page.new-style {
     background-color: #FDB927;
 }
 
-.bracket-champion[data-team-abbr="NOP"] {
-    border-color: #0C2340;
-    box-shadow: 0 2px 4px rgba(12, 35, 64, 0.3);
-    background-color: #C8102E;
-}
-
 .bracket-champion[data-team-abbr="GSW"] {
     border-color: #1D428A;
     box-shadow: 0 2px 4px rgba(29, 66, 138, 0.3);
@@ -668,18 +669,6 @@ main.matchup-page.new-style {
     background-color: #1D428A;
 }
 
-.bracket-champion[data-team-abbr="DAL"] {
-    border-color: #00538C;
-    box-shadow: 0 2px 4px rgba(0, 83, 140, 0.3);
-    background-color: #B8C4CA;
-}
-
-.bracket-champion[data-team-abbr="PHX"] {
-    border-color: #1D1160;
-    box-shadow: 0 2px 4px rgba(29, 17, 96, 0.3);
-    background-color: #E56020;
-}
-
 .bracket-champion[data-team-abbr="MEM"] {
     border-color: #5D76A9;
     box-shadow: 0 2px 4px rgba(93, 118, 169, 0.3);
@@ -693,28 +682,10 @@ main.matchup-page.new-style {
     color: #fff;
 }
 
-.bracket-champion[data-team-abbr="MIA"] {
-    border-color: #98002E;
-    box-shadow: 0 2px 4px rgba(152, 0, 46, 0.3);
-    background-color: #F9A01B;
-}
-
 .bracket-champion[data-team-abbr="MIL"] {
     border-color: #00471B;
     box-shadow: 0 2px 4px rgba(0, 71, 27, 0.3);
     background-color: #EEE1C6;
-}
-
-.bracket-champion[data-team-abbr="PHI"] {
-    border-color: #006BB6;
-    box-shadow: 0 2px 4px rgba(0, 107, 182, 0.3);
-    background-color: #ED174C;
-}
-
-.bracket-champion[data-team-abbr="BKN"] {
-    border-color: #000000;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    background-color: #FFFFFF;
 }
 
 .bracket-champion[data-team-abbr="ATL"] {
@@ -733,6 +704,42 @@ main.matchup-page.new-style {
     border-color: #006BB6;
     box-shadow: 0 2px 4px rgba(0, 107, 182, 0.3);
     background-color: #F58426;
+}
+
+.bracket-champion[data-team-abbr="OKC"] {
+    border-color: #007AC1;
+    box-shadow: 0 2px 4px rgba(0, 122, 193, 0.3);
+    background-color: #EF3B24;
+}
+
+.bracket-champion[data-team-abbr="MIN"] {
+    border-color: #0C2340;
+    box-shadow: 0 2px 4px rgba(12, 35, 64, 0.3);
+    background-color: #9EA2A2;
+}
+
+.bracket-champion[data-team-abbr="HOU"] {
+    border-color: #CE1141;
+    box-shadow: 0 2px 4px rgba(206, 17, 65, 0.3);
+    background-color: #000000;
+}
+
+.bracket-champion[data-team-abbr="IND"] {
+    border-color: #002D62;
+    box-shadow: 0 2px 4px rgba(0, 45, 98, 0.3);
+    background-color: #FDBB30;
+}
+
+.bracket-champion[data-team-abbr="DET"] {
+    border-color: #C8102E;
+    box-shadow: 0 2px 4px rgba(200, 16, 46, 0.3);
+    background-color: #1D42BA;
+}
+
+.bracket-champion[data-team-abbr="ORL"] {
+    border-color: #0077C0;
+    box-shadow: 0 2px 4px rgba(0, 119, 192, 0.3);
+    background-color: #C4CED4;
 }
 
 /* Hide text summary by default if bracket is shown (JS will toggle) */
@@ -827,5 +834,229 @@ main.matchup-page.new-style {
         font-size: 16px;
         padding: 10px;
         bottom: 30px;
+    }
+}
+
+/* 統計數據比較頁面樣式 */
+.stats-comparison {
+    padding: 20px 10px;
+}
+
+.team-buttons-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 15px;
+    max-width: 800px;
+    margin: 0 auto 20px auto;
+}
+
+.team-button {
+    flex: 1;
+    font-size: 20px;
+    font-weight: 700;
+    padding: 12px 5px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.team-button span {
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+    color: white;
+    font-size: 26px;
+    text-align: center;
+    padding: 0 10px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 8px 16px;
+    border-radius: 6px;
+}
+
+.team-logo-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.9;
+    z-index: 1;
+}
+
+.left-team {
+    background-color: var(--left-team-color, #552583);
+    /* Lakers Purple */
+    transition: background-color 0.5s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.right-team {
+    background-color: var(--right-team-color, #007AC1);
+    /* Thunder Blue */
+    transition: background-color 0.5s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.team-button.selected {
+    transform: scale(1.02);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+}
+
+.stats-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 15px 0;
+}
+
+/* 手機版樣式調整 */
+@media screen and (max-width: 600px) {
+    .team-buttons-container {
+        flex-direction: row;
+    }
+
+    .team-button {
+        min-height: 70px;
+        padding: 8px 5px;
+    }
+
+    .team-button span {
+        font-size: 18px;
+    }
+}
+
+.stats-row {
+    display: flex;
+    margin: 15px 0;
+    padding: 5px 10px;
+    align-items: center;
+    position: relative;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.bar-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    height: 30px;
+    position: relative;
+}
+
+.left-bar,
+.right-bar {
+    height: 24px;
+    transition: width 0.5s ease-out;
+}
+
+.left-bar {
+    background-color: var(--left-team-color, #552583);
+    /* Lakers Purple */
+    margin-right: 2px;
+    text-align: right;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    transition: background-color 0.5s ease, width 0.5s ease-out;
+}
+
+.right-bar {
+    background-color: var(--right-team-color, #007AC1);
+    /* Thunder Blue */
+    margin-left: 2px;
+    text-align: left;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    transition: background-color 0.5s ease, width 0.5s ease-out;
+}
+
+.left-value,
+.right-value {
+    font-weight: 700;
+    font-size: 18px;
+    font-family: 'Montserrat', sans-serif;
+    width: 50px;
+    text-align: center;
+    transition: color 0.5s ease;
+}
+
+.left-value {
+    color: var(--left-team-color, #552583);
+    /* Lakers Purple */
+    margin-right: 10px;
+}
+
+.right-value {
+    color: var(--right-team-color, #007AC1);
+    /* Thunder Blue */
+    margin-left: 10px;
+}
+
+.stat-label {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #666;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    background-color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    z-index: 2;
+}
+
+@media screen and (max-width: 600px) {
+    .team-buttons-container {
+        flex-direction: row;
+    }
+
+    .team-button {
+        min-height: 70px;
+        padding: 8px 5px;
+    }
+
+    .team-button span {
+        font-size: 18px;
+    }
+
+    .left-value,
+    .right-value {
+        font-size: 16px;
+        width: 40px;
+    }
+
+    .bar-container {
+        height: 24px;
+    }
+
+    .left-bar,
+    .right-bar {
+        height: 20px;
+    }
+
+    .stat-label {
+        font-size: 12px;
+        padding: 1px 6px;
     }
 }

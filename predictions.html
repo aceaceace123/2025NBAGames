@@ -532,21 +532,21 @@
 
                     const teamColors = {
                         "LAL": { background: "#FDB927", border: "#552583", text: "#000000" },
-                        "NOP": { background: "#C8102E", border: "#0C2340", text: "#FFFFFF" },
                         "GSW": { background: "#FDB927", border: "#1D428A", text: "#000000" },
                         "DEN": { background: "#FEC524", border: "#0E2240", text: "#000000" },
                         "LAC": { background: "#1D428A", border: "#C8102E", text: "#FFFFFF" },
-                        "DAL": { background: "#B8C4CA", border: "#00538C", text: "#000000" },
-                        "PHX": { background: "#E56020", border: "#1D1160", text: "#FFFFFF" },
                         "MEM": { background: "#12173F", border: "#5D76A9", text: "#FFFFFF" },
                         "BOS": { background: "#BA9653", border: "#007A33", text: "#FFFFFF" },
-                        "MIA": { background: "#F9A01B", border: "#98002E", text: "#000000" },
                         "MIL": { background: "#EEE1C6", border: "#00471B", text: "#000000" },
-                        "PHI": { background: "#ED174C", border: "#006BB6", text: "#FFFFFF" },
-                        "BKN": { background: "#FFFFFF", border: "#000000", text: "#000000" },
                         "ATL": { background: "#C1D32F", border: "#E03A3E", text: "#000000" },
                         "CLE": { background: "#FDBB30", border: "#860038", text: "#000000" },
-                        "NYK": { background: "#F58426", border: "#006BB6", text: "#FFFFFF" }
+                        "NYK": { background: "#F58426", border: "#006BB6", text: "#FFFFFF" },
+                        "OKC": { background: "#EF3B24", border: "#007AC1", text: "#FFFFFF" },
+                        "MIN": { background: "#9EA2A2", border: "#0C2340", text: "#000000" },
+                        "HOU": { background: "#000000", border: "#CE1141", text: "#FFFFFF" },
+                        "IND": { background: "#FDBB30", border: "#002D62", text: "#000000" },
+                        "DET": { background: "#1D42BA", border: "#C8102E", text: "#FFFFFF" },
+                        "ORL": { background: "#C4CED4", border: "#0077C0", text: "#000000" }
                     };
 
                     const teamColor = teamColors[champion] || { background: "#FFFFFF", border: "#000000", text: "#000000" };
@@ -626,21 +626,21 @@
                     const teamColors = teamNames.map(team => {
                         const colors = {
                             "LAL": "#552583",
-                            "NOP": "#C8102E",
                             "GSW": "#1D428A",
                             "DEN": "#0E2240",
                             "LAC": "#1D428A",
-                            "DAL": "#00538C",
-                            "PHX": "#1D1160",
                             "MEM": "#5D76A9",
                             "BOS": "#007A33",
-                            "MIA": "#98002E",
                             "MIL": "#00471B",
-                            "PHI": "#006BB6",
-                            "BKN": "#000000",
                             "ATL": "#E03A3E",
                             "CLE": "#860038",
-                            "NYK": "#006BB6"
+                            "NYK": "#006BB6",
+                            "OKC": "#007AC1",
+                            "MIN": "#0C2340",
+                            "HOU": "#CE1141",
+                            "IND": "#002D62",
+                            "DET": "#C8102E",
+                            "ORL": "#0077C0"
                         };
                         return colors[team] || "#777777";
                     });

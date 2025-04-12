@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Round 1 / Matchup 1E - NBA Playoffs</title>
+    <title>Eastern Conference First Round - Matchup 1</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -12,21 +12,84 @@
     <div class="container">
         <header>
             <div class="logo">@NIKA</div>
-            <!-- Username welcome message will be added by script.js -->
-            <h1 class="conference-title">Eastern Conference First Round - Matchup 1</h1>
+            <h1>Eastern Conference First Round - Matchup 1</h1>
+            <div class="welcome-message">Welcome, Nika! Click the team you predict to win.</div>
         </header>
-        <main class="matchup-page new-style">
-            <div id="split-matchup">
-                <div class="team-section" id="E1v8-section" data-team-abbr="BOS">
-                    <button class="choice-button">BOS (1)</button>
-                </div>
-                <div class="team-section" id="E4v5-section" data-team-abbr="ATL">
-                    <button class="choice-button">ATL (8)</button>
-                </div>
+
+        <main class="matchup-page stats-comparison">
+            <div class="team-buttons-container">
+                <button class="team-button left-team" data-team="CLE">
+                    <div class="team-logo-bg"></div>
+                    <span>CLE (1)</span>
+                </button>
+                <button class="team-button right-team" data-team="ATL">
+                    <div class="team-logo-bg"></div>
+                    <span>ATL (8)</span>
+                </button>
+            </div>
+
+            <div class="stats-container">
+                <!-- 統計資料將由JavaScript動態填充 -->
             </div>
         </main>
     </div>
+
     <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 設置球隊標誌
+            const leftTeamBtn = document.querySelector('.left-team');
+            const rightTeamBtn = document.querySelector('.right-team');
+
+            if (leftTeamBtn && teamDetails['CLE']) {
+                const leftLogo = leftTeamBtn.querySelector('.team-logo-bg');
+                if (leftLogo) {
+                    leftLogo.style.backgroundImage = `url(${teamDetails['CLE'].logo})`;
+                }
+            }
+
+            if (rightTeamBtn && teamDetails['ATL']) {
+                const rightLogo = rightTeamBtn.querySelector('.team-logo-bg');
+                if (rightLogo) {
+                    rightLogo.style.backgroundImage = `url(${teamDetails['ATL'].logo})`;
+                }
+            }
+
+            // 使用script.js中的通用函數獲取和顯示對戰數據
+            fetchMatchupStatsAndUpdateUI('CLE', 'ATL');
+
+            // 設置按鈕顏色
+            if (typeof updateBarColors === 'function') {
+                updateBarColors('CLE', 'ATL');
+            }
+
+            // 添加按鈕點擊事件
+            const teamButtons = document.querySelectorAll('.team-button');
+            teamButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const selectedTeam = this.getAttribute('data-team');
+                    console.log('選擇的球隊:', selectedTeam);
+
+                    // 保存預測結果
+                    const matchupId = 'E1v8';
+                    const storageKey = 'round1Predictions';
+
+                    savePrediction(matchupId, selectedTeam, storageKey);
+
+                    // 添加視覺反饋
+                    teamButtons.forEach(btn => {
+                        btn.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+
+                    // 導航到下一頁
+                    setTimeout(() => {
+                        window.location.href = 'matchup2E.html';
+                    }, 500);
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>
