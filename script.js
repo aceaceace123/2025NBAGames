@@ -91,9 +91,13 @@ function addTeamClickAnimation() {
 }
 
 async function savePrediction(matchupId, selectedTeamAbbr, storageKey) {
+    console.log(`====== savePrediction START for ${matchupId}=${selectedTeamAbbr} ======`);
     try {
         const username = localStorage.getItem('nbaPlayoffsUsername');
         console.log('Attempting to save prediction with username:', username);
+        console.log('MatchupId:', matchupId);
+        console.log('SelectedTeam:', selectedTeamAbbr);
+        console.log('StorageKey:', storageKey);
 
         // Format timestamp in YYYY-MM-DDTHH:mm:ss format
         const now = new Date();
@@ -112,7 +116,7 @@ async function savePrediction(matchupId, selectedTeamAbbr, storageKey) {
             selected_team: selectedTeamAbbr,
             timestamp: timestamp
         };
-        console.log('Prediction data:', prediction);
+        console.log('Prediction data:', JSON.stringify(prediction));
 
         console.log('Sending request to API...');
         const response = await fetch('https://two025nbagames-1.onrender.com/predictions', {
@@ -124,24 +128,39 @@ async function savePrediction(matchupId, selectedTeamAbbr, storageKey) {
         });
         console.log('Response status:', response.status);
 
+        // Log full response for debugging
+        const responseText = await response.text();
+        console.log('API Response text:', responseText);
+
+        // Parse response as JSON if possible
+        let jsonResponse = null;
+        try {
+            jsonResponse = JSON.parse(responseText);
+            console.log('API Response JSON:', jsonResponse);
+        } catch (e) {
+            console.log('API Response is not valid JSON');
+        }
+
         if (!response.ok) {
-            const errorText = await response.text();
-            console.error('API Error Response:', errorText);
-            throw new Error(`Failed to save prediction: ${errorText}`);
+            console.error('API Error Response:', responseText);
+            throw new Error(`Failed to save prediction: ${responseText}`);
         }
 
         // Update local storage if API call succeeds
         let storedPredictions = JSON.parse(localStorage.getItem(storageKey) || '{}');
         storedPredictions[matchupId] = selectedTeamAbbr;
         localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
-        console.log('Updated predictions after selection:', JSON.parse(localStorage.getItem(storageKey)));
-
+        console.log('Updated predictions after selection:', JSON.stringify(storedPredictions));
+        console.log(`====== savePrediction COMPLETE for ${matchupId}=${selectedTeamAbbr} ======`);
+        return true;
     } catch (error) {
         console.error('Error saving prediction:', error);
         // Still update local storage even if API call fails to maintain user experience
         let storedPredictions = JSON.parse(localStorage.getItem(storageKey) || '{}');
         storedPredictions[matchupId] = selectedTeamAbbr;
         localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
+        console.log(`====== savePrediction FAILED for ${matchupId}=${selectedTeamAbbr} ======`);
+        return false;
     }
 }
 

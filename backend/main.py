@@ -26,7 +26,7 @@ app.add_middleware(
 )
 
 # 數據庫配置
-DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://nba_predictions_db_user:3oh3POfUn2uL38n7G75iypmAa1vxBdM4@dpg-cvqm3r9r0fns73a1irag-a.singapore-postgres.render.com/nba_predictions_db")
+DATABASE_URL = os.environ.get("DATABASE_URL")
 engine = create_engine(DATABASE_URL)
 metadata = MetaData()
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
