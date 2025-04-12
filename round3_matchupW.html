@@ -6,6 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Western Conference Final</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .debug-button {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .debug-button:hover {
+            background-color: #555;
+        }
+    </style>
 </head>
 
 <body>
@@ -22,98 +40,13 @@
             </div>
 
             <div class="stats-container">
-                <div class="stats-row">
-                    <div class="left-value">98</div>
-                    <div class="bar-container">
-                        <div class="left-bar" style="width: 50%"></div>
-                        <div class="stat-label">PTS</div>
-                        <div class="right-bar" style="width: 50%"></div>
-                    </div>
-                    <div class="right-value">97</div>
-                </div>
-
-                <div class="stats-row">
-                    <div class="left-value">40</div>
-                    <div class="bar-container">
-                        <div class="left-bar" style="width: 56%"></div>
-                        <div class="stat-label">REB</div>
-                        <div class="right-bar" style="width: 44%"></div>
-                    </div>
-                    <div class="right-value">32</div>
-                </div>
-
-                <div class="stats-row">
-                    <div class="left-value">22</div>
-                    <div class="bar-container">
-                        <div class="left-bar" style="width: 40%"></div>
-                        <div class="stat-label">AST</div>
-                        <div class="right-bar" style="width: 60%"></div>
-                    </div>
-                    <div class="right-value">33</div>
-                </div>
-
-                <div class="stats-row">
-                    <div class="left-value">14</div>
-                    <div class="bar-container">
-                        <div class="left-bar" style="width: 58%"></div>
-                        <div class="stat-label">STL</div>
-                        <div class="right-bar" style="width: 42%"></div>
-                    </div>
-                    <div class="right-value">10</div>
-                </div>
-
-                <div class="stats-row">
-                    <div class="left-value">9</div>
-                    <div class="bar-container">
-                        <div class="left-bar" style="width: 50%"></div>
-                        <div class="stat-label">BLK</div>
-                        <div class="right-bar" style="width: 50%"></div>
-                    </div>
-                    <div class="right-value">9</div>
-                </div>
-
-                <div class="stats-row">
-                    <div class="left-value">8</div>
-                    <div class="bar-container">
-                        <div class="left-bar" style="width: 33%"></div>
-                        <div class="stat-label">TO</div>
-                        <div class="right-bar" style="width: 67%"></div>
-                    </div>
-                    <div class="right-value">16</div>
-                </div>
-
-                <div class="stats-row">
-                    <div class="left-value">49.9</div>
-                    <div class="bar-container">
-                        <div class="left-bar" style="width: 47%"></div>
-                        <div class="stat-label">FG%</div>
-                        <div class="right-bar" style="width: 53%"></div>
-                    </div>
-                    <div class="right-value">55.8</div>
-                </div>
-
-                <div class="stats-row">
-                    <div class="left-value">38.8</div>
-                    <div class="bar-container">
-                        <div class="left-bar" style="width: 54%"></div>
-                        <div class="stat-label">3P%</div>
-                        <div class="right-bar" style="width: 46%"></div>
-                    </div>
-                    <div class="right-value">32.8</div>
-                </div>
-
-                <div class="stats-row">
-                    <div class="left-value">70.0</div>
-                    <div class="bar-container">
-                        <div class="left-bar" style="width: 49%"></div>
-                        <div class="stat-label">FT%</div>
-                        <div class="right-bar" style="width: 51%"></div>
-                    </div>
-                    <div class="right-value">73.2</div>
-                </div>
+                <!-- 統計資料將由JavaScript動態填充 -->
             </div>
         </main>
     </div>
+
+    <!-- 添加调试按钮 -->
+    <button class="debug-button" onclick="debugMatchupStats()">偵錯對戰數據</button>
 
     <script src="script.js"></script>
     <script>
@@ -175,71 +108,11 @@
                 }
             }
 
-            // 更新颜色
-            if (typeof updateBarColors === 'function') {
-                updateBarColors(team1Abbr, team2Abbr);
-            } else {
-                // 内部定义颜色更新函数
-                function localUpdateBarColors(leftTeamAbbr, rightTeamAbbr) {
-                    const leftBars = document.querySelectorAll('.left-bar');
-                    const rightBars = document.querySelectorAll('.right-bar');
-                    const leftValues = document.querySelectorAll('.left-value');
-                    const rightValues = document.querySelectorAll('.right-value');
+            // 使用全局函數從matchup_stats.json獲取對戰數據
+            updateMatchupStats(team1Abbr, team2Abbr);
 
-                    // 获取球队对应的颜色
-                    let leftColor, rightColor;
-
-                    switch (leftTeamAbbr) {
-                        case 'OKC': leftColor = '#007AC1'; break; // Thunder Blue
-                        case 'MIN': leftColor = '#0C2340'; break; // Timberwolves Navy
-                        case 'DEN': leftColor = '#0E2240'; break; // Nuggets Navy
-                        case 'LAC': leftColor = '#C8102E'; break; // Clippers Red
-                        case 'LAL': leftColor = '#552583'; break; // Lakers Purple
-                        case 'GSW': leftColor = '#1D428A'; break; // Warriors Blue
-                        case 'HOU': leftColor = '#CE1141'; break; // Rockets Red
-                        case 'MEM': leftColor = '#5D76A9'; break; // Grizzlies Blue
-                        default: leftColor = '#000000'; break;
-                    }
-
-                    switch (rightTeamAbbr) {
-                        case 'OKC': rightColor = '#007AC1'; break; // Thunder Blue
-                        case 'MIN': rightColor = '#0C2340'; break; // Timberwolves Navy
-                        case 'DEN': rightColor = '#0E2240'; break; // Nuggets Navy
-                        case 'LAC': rightColor = '#C8102E'; break; // Clippers Red
-                        case 'LAL': rightColor = '#552583'; break; // Lakers Purple
-                        case 'GSW': rightColor = '#1D428A'; break; // Warriors Blue
-                        case 'HOU': rightColor = '#CE1141'; break; // Rockets Red
-                        case 'MEM': rightColor = '#5D76A9'; break; // Grizzlies Blue
-                        default: rightColor = '#000000'; break;
-                    }
-
-                    // 设置CSS变量
-                    document.documentElement.style.setProperty('--left-team-color', leftColor);
-                    document.documentElement.style.setProperty('--right-team-color', rightColor);
-
-                    // 设置按钮颜色
-                    leftTeamBtn.style.backgroundColor = leftColor;
-                    rightTeamBtn.style.backgroundColor = rightColor;
-
-                    // 设置统计条颜色
-                    leftBars.forEach(bar => bar.style.backgroundColor = leftColor);
-                    rightBars.forEach(bar => bar.style.backgroundColor = rightColor);
-
-                    // 设置数值颜色
-                    leftValues.forEach(value => value.style.color = leftColor);
-                    rightValues.forEach(value => value.style.color = rightColor);
-                }
-
-                localUpdateBarColors(team1Abbr, team2Abbr);
-            }
-
-            // 添加动画效果
-            const rows = document.querySelectorAll('.stats-row');
-            rows.forEach((row, index) => {
-                setTimeout(() => {
-                    row.style.opacity = '1';
-                }, 100 * index);
-            });
+            // 更新按鈕和長條圖顏色
+            updateBarColors(team1Abbr, team2Abbr);
 
             // 添加按钮点击事件
             const teamButtons = document.querySelectorAll('.team-button');

@@ -93,6 +93,17 @@
                     const selectedTeam = this.getAttribute('data-team');
                     console.log('選擇的球隊:', selectedTeam);
 
+                    // Check if this is the right-team (MIN) button and special navigation is needed
+                    const isRightTeam = this.classList.contains('right-team');
+                    const currentPage = window.location.pathname.split('/').pop();
+                    console.log('Team selected:', selectedTeam, 'Is right team:', isRightTeam, 'Current page:', currentPage);
+
+                    if (selectedTeam === 'MIN' && currentPage === 'matchup1W.html') {
+                        console.log('Special navigation: Redirecting to matchup2W.html');
+                        window.location.href = 'matchup2W.html';
+                        return;
+                    }
+
                     // 保存預測結果
                     const matchupId = 'W1v8';
                     const storageKey = 'round1Predictions';
