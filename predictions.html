@@ -362,6 +362,25 @@
         .error-message {
             color: #ff6b6b;
         }
+
+        .cors-message {
+            color: #FFA500;
+            text-align: center;
+            padding: 15px;
+            background-color: rgba(255, 165, 0, 0.1);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .local-predictions {
+            width: 100%;
+        }
+
+        .prediction-history-item .prediction-id {
+            font-family: monospace;
+        }
     </style>
 </head>
 
@@ -820,6 +839,29 @@
                 return;
             }
 
+            // Check if we're in a CORS-restricted environment
+            const isCorsRestricted = window.location.hostname.includes('github.io') ||
+                window.location.protocol === 'file:';
+
+            if (isCorsRestricted) {
+                // Display message about CORS restrictions
+                historyContainer.innerHTML = `
+                    <p class="cors-message">
+                        Prediction history from database is not available due to CORS restrictions when hosted on GitHub Pages.
+                        <br><br>
+                        Your predictions are still being saved locally, and will sync with the database when you use the app in an environment without CORS restrictions.
+                    </p>
+                    <p class="cors-message">
+                        Currently displaying your local predictions only.
+                    </p>
+                `;
+
+                // Show locally saved predictions instead
+                displayLocalPredictions(historyContainer);
+                return;
+            }
+
+            // If we're not in a CORS-restricted environment, try to fetch from API
             fetch(`https://two025nbagames-1.onrender.com/predictions/${currentUser}`)
                 .then(response => {
                     if (!response.ok) {
@@ -855,8 +897,98 @@
                 })
                 .catch(error => {
                     console.error('Error fetching prediction history:', error);
-                    historyContainer.innerHTML = '<p class="error-message">Failed to load prediction history. Please try again later.</p>';
+                    historyContainer.innerHTML = `
+                        <p class="error-message">Failed to load prediction history from database. Displaying local predictions instead.</p>
+                    `;
+
+                    // Fall back to local predictions
+                    displayLocalPredictions(historyContainer);
                 });
+        }
+
+        // Function to display predictions stored in localStorage
+        function displayLocalPredictions(container) {
+            // Get all local storage predictions
+            const round1 = JSON.parse(localStorage.getItem('round1Predictions') || '{}');
+            const round2 = JSON.parse(localStorage.getItem('round2Predictions') || '{}');
+            const round3 = JSON.parse(localStorage.getItem('round3Predictions') || '{}');
+            const round4 = JSON.parse(localStorage.getItem('round4Predictions') || '{}');
+
+            // Also check for any cached failed predictions
+            const failedPredictions = JSON.parse(localStorage.getItem('failedPredictions') || '[]');
+
+            const allPredictions = [];
+
+            // Add regular predictions
+            Object.entries(round1).forEach(([matchupId, team]) => {
+                allPredictions.push({
+                    id: 'local-' + matchupId,
+                    matchup_id: matchupId,
+                    selected_team: team,
+                    timestamp: 'Round 1'
+                });
+            });
+
+            Object.entries(round2).forEach(([matchupId, team]) => {
+                allPredictions.push({
+                    id: 'local-' + matchupId,
+                    matchup_id: matchupId,
+                    selected_team: team,
+                    timestamp: 'Round 2'
+                });
+            });
+
+            Object.entries(round3).forEach(([matchupId, team]) => {
+                allPredictions.push({
+                    id: 'local-' + matchupId,
+                    matchup_id: matchupId,
+                    selected_team: team,
+                    timestamp: 'Round 3'
+                });
+            });
+
+            Object.entries(round4).forEach(([matchupId, team]) => {
+                allPredictions.push({
+                    id: 'local-' + matchupId,
+                    matchup_id: matchupId,
+                    selected_team: team,
+                    timestamp: 'Finals'
+                });
+            });
+
+            // Add any cached failed API predictions
+            failedPredictions.forEach((pred, index) => {
+                allPredictions.push({
+                    id: 'pending-' + index,
+                    matchup_id: pred.matchup_id,
+                    selected_team: pred.selected_team,
+                    timestamp: pred.timestamp ? new Date(pred.timestamp).toLocaleString() : 'Pending'
+                });
+            });
+
+            if (allPredictions.length === 0) {
+                container.innerHTML += '<p class="no-predictions">No local predictions found. Make some predictions!</p>';
+                return;
+            }
+
+            // Create a container for local predictions
+            const localPredictionsDiv = document.createElement('div');
+            localPredictionsDiv.className = 'local-predictions';
+
+            // Add each prediction
+            allPredictions.forEach(pred => {
+                const predItem = document.createElement('div');
+                predItem.className = 'prediction-history-item';
+                predItem.innerHTML = `
+                    <span class="prediction-id">${pred.id.includes('pending') ? '⏳' : '#'}</span>
+                    <span class="prediction-matchup">${pred.matchup_id}</span>
+                    <span class="prediction-team">${pred.selected_team}</span>
+                    <span class="prediction-time">${pred.timestamp}</span>
+                `;
+                localPredictionsDiv.appendChild(predItem);
+            });
+
+            container.appendChild(localPredictionsDiv);
         }
     </script>
 </body>

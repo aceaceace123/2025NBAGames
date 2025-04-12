@@ -19,14 +19,14 @@ app = FastAPI()
 # 配置CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://127.0.0.1:5500"],  # 允許的源
+    allow_origins=["https://aceaceace123.github.io"],  # 允許的源
     allow_credentials=True,
     allow_methods=["*"],  # 允許的方法
     allow_headers=["*"],  # 允許的頭部
 )
 
 # 數據庫配置
-DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///./sql_app.db")
+DATABASE_URL = os.environ.get("DATABASE_URL", "spostgresql://nba_predictions_db_user:3oh3POfUn2uL38n7G75iypmAa1vxBdM4@dpg-cvqm3r9r0fns73a1irag-a.singapore-postgres.render.com/nba_predictions_db")
 engine = create_engine(DATABASE_URL)
 metadata = MetaData()
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

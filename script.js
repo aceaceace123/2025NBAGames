@@ -91,6 +91,12 @@ function addTeamClickAnimation() {
 }
 
 async function savePrediction(matchupId, selectedTeamAbbr, storageKey) {
+    // First update local storage to ensure prediction is saved regardless of API success
+    let storedPredictions = JSON.parse(localStorage.getItem(storageKey) || '{}');
+    storedPredictions[matchupId] = selectedTeamAbbr;
+    localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
+    console.log('Updated local predictions for', matchupId, 'with team', selectedTeamAbbr);
+
     try {
         const username = localStorage.getItem('nbaPlayoffsUsername') || 'anonymous';
         console.log('Attempting to save prediction with username:', username);
@@ -104,8 +110,6 @@ async function savePrediction(matchupId, selectedTeamAbbr, storageKey) {
             String(now.getMinutes()).padStart(2, '0') + ':' +
             String(now.getSeconds()).padStart(2, '0');
 
-        console.log('Formatted timestamp:', timestamp);
-
         const prediction = {
             username: username,
             matchup_id: matchupId,
@@ -114,37 +118,53 @@ async function savePrediction(matchupId, selectedTeamAbbr, storageKey) {
         };
         console.log('Prediction data:', prediction);
 
-        console.log('Sending request to API...');
-        const response = await fetch('https://two025nbagames-1.onrender.com/predictions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(prediction)
-        });
-        console.log('Response status:', response.status);
+        // Use a local prediction cache to store failed API calls
+        let failedPredictions = JSON.parse(localStorage.getItem('failedPredictions') || '[]');
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('API Error Response:', errorText);
-            throw new Error(`Failed to save prediction: ${errorText}`);
+        try {
+            console.log('Sending request to API...');
+            const response = await fetch('https://two025nbagames-1.onrender.com/predictions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(prediction),
+                // Add mode and credentials settings to help with CORS
+                mode: 'cors',
+                credentials: 'same-origin'
+            });
+
+            console.log('Response status:', response.status);
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('API Error Response:', errorText);
+                throw new Error(`Failed to save prediction: ${errorText}`);
+            }
+
+            // If successful, add to successful predictions log
+            console.log('Prediction saved to API successfully');
+
+            // Check if we have any failed predictions to retry
+            if (failedPredictions.length > 0) {
+                console.log('Found failed predictions to retry:', failedPredictions.length);
+                // In a real app, you might want to retry these in the background
+            }
+
+        } catch (fetchError) {
+            console.error('API call failed, storing prediction locally:', fetchError);
+            // Store the failed prediction to try again later
+            failedPredictions.push(prediction);
+            localStorage.setItem('failedPredictions', JSON.stringify(failedPredictions));
+            console.log('Added to failed predictions cache. Total:', failedPredictions.length);
+
+            // This error is caught by the outer try-catch, so we don't need to handle it here
+            throw fetchError;
         }
-
-        const responseData = await response.json();
-        console.log('Prediction saved to database successfully:', responseData);
-
-        // Update local storage if API call succeeds
-        let storedPredictions = JSON.parse(localStorage.getItem(storageKey) || '{}');
-        storedPredictions[matchupId] = selectedTeamAbbr;
-        localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
-        console.log('Updated predictions after selection:', JSON.parse(localStorage.getItem(storageKey)));
-
     } catch (error) {
-        console.error('Error saving prediction:', error);
-        // Still update local storage even if API call fails to maintain user experience
-        let storedPredictions = JSON.parse(localStorage.getItem(storageKey) || '{}');
-        storedPredictions[matchupId] = selectedTeamAbbr;
-        localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
+        console.error('Error in savePrediction:', error);
+        // Even if API saving fails, local storage update was already done at the beginning
+        console.log('Prediction saved to local storage only');
     }
 }
 
