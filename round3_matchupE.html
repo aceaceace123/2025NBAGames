@@ -111,8 +111,16 @@
             // 使用全局函數從matchup_stats.json獲取對戰數據
             updateMatchupStats(team1Abbr, team2Abbr);
 
-            // 更新按鈕和長條圖顏色
-            updateBarColors(team1Abbr, team2Abbr);
+            // 更新按鈕和長條圖顏色 - 添加錯誤處理
+            try {
+                if (typeof updateBarColors === 'function') {
+                    updateBarColors(team1Abbr, team2Abbr);
+                } else {
+                    console.warn('updateBarColors函數未定義，跳過顏色更新');
+                }
+            } catch (error) {
+                console.error('更新顏色時出錯:', error);
+            }
 
             // 添加按钮点击事件
             const teamButtons = document.querySelectorAll('.team-button');
@@ -121,11 +129,14 @@
                     const selectedTeam = this.getAttribute('data-team');
                     console.log('选择的球队:', selectedTeam);
 
-                    // 保存预测结果
-                    const matchupId = 'R3E';
-                    const storageKey = 'round3Predictions';
-
-                    savePrediction(matchupId, selectedTeam, storageKey);
+                    // 保存预测结果 - 使用try-catch包裹以確保不會阻擋導航
+                    try {
+                        const matchupId = 'R3E';
+                        const storageKey = 'round3Predictions';
+                        savePrediction(matchupId, selectedTeam, storageKey);
+                    } catch (error) {
+                        console.error('保存預測時發生錯誤:', error);
+                    }
 
                     // 添加视觉反馈
                     teamButtons.forEach(btn => {
@@ -133,10 +144,25 @@
                     });
                     this.classList.add('selected');
 
-                    // 导航到下一页
+                    // 確保導航必定觸發 - 使用直接導航而不是setTimeout
+                    console.log('準備跳轉到 round3_matchupW.html...');
+
+                    // 仍然使用setTimeout但縮短時間並添加直接跳轉作為後備
+                    let hasNavigated = false;
                     setTimeout(() => {
-                        window.location.href = 'round4_finals.html';
-                    }, 500);
+                        if (!hasNavigated) {
+                            hasNavigated = true;
+                            window.location.href = 'round3_matchupW.html';
+                        }
+                    }, 300);
+
+                    // 兩秒後強制跳轉，以防任何原因阻止了導航
+                    setTimeout(() => {
+                        if (!hasNavigated) {
+                            console.warn('導航延遲，強制跳轉...');
+                            window.location.replace('round3_matchupW.html');
+                        }
+                    }, 2000);
                 });
             });
         });
