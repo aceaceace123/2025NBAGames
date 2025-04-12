@@ -6,24 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Western Conference First Round - Matchup 1</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        .debug-button {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            background-color: #333;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            z-index: 1000;
-        }
-
-        .debug-button:hover {
-            background-color: #555;
-        }
-    </style>
 </head>
 
 <body>
@@ -51,9 +33,6 @@
             </div>
         </main>
     </div>
-
-    <!-- 添加调试按钮 -->
-    <button class="debug-button" onclick="debugMatchupStats()">偵錯對戰數據</button>
 
     <script src="script.js"></script>
     <script>
@@ -124,7 +103,7 @@
             });
 
             // 初始調試輸出
-            console.log('對戰頁面初始化完成，可點擊下方「偵錯對戰數據」按鈕查看詳細數據');
+            console.log('對戰頁面初始化完成');
         });
     </script>
 </body>

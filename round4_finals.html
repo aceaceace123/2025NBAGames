@@ -6,24 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NBA Finals</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        .debug-button {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            background-color: #333;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            z-index: 1000;
-        }
-
-        .debug-button:hover {
-            background-color: #555;
-        }
-    </style>
 </head>
 
 <body>
@@ -45,13 +27,12 @@
         </main>
     </div>
 
-    <!-- 添加调试按钮 -->
-    <button class="debug-button" onclick="debugMatchupStats()">偵錯對戰數據</button>
-
     <script src="script.js"></script>
     <script>
+        // 移除緊急跳轉按鈕函數和調用
+
         document.addEventListener('DOMContentLoaded', async function () {
-            // 从localStorage获取东西部决赛的获胜者
+            // 從localStorage獲取東西部決賽的獲勝者
             const round3Predictions = JSON.parse(localStorage.getItem('round3Predictions') || '{}');
 
             // 检查是否完成了东西部决赛选择
@@ -79,14 +60,20 @@
             // 创建按钮HTML
             const buttonsContainer = document.querySelector('.team-buttons-container');
             buttonsContainer.innerHTML = `
-                <button class="team-button left-team" data-team="${westChampion}">
-                    <div class="team-logo-bg"></div>
-                    <span>${westChampion} (${westTeam.seed})</span>
-                </button>
-                <button class="team-button right-team" data-team="${eastChampion}">
-                    <div class="team-logo-bg"></div>
-                    <span>${eastChampion} (${eastTeam.seed})</span>
-                </button>
+                <form id="westForm" action="predictions.html" method="get" style="display: contents; margin: 0; padding: 0; border: none;">
+                    <input type="hidden" name="champion" value="${westChampion}">
+                    <button type="submit" class="team-button left-team" data-team="${westChampion}" style="margin-right: 20px;">
+                        <div class="team-logo-bg"></div>
+                        <span>${westChampion} (${westTeam.seed})</span>
+                    </button>
+                </form>
+                <form id="eastForm" action="predictions.html" method="get" style="display: contents; margin: 0; padding: 0; border: none;">
+                    <input type="hidden" name="champion" value="${eastChampion}">
+                    <button type="submit" class="team-button right-team" data-team="${eastChampion}" style="margin-left: 20px;">
+                        <div class="team-logo-bg"></div>
+                        <span>${eastChampion} (${eastTeam.seed})</span>
+                    </button>
+                </form>
             `;
 
             // 设置球队标志
@@ -113,29 +100,84 @@
             // 更新按鈕和長條圖顏色
             updateBarColors(westChampion, eastChampion);
 
-            // 添加按钮点击事件
+            // 添加表單提交事件處理
+            const westForm = document.getElementById('westForm');
+            const eastForm = document.getElementById('eastForm');
+
+            // 西區冠軍表單提交
+            westForm.addEventListener('submit', function (e) {
+                // 暫時阻止表單提交，先保存數據
+                e.preventDefault();
+
+                const selectedTeam = westChampion;
+                console.log('選擇西區冠軍:', selectedTeam);
+
+                // 直接顯示保存成功的訊息
+                alert('選擇保存成功！冠軍：' + selectedTeam);
+
+                // 保存預測到localStorage - 確保這一步正確執行
+                try {
+                    const matchupId = 'R4F';
+                    const storageKey = 'round4Predictions';
+                    let storedPredictions = {};
+                    storedPredictions[matchupId] = selectedTeam;
+                    localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
+                    console.log('已保存到localStorage:', JSON.stringify(storedPredictions));
+
+                    // 後台保存到API
+                    setTimeout(() => savePrediction(matchupId, selectedTeam, storageKey), 0);
+                } catch (error) {
+                    console.error('保存預測失敗:', error);
+                }
+
+                // 設置URL參數
+                const url = new URL('predictions.html', window.location.href);
+                url.searchParams.set('champion', selectedTeam);
+
+                // 手動導航
+                window.location.href = url.toString();
+            });
+
+            // 東區冠軍表單提交
+            eastForm.addEventListener('submit', function (e) {
+                // 暫時阻止表單提交，先保存數據
+                e.preventDefault();
+
+                const selectedTeam = eastChampion;
+                console.log('選擇東區冠軍:', selectedTeam);
+
+                // 直接顯示保存成功的訊息
+                alert('選擇保存成功！冠軍：' + selectedTeam);
+
+                // 保存預測到localStorage - 確保這一步正確執行
+                try {
+                    const matchupId = 'R4F';
+                    const storageKey = 'round4Predictions';
+                    let storedPredictions = {};
+                    storedPredictions[matchupId] = selectedTeam;
+                    localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
+                    console.log('已保存到localStorage:', JSON.stringify(storedPredictions));
+
+                    // 後台保存到API
+                    setTimeout(() => savePrediction(matchupId, selectedTeam, storageKey), 0);
+                } catch (error) {
+                    console.error('保存預測失敗:', error);
+                }
+
+                // 設置URL參數
+                const url = new URL('predictions.html', window.location.href);
+                url.searchParams.set('champion', selectedTeam);
+
+                // 手動導航
+                window.location.href = url.toString();
+            });
+
+            // 添加按鈕視覺反饋
             const teamButtons = document.querySelectorAll('.team-button');
             teamButtons.forEach(button => {
                 button.addEventListener('click', function () {
-                    const selectedTeam = this.getAttribute('data-team');
-                    console.log('选择的球队:', selectedTeam);
-
-                    // 保存预测结果
-                    const matchupId = 'R4F';
-                    const storageKey = 'round4Predictions';
-
-                    savePrediction(matchupId, selectedTeam, storageKey);
-
-                    // 添加视觉反馈
-                    teamButtons.forEach(btn => {
-                        btn.classList.remove('selected');
-                    });
+                    teamButtons.forEach(btn => btn.classList.remove('selected'));
                     this.classList.add('selected');
-
-                    // 导航到下一页
-                    setTimeout(() => {
-                        window.location.href = 'predictions.html';
-                    }, 500);
                 });
             });
         });
