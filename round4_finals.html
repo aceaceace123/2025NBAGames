@@ -105,7 +105,7 @@
             const eastForm = document.getElementById('eastForm');
 
             // 西區冠軍表單提交
-            westForm.addEventListener('submit', async function (e) {
+            westForm.addEventListener('submit', function (e) {
                 // 暫時阻止表單提交，先保存數據
                 e.preventDefault();
 
@@ -124,18 +124,29 @@
                     localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
                     console.log('已保存到localStorage:', JSON.stringify(storedPredictions));
 
-                    // 使用await確保API調用完成，再進行跳轉
-                    console.log('正在保存預測到API...');
-                    await savePrediction(matchupId, selectedTeam, storageKey);
-                    console.log('API保存完成，準備跳轉');
+                    // 先保存到API，確保數據發送到資料庫後再跳轉
+                    savePrediction(matchupId, selectedTeam, storageKey);
 
                     // 設置URL參數
                     const url = new URL('predictions.html', window.location.href);
                     url.searchParams.set('champion', selectedTeam);
 
-                    // 完成API調用後進行跳轉
-                    console.log('即將跳轉到:', url.toString());
-                    window.location.href = url.toString();
+                    // 延遲500毫秒後再進行跳轉，確保API請求有足夠時間完成
+                    let hasNavigated = false;
+                    setTimeout(() => {
+                        if (!hasNavigated) {
+                            hasNavigated = true;
+                            window.location.href = url.toString();
+                        }
+                    }, 500);
+
+                    // 兩秒後強制跳轉，以防任何原因阻止了導航
+                    setTimeout(() => {
+                        if (!hasNavigated) {
+                            console.warn('導航延遲，強制跳轉...');
+                            window.location.replace(url.toString());
+                        }
+                    }, 2000);
                 } catch (error) {
                     console.error('保存預測失敗:', error);
                     // 出錯時仍然跳轉到預測頁面
@@ -146,7 +157,7 @@
             });
 
             // 東區冠軍表單提交
-            eastForm.addEventListener('submit', async function (e) {
+            eastForm.addEventListener('submit', function (e) {
                 // 暫時阻止表單提交，先保存數據
                 e.preventDefault();
 
@@ -165,18 +176,29 @@
                     localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
                     console.log('已保存到localStorage:', JSON.stringify(storedPredictions));
 
-                    // 使用await確保API調用完成，再進行跳轉
-                    console.log('正在保存預測到API...');
-                    await savePrediction(matchupId, selectedTeam, storageKey);
-                    console.log('API保存完成，準備跳轉');
+                    // 先保存到API，確保數據發送到資料庫後再跳轉
+                    savePrediction(matchupId, selectedTeam, storageKey);
 
                     // 設置URL參數
                     const url = new URL('predictions.html', window.location.href);
                     url.searchParams.set('champion', selectedTeam);
 
-                    // 完成API調用後進行跳轉
-                    console.log('即將跳轉到:', url.toString());
-                    window.location.href = url.toString();
+                    // 延遲500毫秒後再進行跳轉，確保API請求有足夠時間完成
+                    let hasNavigated = false;
+                    setTimeout(() => {
+                        if (!hasNavigated) {
+                            hasNavigated = true;
+                            window.location.href = url.toString();
+                        }
+                    }, 500);
+
+                    // 兩秒後強制跳轉，以防任何原因阻止了導航
+                    setTimeout(() => {
+                        if (!hasNavigated) {
+                            console.warn('導航延遲，強制跳轉...');
+                            window.location.replace(url.toString());
+                        }
+                    }, 2000);
                 } catch (error) {
                     console.error('保存預測失敗:', error);
                     // 出錯時仍然跳轉到預測頁面
