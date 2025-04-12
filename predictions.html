@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your NBA Playoffs Predictions</title>
+    <title>Your Predictions - NBA Playoffs</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
@@ -303,84 +303,6 @@
                 gap: 2px;
             }
         }
-
-        .prediction-history {
-            margin-top: 40px;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 20px;
-            border-radius: 8px;
-        }
-
-        .prediction-history h2 {
-            color: white;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .prediction-history-header {
-            display: grid;
-            grid-template-columns: 0.5fr 1fr 1fr 1.5fr;
-            padding: 10px;
-            background-color: #333;
-            color: white;
-            font-weight: bold;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
-
-        .prediction-history-item {
-            display: grid;
-            grid-template-columns: 0.5fr 1fr 1fr 1.5fr;
-            padding: 8px 10px;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: white;
-            border-radius: 4px;
-            margin-bottom: 5px;
-            transition: background-color 0.3s;
-        }
-
-        .prediction-history-item:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .prediction-id,
-        .prediction-matchup,
-        .prediction-team,
-        .prediction-time {
-            display: flex;
-            align-items: center;
-        }
-
-        .loading-message,
-        .no-predictions,
-        .error-message {
-            color: white;
-            text-align: center;
-            padding: 15px;
-        }
-
-        .error-message {
-            color: #ff6b6b;
-        }
-
-        .cors-message {
-            color: #FFA500;
-            text-align: center;
-            padding: 15px;
-            background-color: rgba(255, 165, 0, 0.1);
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-size: 0.9em;
-            line-height: 1.5;
-        }
-
-        .local-predictions {
-            width: 100%;
-        }
-
-        .prediction-history-item .prediction-id {
-            font-family: monospace;
-        }
     </style>
 </head>
 
@@ -388,8 +310,7 @@
     <div class="container">
         <header>
             <div class="logo">@NIKA</div>
-            <h1>Your NBA Playoffs Predictions</h1>
-            <div class="welcome-message">Welcome! Here's a summary of your predictions.</div>
+            <h1 id="main-title" class="typewriter conference-title"></h1>
         </header>
 
         <button id="stats-button">See others' predictions</button>
@@ -448,138 +369,10 @@
                     </div>
                 </div>
             </div>
-
-            <div id="predictions-summary" class="predictions-summary">
-                <!-- User predictions will be displayed here -->
-            </div>
-
-            <div id="prediction-history" class="prediction-history">
-                <h2>Your Prediction History</h2>
-                <div class="prediction-history-header">
-                    <span class="prediction-id">ID</span>
-                    <span class="prediction-matchup">Matchup</span>
-                    <span class="prediction-team">Team</span>
-                    <span class="prediction-time">Timestamp</span>
-                </div>
-                <div id="prediction-history-list">
-                    <p class="loading-message">Loading your prediction history...</p>
-                </div>
-            </div>
-
-            <div class="stats-section">
-                <button id="statsBtn" class="stats-button">See Others' Predictions</button>
-                <div id="statsModal" class="modal">
-                    <div class="modal-content">
-                        <span class="close-button">&times;</span>
-                        <h2>NBA Champion Predictions</h2>
-                        <canvas id="pieChart" width="400" height="300"></canvas>
-                    </div>
-                </div>
-            </div>
         </main>
     </div>
     <script src="script.js"></script>
     <script>
-        // Define team details if not already imported from script.js
-        const teamDetails = {
-            "OKC": {
-                name: "Oklahoma City Thunder",
-                logo: "images/logos/OKC.png",
-                seed: 1,
-                conference: "Western"
-            },
-            "MIN": {
-                name: "Minnesota Timberwolves",
-                logo: "images/logos/MIN.png",
-                seed: 8,
-                conference: "Western"
-            },
-            "DEN": {
-                name: "Denver Nuggets",
-                logo: "images/logos/DEN.png",
-                seed: 4,
-                conference: "Western"
-            },
-            "LAC": {
-                name: "LA Clippers",
-                logo: "images/logos/LAC.png",
-                seed: 5,
-                conference: "Western"
-            },
-            "LAL": {
-                name: "Los Angeles Lakers",
-                logo: "images/logos/LAL.png",
-                seed: 3,
-                conference: "Western"
-            },
-            "GSW": {
-                name: "Golden State Warriors",
-                logo: "images/logos/GSW.png",
-                seed: 6,
-                conference: "Western"
-            },
-            "HOU": {
-                name: "Houston Rockets",
-                logo: "images/logos/HOU.png",
-                seed: 2,
-                conference: "Western"
-            },
-            "MEM": {
-                name: "Memphis Grizzlies",
-                logo: "images/logos/MEM.png",
-                seed: 7,
-                conference: "Western"
-            },
-            "CLE": {
-                name: "Cleveland Cavaliers",
-                logo: "images/logos/CLE.png",
-                seed: 1,
-                conference: "Eastern"
-            },
-            "ATL": {
-                name: "Atlanta Hawks",
-                logo: "images/logos/ATL.png",
-                seed: 8,
-                conference: "Eastern"
-            },
-            "IND": {
-                name: "Indiana Pacers",
-                logo: "images/logos/IND.png",
-                seed: 4,
-                conference: "Eastern"
-            },
-            "MIL": {
-                name: "Milwaukee Bucks",
-                logo: "images/logos/MIL.png",
-                seed: 5,
-                conference: "Eastern"
-            },
-            "NYK": {
-                name: "New York Knicks",
-                logo: "images/logos/NYK.png",
-                seed: 3,
-                conference: "Eastern"
-            },
-            "DET": {
-                name: "Detroit Pistons",
-                logo: "images/logos/DET.png",
-                seed: 6,
-                conference: "Eastern"
-            },
-            "BOS": {
-                name: "Boston Celtics",
-                logo: "images/logos/BOS.png",
-                seed: 2,
-                conference: "Eastern"
-            },
-            "ORL": {
-                name: "Orlando Magic",
-                logo: "images/logos/ORL.png",
-                seed: 7,
-                conference: "Eastern"
-            }
-        };
-
         function typewriterEffect(element, text, speed = 80) {
             element.textContent = '';
 
@@ -596,182 +389,359 @@
         }
 
         function initializePredictions() {
-            const predictionsSummaryDiv = document.getElementById('predictions-summary');
-            const bracketDisplayDiv = document.getElementById('bracket-display');
+            const username = localStorage.getItem('nbaPlayoffsUsername');
+            if (!username) {
+                window.location.href = 'index.html';
+                return;
+            }
 
-            if (predictionsSummaryDiv && bracketDisplayDiv) {
-                const storedR1 = JSON.parse(localStorage.getItem('round1Predictions') || '{}');
-                const storedR2 = JSON.parse(localStorage.getItem('round2Predictions') || '{}');
-                const storedR3 = JSON.parse(localStorage.getItem('round3Predictions') || '{}');
-                const storedR4 = JSON.parse(localStorage.getItem('round4Predictions') || '{}');
+            const titleElement = document.getElementById('main-title');
+            if (titleElement) {
+                typewriterEffect(titleElement, '2025 NBA PLAYOFFS', 80);
+            }
 
-                console.log('Round 1 Predictions:', storedR1);
-                console.log('Round 2 Predictions:', storedR2);
-                console.log('Round 3 Predictions:', storedR3);
-                console.log('Round 4 Predictions:', storedR4);
+            displayWelcomeMessage('prediction');
 
-                const r1Complete = Object.keys(storedR1).length === 8;
-                const r2Complete = Object.keys(storedR2).length === 4;
-                const r3Complete = Object.keys(storedR3).length === 2;
-                const r4Complete = Object.keys(storedR4).length === 1;
-                const allComplete = r1Complete && r2Complete && r3Complete && r4Complete;
+            const round1Predictions = JSON.parse(localStorage.getItem('round1Predictions') || '{}');
+            const round2Predictions = JSON.parse(localStorage.getItem('round2Predictions') || '{}');
+            const round3Predictions = JSON.parse(localStorage.getItem('round3Predictions') || '{}');
+            const round4Predictions = JSON.parse(localStorage.getItem('round4Predictions') || '{}');
 
-                if (allComplete) {
-                    // Display complete bracket
-                    const pageTitle = document.querySelector('.container header h1');
-                    if (pageTitle) pageTitle.textContent = 'Your Final Predictions';
+            console.log('Round 1 Predictions:', round1Predictions);
+            console.log('Round 2 Predictions:', round2Predictions);
+            console.log('Round 3 Predictions:', round3Predictions);
+            console.log('Round 4 Predictions:', round4Predictions);
 
-                    predictionsSummaryDiv.classList.add('hidden');
-                    bracketDisplayDiv.style.display = 'flex';
+            const isComplete = {
+                round1: Object.keys(round1Predictions).length === 8,
+                round2: Object.keys(round2Predictions).length === 4,
+                round3: Object.keys(round3Predictions).length === 2,
+                round4: Object.keys(round4Predictions).length === 1
+            };
 
-                    const getTeam = (roundStore, matchupId) => {
-                        const winnerAbbr = roundStore[matchupId];
-                        if (winnerAbbr && teamDetails[winnerAbbr]) {
-                            return { abbr: winnerAbbr, ...teamDetails[winnerAbbr] };
-                        }
-                        return { abbr: 'TBD', name: 'TBD', logo: 'placeholder.png', seed: '?' };
+            console.log('Completion Status:', isComplete);
+
+            const incompleteMessage = document.getElementById('incomplete-message');
+            const bracketContainer = document.getElementById('bracket-container');
+
+            if (!isComplete.round1) {
+                incompleteMessage.style.display = 'block';
+                bracketContainer.style.display = 'none';
+                return;
+            }
+
+            incompleteMessage.style.display = 'none';
+            bracketContainer.style.display = 'flex';
+
+            // 確保在頁面初始化時顯示Finals和Champion區域
+            document.querySelector('.finals').style.display = 'block';
+
+            function createTeamElement(teamAbbr, isWinner = false) {
+                const team = teamDetails[teamAbbr];
+                if (!team) {
+                    console.error('Team not found:', teamAbbr);
+                    return null;
+                }
+
+                const div = document.createElement('div');
+                div.className = `team${isWinner ? ' winner' : ''}`;
+                div.innerHTML = `
+                    <img src="${team.logo}" alt="${team.name}">
+                    <div class="team-info">
+                        <span class="seed">(${team.seed})</span>
+                        <span class="team-name">${team.name}</span>
+                    </div>
+                `;
+                return div;
+            }
+
+            function createMatchupElement(team1Abbr, team2Abbr, winnerAbbr = null) {
+                const matchupDiv = document.createElement('div');
+                matchupDiv.className = 'matchup';
+
+                const team1Element = createTeamElement(team1Abbr, team1Abbr === winnerAbbr);
+                const team2Element = createTeamElement(team2Abbr, team2Abbr === winnerAbbr);
+
+                if (team1Element && team2Element) {
+                    matchupDiv.appendChild(team1Element);
+                    matchupDiv.appendChild(team2Element);
+                }
+
+                return matchupDiv;
+            }
+
+            const westRound1 = document.getElementById('west-round1');
+            round1Matchups.filter(m => m.conference === "Western").forEach(matchup => {
+                const winner = round1Predictions[matchup.id];
+                westRound1.appendChild(createMatchupElement(matchup.team1Abbr, matchup.team2Abbr, winner));
+            });
+
+            const eastRound1 = document.getElementById('east-round1');
+            round1Matchups.filter(m => m.conference === "Eastern").forEach(matchup => {
+                const winner = round1Predictions[matchup.id];
+                eastRound1.appendChild(createMatchupElement(matchup.team1Abbr, matchup.team2Abbr, winner));
+            });
+
+            if (isComplete.round2) {
+                const westRound2 = document.getElementById('west-round2');
+                ['R2W1', 'R2W2'].forEach(matchupId => {
+                    const sourceData = roundSources[matchupId];
+                    const team1 = round1Predictions[sourceData.source1];
+                    const team2 = round1Predictions[sourceData.source2];
+                    const winner = round2Predictions[matchupId];
+                    westRound2.appendChild(createMatchupElement(team1, team2, winner));
+                });
+
+                const eastRound2 = document.getElementById('east-round2');
+                ['R2E1', 'R2E2'].forEach(matchupId => {
+                    const sourceData = roundSources[matchupId];
+                    const team1 = round1Predictions[sourceData.source1];
+                    const team2 = round1Predictions[sourceData.source2];
+                    const winner = round2Predictions[matchupId];
+                    eastRound2.appendChild(createMatchupElement(team1, team2, winner));
+                });
+            }
+
+            if (isComplete.round3) {
+                const westRound3 = document.getElementById('west-round3');
+                const eastRound3 = document.getElementById('east-round3');
+
+                const westFinalsData = roundSources['R3W'];
+                const eastFinalsData = roundSources['R3E'];
+
+                const westTeam1 = round2Predictions[westFinalsData.source1];
+                const westTeam2 = round2Predictions[westFinalsData.source2];
+                const eastTeam1 = round2Predictions[eastFinalsData.source1];
+                const eastTeam2 = round2Predictions[eastFinalsData.source2];
+
+                westRound3.appendChild(createMatchupElement(westTeam1, westTeam2, round3Predictions['R3W']));
+                eastRound3.appendChild(createMatchupElement(eastTeam1, eastTeam2, round3Predictions['R3E']));
+
+                // 顯示NBA Finals區域 - 移動到這個條件區塊內，保證當round3完成時就會顯示
+                const finalsMatchup = document.getElementById('finals-matchup');
+                const championDisplay = document.getElementById('champion-display');
+                const championContent = document.getElementById('champion-content');
+
+                const westChampion = round3Predictions['R3W'];
+                const eastChampion = round3Predictions['R3E'];
+                let champion = round4Predictions['R4F']; // 這可能不存在
+
+                // 獲取URL參數中的champion
+                const urlParams = new URLSearchParams(window.location.search);
+                const championFromURL = urlParams.get('champion');
+                if (championFromURL && teamDetails[championFromURL]) {
+                    champion = championFromURL;
+                    // 確保它被保存到localStorage
+                    let storedPredictions = JSON.parse(localStorage.getItem('round4Predictions') || '{}');
+                    storedPredictions['R4F'] = champion;
+                    localStorage.setItem('round4Predictions', JSON.stringify(storedPredictions));
+                    console.log('已從URL更新冠軍:', champion);
+                }
+
+                // 強制顯示championDisplay，無論是否有champion
+                championDisplay.style.display = 'block';
+
+                // 清除並顯示總決賽對陣
+                finalsMatchup.innerHTML = '';
+                finalsMatchup.appendChild(createMatchupElement(westChampion, eastChampion, champion));
+
+                // 如果已選擇冠軍，則顯示冠軍詳細信息
+                if (champion && teamDetails[champion]) {
+                    championDisplay.setAttribute('data-team-abbr', champion);
+
+                    const teamColors = {
+                        "LAL": { background: "#FDB927", border: "#552583", text: "#000000" },
+                        "NOP": { background: "#C8102E", border: "#0C2340", text: "#FFFFFF" },
+                        "GSW": { background: "#FDB927", border: "#1D428A", text: "#000000" },
+                        "DEN": { background: "#FEC524", border: "#0E2240", text: "#000000" },
+                        "LAC": { background: "#1D428A", border: "#C8102E", text: "#FFFFFF" },
+                        "DAL": { background: "#B8C4CA", border: "#00538C", text: "#000000" },
+                        "PHX": { background: "#E56020", border: "#1D1160", text: "#FFFFFF" },
+                        "MEM": { background: "#12173F", border: "#5D76A9", text: "#FFFFFF" },
+                        "BOS": { background: "#BA9653", border: "#007A33", text: "#FFFFFF" },
+                        "MIA": { background: "#F9A01B", border: "#98002E", text: "#000000" },
+                        "MIL": { background: "#EEE1C6", border: "#00471B", text: "#000000" },
+                        "PHI": { background: "#ED174C", border: "#006BB6", text: "#FFFFFF" },
+                        "BKN": { background: "#FFFFFF", border: "#000000", text: "#000000" },
+                        "ATL": { background: "#C1D32F", border: "#E03A3E", text: "#000000" },
+                        "CLE": { background: "#FDBB30", border: "#860038", text: "#000000" },
+                        "NYK": { background: "#F58426", border: "#006BB6", text: "#FFFFFF" },
+                        "OKC": { background: "#EF3B24", border: "#007AC1", text: "#FFFFFF" },
+                        "MIN": { background: "#9EA2A2", border: "#0C2340", text: "#000000" },
+                        "HOU": { background: "#000000", border: "#CE1141", text: "#FFFFFF" },
+                        "IND": { background: "#FDBB30", border: "#002D62", text: "#000000" },
+                        "DET": { background: "#1D42BA", border: "#C8102E", text: "#FFFFFF" },
+                        "ORL": { background: "#C4CED4", border: "#0077C0", text: "#000000" }
                     };
 
-                    const r1Winners = {
-                        W1v8: getTeam(storedR1, "W1v8"), W4v5: getTeam(storedR1, "W4v5"),
-                        W3v6: getTeam(storedR1, "W3v6"), W2v7: getTeam(storedR1, "W2v7"),
-                        E1v8: getTeam(storedR1, "E1v8"), E4v5: getTeam(storedR1, "E4v5"),
-                        E3v6: getTeam(storedR1, "E3v6"), E2v7: getTeam(storedR1, "E2v7")
-                    };
-                    const r2Winners = {
-                        R2W1: getTeam(storedR2, "R2W1"), R2W2: getTeam(storedR2, "R2W2"),
-                        R2E1: getTeam(storedR2, "R2E1"), R2E2: getTeam(storedR2, "R2E2")
-                    };
-                    const r3Winners = { R3W: getTeam(storedR3, "R3W"), R3E: getTeam(storedR3, "R3E") };
-                    const champion = getTeam(storedR4, "R4F");
+                    const teamColor = teamColors[champion] || { background: "#FFFFFF", border: "#000000", text: "#000000" };
 
-                    const createTeamHTML = (teamData, isWinner = false) => `
-                        <div class="bracket-team ${isWinner ? 'winner' : ''}">
-                            <img src="${teamData.logo}" alt="${teamData.name}">
-                            <span>(${teamData.seed}) ${teamData.abbr}</span>
-                        </div>`;
+                    championDisplay.style.backgroundColor = teamColor.background;
+                    championDisplay.style.borderColor = teamColor.border;
+                    championDisplay.style.color = teamColor.text;
 
-                    const createMatchupHTML = (team1, team2, winnerAbbr) => `
-                        <div class="bracket-matchup">
-                            ${createTeamHTML(team1, team1.abbr === winnerAbbr)}
-                            ${createTeamHTML(team2, team2.abbr === winnerAbbr)}
-                        </div>`;
-
-                    bracketDisplayDiv.innerHTML = `
-                        <h2>Your Predicted Bracket</h2>
-                        <div class="bracket-region"> <!-- West -->
-                            <div class="bracket-round"> <!-- R1 West -->
-                                ${createMatchupHTML(teamDetails['OKC'], teamDetails['MIN'], r1Winners['W1v8'].abbr)}
-                                ${createMatchupHTML(teamDetails['DEN'], teamDetails['LAC'], r1Winners['W4v5'].abbr)}
-                                ${createMatchupHTML(teamDetails['LAL'], teamDetails['GSW'], r1Winners['W3v6'].abbr)}
-                                ${createMatchupHTML(teamDetails['HOU'], teamDetails['MEM'], r1Winners['W2v7'].abbr)}
-                            </div>
-                            <div class="bracket-round"> <!-- R2 West -->
-                                 ${createMatchupHTML(r1Winners['W1v8'], r1Winners['W4v5'], r2Winners['R2W1'].abbr)}
-                                 ${createMatchupHTML(r1Winners['W3v6'], r1Winners['W2v7'], r2Winners['R2W2'].abbr)}
-                            </div>
-                            <div class="bracket-round"> <!-- R3 West -->
-                                 ${createMatchupHTML(r2Winners['R2W1'], r2Winners['R2W2'], r3Winners['R3W'].abbr)}
-                            </div>
-                        </div>
-                        <div class="bracket-final-region"> <!-- Finals -->
-                             <div class="bracket-champion" data-team-abbr="${champion.abbr}">
-                                  <img src="${champion.logo}" alt="${champion.name}">
-                                  <span>${champion.abbr}</span>
-                                  <div class="title">2025 NBA Champion</div>
-                             </div>
-                        </div>
-                        <div class="bracket-region"> <!-- East -->
-                             <div class="bracket-round"> <!-- R3 East -->
-                                  ${createMatchupHTML(r2Winners['R2E1'], r2Winners['R2E2'], r3Winners['R3E'].abbr)}
-                             </div>
-                             <div class="bracket-round"> <!-- R2 East -->
-                                  ${createMatchupHTML(r1Winners['E1v8'], r1Winners['E4v5'], r2Winners['R2E1'].abbr)}
-                                  ${createMatchupHTML(r1Winners['E3v6'], r1Winners['E2v7'], r2Winners['R2E2'].abbr)}
-                             </div>
-                             <div class="bracket-round"> <!-- R1 East -->
-                                ${createMatchupHTML(teamDetails['CLE'], teamDetails['ATL'], r1Winners['E1v8'].abbr)}
-                                ${createMatchupHTML(teamDetails['IND'], teamDetails['MIL'], r1Winners['E4v5'].abbr)}
-                                ${createMatchupHTML(teamDetails['NYK'], teamDetails['DET'], r1Winners['E3v6'].abbr)}
-                                ${createMatchupHTML(teamDetails['BOS'], teamDetails['ORL'], r1Winners['E2v7'].abbr)}
-                            </div>
-                        </div>
+                    championContent.innerHTML = `
+                        <img src="${teamDetails[champion].logo}" alt="${teamDetails[champion].name}">
+                        <div>${teamDetails[champion].name}</div>
                     `;
                 } else {
-                    // Show text summary of current predictions
-                    bracketDisplayDiv.style.display = 'none';
-                    predictionsSummaryDiv.classList.remove('hidden');
+                    // 如果沒有選出冠軍，顯示提示信息
+                    championContent.innerHTML = `
+                        <div style="padding: 20px; text-align: center;">請在總決賽中選擇冠軍</div>
+                    `;
+                }
+            }
 
-                    let predictionsHTML = '<h2>Round 1 Picks:</h2>';
-                    if (r1Complete) {
-                        // Display Round 1 predictions
-                        const round1Matchups = [
-                            { id: 'W1v8', conference: 'Western', matchupNum: 1 },
-                            { id: 'W4v5', conference: 'Western', matchupNum: 2 },
-                            { id: 'W3v6', conference: 'Western', matchupNum: 3 },
-                            { id: 'W2v7', conference: 'Western', matchupNum: 4 },
-                            { id: 'E1v8', conference: 'Eastern', matchupNum: 1 },
-                            { id: 'E4v5', conference: 'Eastern', matchupNum: 2 },
-                            { id: 'E3v6', conference: 'Eastern', matchupNum: 3 },
-                            { id: 'E2v7', conference: 'Eastern', matchupNum: 4 }
-                        ];
+            const statsButton = document.getElementById('stats-button');
+            const statsModal = document.getElementById('stats-modal');
+            const closeButton = document.querySelector('.close-button');
 
-                        round1Matchups.forEach(r1m => {
-                            const winnerAbbr = storedR1[r1m.id];
-                            const winnerName = winnerAbbr && teamDetails[winnerAbbr] ? teamDetails[winnerAbbr].name : '(Not selected)';
-                            predictionsHTML += `<p>${r1m.conference} Matchup ${r1m.matchupNum}: ${winnerName} wins</p>`;
-                        });
-                    } else {
-                        predictionsHTML += '<p>Round 1 predictions incomplete.</p>';
+            statsButton.addEventListener('click', function () {
+                statsModal.style.display = 'flex';
+                loadChampionshipStats();
+            });
+
+            closeButton.addEventListener('click', function () {
+                statsModal.style.display = 'none';
+            });
+
+            window.addEventListener('click', function (event) {
+                if (event.target === statsModal) {
+                    statsModal.style.display = 'none';
+                }
+            });
+
+            let championshipChart = null;
+
+            async function loadChampionshipStats() {
+                try {
+                    // 使用新的API端點直接獲取所有冠軍預測
+                    const response = await fetch('https://two025nbagames-1.onrender.com/predictions/championship/all');
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch championship predictions data');
                     }
 
-                    predictionsHTML += '<h2 style="margin-top: 30px;">Round 2 Picks:</h2>';
-                    if (r2Complete) {
-                        // Display Round 2 predictions
-                        const roundSources = {
-                            "R2W1": { name: "Western Conference Semifinal 1" },
-                            "R2W2": { name: "Western Conference Semifinal 2" },
-                            "R2E1": { name: "Eastern Conference Semifinal 1" },
-                            "R2E2": { name: "Eastern Conference Semifinal 2" }
+                    const predictions = await response.json();
+                    console.log('Championship predictions:', predictions);
+
+                    // 處理獲取到的數據，統計每個冠軍隊伍的數量
+                    const championCounts = {};
+                    let totalPredictions = 0;
+
+                    predictions.forEach(prediction => {
+                        const team = prediction.selected_team;
+                        if (team) {
+                            championCounts[team] = (championCounts[team] || 0) + 1;
+                            totalPredictions++;
+                        }
+                    });
+
+                    // 如果我們沒有獲取到任何預測，使用本地存儲的當前用戶數據
+                    if (totalPredictions === 0) {
+                        const currentUser = localStorage.getItem('nbaPlayoffsUsername');
+                        const localFinalPrediction = JSON.parse(localStorage.getItem('round4Predictions') || '{}')['R4F'];
+                        if (localFinalPrediction) {
+                            championCounts[localFinalPrediction] = 1;
+                            totalPredictions = 1;
+                        }
+                    }
+
+                    // 如果仍然沒有數據，顯示錯誤訊息
+                    if (totalPredictions === 0) {
+                        throw new Error('No prediction data available');
+                    }
+
+                    // 準備圓餅圖數據
+                    const teamNames = Object.keys(championCounts);
+                    const teamColors = teamNames.map(team => {
+                        const colors = {
+                            "LAL": "#552583",
+                            "NOP": "#C8102E",
+                            "GSW": "#1D428A",
+                            "DEN": "#0E2240",
+                            "LAC": "#1D428A",
+                            "DAL": "#00538C",
+                            "PHX": "#1D1160",
+                            "MEM": "#5D76A9",
+                            "BOS": "#007A33",
+                            "MIA": "#98002E",
+                            "MIL": "#00471B",
+                            "PHI": "#006BB6",
+                            "BKN": "#000000",
+                            "ATL": "#E03A3E",
+                            "CLE": "#860038",
+                            "NYK": "#006BB6"
                         };
+                        return colors[team] || "#777777";
+                    });
 
-                        ["R2W1", "R2W2", "R2E1", "R2E2"].forEach(r2Id => {
-                            const winnerAbbr = storedR2[r2Id];
-                            const winnerName = winnerAbbr && teamDetails[winnerAbbr] ? teamDetails[winnerAbbr].name : '(Not selected)';
-                            predictionsHTML += `<p>${roundSources[r2Id].name}: ${winnerName} wins</p>`;
-                        });
-                    } else {
-                        predictionsHTML += `<p>Round 2 predictions ${r1Complete ? 'incomplete or not started' : 'cannot start until Round 1 is complete'}.</p>`;
+                    const data = {
+                        labels: teamNames.map(abbr => teamDetails[abbr] ? teamDetails[abbr].name : abbr),
+                        datasets: [{
+                            data: teamNames.map(team => championCounts[team]),
+                            backgroundColor: teamColors
+                        }]
+                    };
+
+                    // 如果已經有圖表，銷毀它
+                    if (championshipChart) {
+                        championshipChart.destroy();
                     }
 
-                    predictionsHTML += '<h2 style="margin-top: 30px;">Round 3 Picks (Conference Finals):</h2>';
-                    if (r3Complete) {
-                        // Display Round 3 predictions
-                        const roundSources = {
-                            "R3W": { name: "Western Conference Final" },
-                            "R3E": { name: "Eastern Conference Final" }
-                        };
+                    // 註冊數據標籤插件
+                    Chart.register(ChartDataLabels);
 
-                        ["R3W", "R3E"].forEach(r3Id => {
-                            const winnerAbbr = storedR3[r3Id];
-                            const winnerName = winnerAbbr && teamDetails[winnerAbbr] ? teamDetails[winnerAbbr].name : '(Not selected)';
-                            predictionsHTML += `<p>${roundSources[r3Id].name}: ${winnerName} wins</p>`;
-                        });
-                    } else {
-                        predictionsHTML += `<p>Round 3 predictions ${r2Complete ? 'incomplete or not started' : 'cannot start until Round 2 is complete'}.</p>`;
-                    }
+                    // 創建新的圓餅圖
+                    const ctx = document.getElementById('predictions-chart').getContext('2d');
+                    championshipChart = new Chart(ctx, {
+                        type: 'pie',
+                        data: data,
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'right',
+                                    labels: {
+                                        boxWidth: 20,
+                                        font: {
+                                            size: 12
+                                        }
+                                    }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function (context) {
+                                            const value = context.raw;
+                                            const percentage = Math.round((value / totalPredictions) * 100);
+                                            return `${context.label}: ${value} (${percentage}%)`;
+                                        }
+                                    }
+                                },
+                                datalabels: {
+                                    formatter: (value, ctx) => {
+                                        const dataset = ctx.chart.data.datasets[0];
+                                        const sum = dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = Math.round((value / sum) * 100) + '%';
+                                        return percentage;
+                                    },
+                                    color: '#fff',
+                                    font: {
+                                        weight: 'bold',
+                                        size: 14
+                                    }
+                                }
+                            }
+                        }
+                    });
 
-                    predictionsHTML += '<h2 style="margin-top: 30px;">Round 4 Pick (NBA Finals):</h2>';
-                    if (r4Complete) {
-                        // Display NBA Finals prediction
-                        const winnerAbbr = storedR4["R4F"];
-                        const winnerName = winnerAbbr && teamDetails[winnerAbbr] ? teamDetails[winnerAbbr].name : '(Not selected)';
-                        predictionsHTML += `<p>NBA Champion: ${winnerName}</p>`;
-                    } else {
-                        predictionsHTML += `<p>NBA Finals prediction ${r3Complete ? 'incomplete or not started' : 'cannot start until Conference Finals are complete'}.</p>`;
-                    }
-
-                    predictionsSummaryDiv.innerHTML = predictionsHTML;
+                } catch (error) {
+                    console.error('Error loading championship stats:', error);
+                    document.getElementById('predictions-chart').innerHTML = `
+                        <div style="text-align: center; color: #d32f2f; padding: 20px;">
+                            Failed to load prediction statistics. Please try again later.
+                        </div>
+                    `;
                 }
             }
         }
@@ -793,203 +763,6 @@
 
             initializePredictions();
         });
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const username = localStorage.getItem('nbaPlayoffsUsername');
-
-            // Display welcome message
-            const welcomeMsg = document.querySelector('.welcome-message');
-            if (welcomeMsg && username) {
-                welcomeMsg.textContent = `Welcome, ${username}! Here's a summary of your predictions.`;
-            }
-
-            // Load prediction history from database
-            loadPredictionHistory();
-
-            // Stats button click event
-            const statsBtn = document.getElementById('statsBtn');
-            const statsModal = document.getElementById('statsModal');
-            const closeBtn = document.querySelector('.close-button');
-
-            if (statsBtn && statsModal) {
-                statsBtn.onclick = function () {
-                    statsModal.style.display = "block";
-                    loadChampionshipStats();
-                }
-            }
-
-            if (closeBtn) {
-                closeBtn.onclick = function () {
-                    statsModal.style.display = "none";
-                }
-            }
-
-            window.onclick = function (event) {
-                if (event.target == statsModal) {
-                    statsModal.style.display = "none";
-                }
-            }
-        });
-
-        function loadPredictionHistory() {
-            const historyContainer = document.getElementById('prediction-history-list');
-            const currentUser = localStorage.getItem('nbaPlayoffsUsername');
-
-            if (!currentUser || !historyContainer) {
-                return;
-            }
-
-            // Check if we're in a CORS-restricted environment
-            const isCorsRestricted = window.location.hostname.includes('github.io') ||
-                window.location.protocol === 'file:';
-
-            if (isCorsRestricted) {
-                // Display message about CORS restrictions
-                historyContainer.innerHTML = `
-                    <p class="cors-message">
-                        Prediction history from database is not available due to CORS restrictions when hosted on GitHub Pages.
-                        <br><br>
-                        Your predictions are still being saved locally, and will sync with the database when you use the app in an environment without CORS restrictions.
-                    </p>
-                    <p class="cors-message">
-                        Currently displaying your local predictions only.
-                    </p>
-                `;
-
-                // Show locally saved predictions instead
-                displayLocalPredictions(historyContainer);
-                return;
-            }
-
-            // If we're not in a CORS-restricted environment, try to fetch from API
-            fetch(`https://two025nbagames-1.onrender.com/predictions/${currentUser}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data && data.length > 0) {
-                        historyContainer.innerHTML = '';
-
-                        // Sort predictions by timestamp (newest first)
-                        data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-
-                        data.forEach(prediction => {
-                            // Format the timestamp
-                            const predDate = new Date(prediction.timestamp);
-                            const formattedDate = `${predDate.getFullYear()}-${String(predDate.getMonth() + 1).padStart(2, '0')}-${String(predDate.getDate()).padStart(2, '0')} ${String(predDate.getHours()).padStart(2, '0')}:${String(predDate.getMinutes()).padStart(2, '0')}`;
-
-                            const predictionItem = document.createElement('div');
-                            predictionItem.className = 'prediction-history-item';
-                            predictionItem.innerHTML = `
-                                <span class="prediction-id">${prediction.id}</span>
-                                <span class="prediction-matchup">${prediction.matchup_id}</span>
-                                <span class="prediction-team">${prediction.selected_team}</span>
-                                <span class="prediction-time">${formattedDate}</span>
-                            `;
-                            historyContainer.appendChild(predictionItem);
-                        });
-                    } else {
-                        historyContainer.innerHTML = '<p class="no-predictions">No prediction history found. Make some predictions!</p>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching prediction history:', error);
-                    historyContainer.innerHTML = `
-                        <p class="error-message">Failed to load prediction history from database. Displaying local predictions instead.</p>
-                    `;
-
-                    // Fall back to local predictions
-                    displayLocalPredictions(historyContainer);
-                });
-        }
-
-        // Function to display predictions stored in localStorage
-        function displayLocalPredictions(container) {
-            // Get all local storage predictions
-            const round1 = JSON.parse(localStorage.getItem('round1Predictions') || '{}');
-            const round2 = JSON.parse(localStorage.getItem('round2Predictions') || '{}');
-            const round3 = JSON.parse(localStorage.getItem('round3Predictions') || '{}');
-            const round4 = JSON.parse(localStorage.getItem('round4Predictions') || '{}');
-
-            // Also check for any cached failed predictions
-            const failedPredictions = JSON.parse(localStorage.getItem('failedPredictions') || '[]');
-
-            const allPredictions = [];
-
-            // Add regular predictions
-            Object.entries(round1).forEach(([matchupId, team]) => {
-                allPredictions.push({
-                    id: 'local-' + matchupId,
-                    matchup_id: matchupId,
-                    selected_team: team,
-                    timestamp: 'Round 1'
-                });
-            });
-
-            Object.entries(round2).forEach(([matchupId, team]) => {
-                allPredictions.push({
-                    id: 'local-' + matchupId,
-                    matchup_id: matchupId,
-                    selected_team: team,
-                    timestamp: 'Round 2'
-                });
-            });
-
-            Object.entries(round3).forEach(([matchupId, team]) => {
-                allPredictions.push({
-                    id: 'local-' + matchupId,
-                    matchup_id: matchupId,
-                    selected_team: team,
-                    timestamp: 'Round 3'
-                });
-            });
-
-            Object.entries(round4).forEach(([matchupId, team]) => {
-                allPredictions.push({
-                    id: 'local-' + matchupId,
-                    matchup_id: matchupId,
-                    selected_team: team,
-                    timestamp: 'Finals'
-                });
-            });
-
-            // Add any cached failed API predictions
-            failedPredictions.forEach((pred, index) => {
-                allPredictions.push({
-                    id: 'pending-' + index,
-                    matchup_id: pred.matchup_id,
-                    selected_team: pred.selected_team,
-                    timestamp: pred.timestamp ? new Date(pred.timestamp).toLocaleString() : 'Pending'
-                });
-            });
-
-            if (allPredictions.length === 0) {
-                container.innerHTML += '<p class="no-predictions">No local predictions found. Make some predictions!</p>';
-                return;
-            }
-
-            // Create a container for local predictions
-            const localPredictionsDiv = document.createElement('div');
-            localPredictionsDiv.className = 'local-predictions';
-
-            // Add each prediction
-            allPredictions.forEach(pred => {
-                const predItem = document.createElement('div');
-                predItem.className = 'prediction-history-item';
-                predItem.innerHTML = `
-                    <span class="prediction-id">${pred.id.includes('pending') ? '⏳' : '#'}</span>
-                    <span class="prediction-matchup">${pred.matchup_id}</span>
-                    <span class="prediction-team">${pred.selected_team}</span>
-                    <span class="prediction-time">${pred.timestamp}</span>
-                `;
-                localPredictionsDiv.appendChild(predItem);
-            });
-
-            container.appendChild(localPredictionsDiv);
-        }
     </script>
 </body>
 

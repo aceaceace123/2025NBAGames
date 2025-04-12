@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2025 NBA Playoffs Predictions</title>
+    <title>2025 NBA Playoffs</title>
     <link rel="stylesheet" href="style.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap');
@@ -37,60 +37,6 @@
                 border-color: #000
             }
         }
-
-        .login-container {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: rgba(0, 0, 0, 0.7);
-            border-radius: 8px;
-            margin-top: 100px;
-        }
-
-        .login-input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: none;
-            border-radius: 4px;
-            background-color: #333;
-            color: white;
-            font-size: 16px;
-        }
-
-        .login-input:focus {
-            outline: none;
-            box-shadow: 0 0 5px #007bff;
-        }
-
-        .login-button {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            background-color: #007bff;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .login-button:hover {
-            background-color: #0056b3;
-        }
-
-        .login-heading {
-            color: white;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .error-message {
-            color: #ff4c4c;
-            margin-bottom: 10px;
-            font-size: 14px;
-            display: none;
-        }
     </style>
 </head>
 
@@ -99,16 +45,19 @@
         <header>
             <div class="logo">@NIKA</div>
             <h1 id="main-title" class="typewriter"></h1>
+            <p>Choose your championship team for this year.</p>
         </header>
-
-        <div class="login-container">
-            <h2 class="login-heading">Enter your name to start</h2>
-            <div id="error-message" class="error-message">Please enter a valid username (3-20 characters)</div>
-            <input type="text" id="username" class="login-input" placeholder="Your Name" maxlength="20">
-            <button id="loginButton" class="login-button">Continue</button>
-        </div>
+        <main>
+            <div class="image-container">
+                <img src="images/nba_players.png" alt="NBA Players Collage">
+                <div class="login-box">
+                    <label for="username">User Name:</label>
+                    <input type="text" id="username" name="username" placeholder="Enter your name">
+                    <button id="loginButton">Continue</button>
+                </div>
+            </div>
+        </main>
     </div>
-
     <script src="script.js"></script>
     <script>
         // Function to create typewriter effect
@@ -140,44 +89,6 @@
             if (username) {
                 window.location.href = 'predictions.html';
                 return;
-            }
-
-            const loginButton = document.getElementById('loginButton');
-            const usernameInput = document.getElementById('username');
-            const errorMessage = document.getElementById('error-message');
-
-            if (loginButton && usernameInput) {
-                loginButton.addEventListener('click', () => {
-                    const usernameValue = usernameInput.value.trim();
-
-                    if (usernameValue && usernameValue.length >= 3 && usernameValue.length <= 20) {
-                        localStorage.setItem('nbaPlayoffsUsername', usernameValue);
-                        console.log('Username saved:', usernameValue);
-
-                        // Reset predictions for a new user
-                        localStorage.removeItem('round1Predictions');
-                        localStorage.removeItem('round2Predictions');
-                        localStorage.removeItem('round3Predictions');
-                        localStorage.removeItem('round4Predictions');
-
-                        // Redirect to first matchup
-                        window.location.href = 'matchup1W.html';
-                    } else {
-                        errorMessage.style.display = 'block';
-                        usernameInput.focus();
-                    }
-                });
-
-                usernameInput.addEventListener('keypress', (event) => {
-                    if (event.key === 'Enter') {
-                        event.preventDefault();
-                        loginButton.click();
-                    }
-                });
-
-                usernameInput.addEventListener('input', () => {
-                    errorMessage.style.display = 'none';
-                });
             }
         });
     </script>
