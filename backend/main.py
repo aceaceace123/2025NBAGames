@@ -19,14 +19,14 @@ app = FastAPI()
 # 配置CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://aceaceace123.github.io"],  # 允許的源
+    allow_origins=["https://aceaceace123.github.io", "http://localhost:5500", "http://127.0.0.1:5500", "*"],  # 允許的源
     allow_credentials=True,
     allow_methods=["*"],  # 允許的方法
     allow_headers=["*"],  # 允許的頭部
 )
 
 # 數據庫配置
-DATABASE_URL = os.environ.get("DATABASE_URL")
+DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///./predictions.db")
 engine = create_engine(DATABASE_URL)
 metadata = MetaData()
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -99,6 +99,28 @@ async def get_user_predictions(username: str, db: Session = Depends(get_db)):
     # 轉換為JSON友好格式
     result = []
     for pred in user_predictions:
+        result.append({
+            "id": pred.id,
+            "username": pred.username,
+            "matchup_id": pred.matchup_id,
+            "selected_team": pred.selected_team,
+            "timestamp": pred.timestamp.isoformat()
+        })
+    
+    return result
+
+# 新增路由：獲取所有冠軍預測
+@app.get("/predictions/championship/all")
+async def get_all_championship_predictions(db: Session = Depends(get_db)):
+    # 查詢所有 matchup_id 為 "R4F" 的預測（NBA總決賽）
+    championship_predictions = db.query(Prediction).filter(Prediction.matchup_id == "R4F").all()
+    
+    if not championship_predictions:
+        raise HTTPException(status_code=404, detail="No championship predictions found")
+    
+    # 轉換為JSON友好格式
+    result = []
+    for pred in championship_predictions:
         result.append({
             "id": pred.id,
             "username": pred.username,
