@@ -117,41 +117,59 @@
 
             // 添加直接测试事件处理函数
             async function handleTeamSelection(selectedTeam) {
-                console.log('[DEBUG] 选择了冠军球队:', selectedTeam);
+                try {
+                    console.log('[DEBUG] 选择了冠军球队:', selectedTeam);
 
-                // 确保用户名存在
-                const username = localStorage.getItem('nbaPlayoffsUsername');
-                if (!username) {
-                    localStorage.setItem('nbaPlayoffsUsername', 'guest');
-                    console.log('[DEBUG] 用户名不存在，设置为guest');
-                } else {
-                    console.log('[DEBUG] 当前用户:', username);
-                }
+                    // 确保用户名存在
+                    const username = localStorage.getItem('nbaPlayoffsUsername');
+                    if (!username) {
+                        localStorage.setItem('nbaPlayoffsUsername', 'guest');
+                        console.log('[DEBUG] 用户名不存在，设置为guest');
+                    } else {
+                        console.log('[DEBUG] 当前用户:', username);
+                    }
 
-                // 定义matchupId和storageKey
-                const matchupId = 'R4F';
-                const storageKey = 'round4Predictions';
+                    // 定义matchupId和storageKey
+                    const matchupId = 'R4F';
+                    const storageKey = 'round4Predictions';
 
-                // 使用script.js中的savePrediction函数保存预测
-                console.log('[DEBUG] 正在保存总决赛冠军预测数据...');
-                const saveResult = await savePrediction(matchupId, selectedTeam, storageKey);
+                    // 保存到本地存储，确保无论API如何都能保存
+                    let storedPredictions = JSON.parse(localStorage.getItem(storageKey) || '{}');
+                    storedPredictions[matchupId] = selectedTeam;
+                    localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
+                    console.log('[DEBUG] 已保存到本地存储:', storedPredictions);
 
-                if (saveResult) {
-                    console.log('[DEBUG] 冠军预测保存成功');
-                } else {
-                    console.warn('[WARNING] API保存可能失败，但本地存储已更新');
-                }
+                    // 尝试使用savePrediction函数
+                    try {
+                        console.log('[DEBUG] 正在保存总决赛冠军预测数据...');
+                        await savePrediction(matchupId, selectedTeam, storageKey);
+                        console.log('[DEBUG] 冠军预测API保存调用完成');
+                    } catch (saveError) {
+                        console.error('[ERROR] savePrediction出错:', saveError);
+                        // 出错时不阻止继续执行
+                    }
 
-                // 通知用户选择已保存
-                alert('选择保存成功！冠军：' + selectedTeam);
+                    // 通知用户选择已保存
+                    alert('选择保存成功！冠军：' + selectedTeam);
 
-                // 延迟后跳转到predictions.html页面
-                setTimeout(() => {
-                    const url = new URL('predictions.html', window.location.href);
-                    url.searchParams.set('champion', selectedTeam);
+                } catch (error) {
+                    console.error('[ERROR] 处理冠军选择时出错:', error);
+                    alert('保存过程中出现错误，但您的选择已保存在本地，冠军：' + selectedTeam);
+                } finally {
+                    // 确保无论如何都会跳转
                     console.log('[DEBUG] 准备跳转到predictions.html');
-                    window.location.href = url.toString();
-                }, 1000);
+
+                    // 直接设置跳转，不使用setTimeout
+                    try {
+                        const url = new URL('predictions.html', window.location.href);
+                        url.searchParams.set('champion', selectedTeam);
+                        window.location.href = url.toString();
+                    } catch (urlError) {
+                        console.error('[ERROR] URL构建失败，使用简单跳转:', urlError);
+                        // 如果URL构建失败，使用最简单的跳转方式
+                        window.location.href = 'predictions.html?champion=' + selectedTeam;
+                    }
+                }
             }
 
             // 直接绑定点击事件
