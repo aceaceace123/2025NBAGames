@@ -13,7 +13,7 @@
         <header>
             <div class="logo">@NIKA</div>
             <h1>NBA Finals</h1>
-            <div class="welcome-message">Welcome, Nika! Click the team you predict to win the championship.</div>
+            <!-- 欢迎信息将由JavaScript动态生成 -->
         </header>
 
         <main class="matchup-page stats-comparison">
@@ -101,6 +101,9 @@
         }
 
         document.addEventListener('DOMContentLoaded', async function () {
+            // 显示欢迎信息
+            displayWelcomeMessage('matchup');
+
             // 從localStorage獲取東西部決賽的獲勝者
             const round3Predictions = JSON.parse(localStorage.getItem('round3Predictions') || '{}');
 

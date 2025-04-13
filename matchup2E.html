@@ -13,7 +13,7 @@
         <header>
             <div class="logo">@NIKA</div>
             <h1>Eastern Conference First Round - Matchup 2</h1>
-            <div class="welcome-message">Welcome, Nika! Click the team you predict to win.</div>
+            <!-- 欢迎信息将由JavaScript动态生成 -->
         </header>
 
         <main class="matchup-page stats-comparison">
@@ -123,6 +123,64 @@
     </div>
 
     <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 显示欢迎信息
+            displayWelcomeMessage('matchup');
+
+            // 設置球隊標誌
+            const leftTeamBtn = document.querySelector('.left-team');
+            const rightTeamBtn = document.querySelector('.right-team');
+
+            if (leftTeamBtn && teamDetails['IND']) {
+                const leftLogo = leftTeamBtn.querySelector('.team-logo-bg');
+                if (leftLogo) {
+                    leftLogo.style.backgroundImage = `url(${teamDetails['IND'].logo})`;
+                }
+            }
+
+            if (rightTeamBtn && teamDetails['MIL']) {
+                const rightLogo = rightTeamBtn.querySelector('.team-logo-bg');
+                if (rightLogo) {
+                    rightLogo.style.backgroundImage = `url(${teamDetails['MIL'].logo})`;
+                }
+            }
+
+            // 使用script.js中的通用函數獲取和顯示對戰數據
+            fetchMatchupStatsAndUpdateUI('IND', 'MIL');
+
+            // 設置按鈕顏色
+            if (typeof updateBarColors === 'function') {
+                updateBarColors('IND', 'MIL');
+            }
+
+            // 添加按鈕點擊事件
+            const teamButtons = document.querySelectorAll('.team-button');
+            teamButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const selectedTeam = this.getAttribute('data-team');
+                    console.log('選擇的球隊:', selectedTeam);
+
+                    // 保存預測結果
+                    const matchupId = 'E4v5';
+                    const storageKey = 'round1Predictions';
+
+                    savePrediction(matchupId, selectedTeam, storageKey);
+
+                    // 添加視覺反饋
+                    teamButtons.forEach(btn => {
+                        btn.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+
+                    // 導航到下一頁
+                    setTimeout(() => {
+                        window.location.href = 'matchup3E.html';
+                    }, 500);
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

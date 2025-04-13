@@ -13,7 +13,7 @@
         <header>
             <div class="logo">@NIKA</div>
             <h1>Eastern Conference First Round - Matchup 3</h1>
-            <div class="welcome-message">Welcome, Nika! Click the team you predict to win.</div>
+            <!-- 欢迎信息将由JavaScript动态生成 -->
         </header>
 
         <main class="matchup-page stats-comparison">
@@ -123,6 +123,14 @@
     </div>
 
     <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 显示欢迎信息
+            displayWelcomeMessage('matchup');
+
+            // 其他脚本代码
+        });
+    </script>
 </body>
 
 </html>
