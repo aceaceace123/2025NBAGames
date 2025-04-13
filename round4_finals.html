@@ -32,6 +32,13 @@
         // 簡單的預測保存函數
         async function saveChampionPrediction(teamAbbr) {
             try {
+                // 檢查是否已經保存過該預測，防止重複保存
+                const round4Predictions = JSON.parse(localStorage.getItem('round4Predictions') || '{}');
+                if (round4Predictions['R4F'] === teamAbbr) {
+                    console.log('[DEBUG] 已經保存過該預測，跳過API請求');
+                    return true;
+                }
+
                 // 獲取用戶名
                 const username = localStorage.getItem('nbaPlayoffsUsername') || 'guest';
 
@@ -46,20 +53,56 @@
                 console.log('[DEBUG] 保存冠軍預測數據:', prediction);
 
                 // 先保存到本地存儲
-                let round4Predictions = JSON.parse(localStorage.getItem('round4Predictions') || '{}');
                 round4Predictions['R4F'] = teamAbbr;
                 localStorage.setItem('round4Predictions', JSON.stringify(round4Predictions));
+                console.log('[DEBUG] 已保存到本地存儲');
+
+                // 設置請求超時
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超時
 
                 // 嘗試發送到API
-                fetch('https://two025nbagames-1.onrender.com/predictions', {
+                const response = await fetch('https://two025nbagames-1.onrender.com/predictions', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(prediction)
+                    body: JSON.stringify(prediction),
+                    signal: controller.signal
                 });
 
+                clearTimeout(timeoutId);
+
+                if (!response.ok) {
+                    throw new Error(`API請求失敗: ${response.status}`);
+                }
+
+                console.log('[DEBUG] 成功保存到API');
                 return true;
             } catch (error) {
                 console.error('[ERROR] 保存預測出錯:', error);
+
+                // 在API請求失敗時嘗試一次備份請求，使用不同的機制
+                try {
+                    const username = localStorage.getItem('nbaPlayoffsUsername') || 'guest';
+                    console.log('[DEBUG] 嘗試備份保存請求...');
+
+                    // 使用不同的方式發送請求，不設置超時
+                    await fetch('https://two025nbagames-1.onrender.com/predictions', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            username: username,
+                            matchup_id: 'R4F',
+                            selected_team: teamAbbr,
+                            timestamp: new Date().toISOString().split('.')[0]
+                        }),
+                        keepalive: true // 確保請求在頁面跳轉後仍然完成
+                    });
+
+                    console.log('[DEBUG] 備份請求已發送');
+                } catch (backupError) {
+                    console.error('[ERROR] 備份請求也失敗了:', backupError);
+                }
+
                 return false;
             }
         }
@@ -143,6 +186,9 @@
             console.log('[DEBUG] 西部冠军按钮:', document.getElementById('westChampBtn'));
             console.log('[DEBUG] 东部冠军按钮:', document.getElementById('eastChampBtn'));
 
+            // 添加一個標誌，防止重複點擊
+            let isProcessing = false;
+
             // 添加按钮点击事件 - 使用更直接的方式绑定事件
             const westButton = document.getElementById('westChampBtn');
             const eastButton = document.getElementById('eastChampBtn');
@@ -150,19 +196,38 @@
             // 直接绑定点击事件
             if (westButton) {
                 console.log('[DEBUG] 为西部冠军按钮添加点击事件');
-                westButton.addEventListener('click', function () {
-                    console.log('[DEBUG] 西部冠军按钮被点击');
+                westButton.addEventListener('click', async function (e) {
+                    // 防止重複點擊處理
+                    if (isProcessing) {
+                        console.log('[DEBUG] 正在處理中，忽略點擊');
+                        return;
+                    }
 
-                    // 保存預測並跳轉
-                    saveChampionPrediction(westChampion);
+                    try {
+                        // 設置處理中標誌
+                        isProcessing = true;
 
-                    // 保存選擇的冠軍
-                    localStorage.setItem('nbaChampion', westChampion);
-                    console.log('[DEBUG] 保存冠軍到localStorage:', westChampion);
+                        // 視覺反饋
+                        westButton.classList.add('clicked');
 
-                    // 跳轉到預測摘要頁面
-                    console.log('[DEBUG] 跳轉到predictions.html');
-                    window.location.href = 'predictions.html?champion=' + westChampion;
+                        console.log('[DEBUG] 西部冠军按钮被点击');
+
+                        // 保存預測並跳轉
+                        await saveChampionPrediction(westChampion);
+
+                        // 保存選擇的冠軍
+                        localStorage.setItem('nbaChampion', westChampion);
+                        console.log('[DEBUG] 保存冠軍到localStorage:', westChampion);
+
+                        // 跳轉到預測摘要頁面
+                        console.log('[DEBUG] 跳轉到predictions.html');
+                        window.location.href = 'predictions.html?champion=' + westChampion;
+                    } catch (error) {
+                        console.error('[ERROR] 處理西部冠軍點擊時出錯:', error);
+                        // 出錯時重置處理標誌
+                        isProcessing = false;
+                        westButton.classList.remove('clicked');
+                    }
                 });
             } else {
                 console.error('[ERROR] 找不到西部冠军按钮');
@@ -170,19 +235,38 @@
 
             if (eastButton) {
                 console.log('[DEBUG] 为东部冠军按钮添加点击事件');
-                eastButton.addEventListener('click', function () {
-                    console.log('[DEBUG] 东部冠军按钮被点击');
+                eastButton.addEventListener('click', async function (e) {
+                    // 防止重複點擊處理
+                    if (isProcessing) {
+                        console.log('[DEBUG] 正在處理中，忽略點擊');
+                        return;
+                    }
 
-                    // 保存預測並跳轉
-                    saveChampionPrediction(eastChampion);
+                    try {
+                        // 設置處理中標誌
+                        isProcessing = true;
 
-                    // 保存選擇的冠軍
-                    localStorage.setItem('nbaChampion', eastChampion);
-                    console.log('[DEBUG] 保存冠軍到localStorage:', eastChampion);
+                        // 視覺反饋
+                        eastButton.classList.add('clicked');
 
-                    // 跳轉到預測摘要頁面
-                    console.log('[DEBUG] 跳轉到predictions.html');
-                    window.location.href = 'predictions.html?champion=' + eastChampion;
+                        console.log('[DEBUG] 东部冠军按钮被点击');
+
+                        // 保存預測並跳轉
+                        await saveChampionPrediction(eastChampion);
+
+                        // 保存選擇的冠軍
+                        localStorage.setItem('nbaChampion', eastChampion);
+                        console.log('[DEBUG] 保存冠軍到localStorage:', eastChampion);
+
+                        // 跳轉到預測摘要頁面
+                        console.log('[DEBUG] 跳轉到predictions.html');
+                        window.location.href = 'predictions.html?champion=' + eastChampion;
+                    } catch (error) {
+                        console.error('[ERROR] 處理東部冠軍點擊時出錯:', error);
+                        // 出錯時重置處理標誌
+                        isProcessing = false;
+                        eastButton.classList.remove('clicked');
+                    }
                 });
             } else {
                 console.error('[ERROR] 找不到东部冠军按钮');
