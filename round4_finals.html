@@ -29,77 +29,6 @@
 
     <script src="script.js"></script>
     <script>
-        // 移除緊急跳轉按鈕函數和調用
-
-        // 定義一個同步版本的保存預測函數，確保API請求完成再返回
-        async function savePredictionPromise(matchupId, selectedTeam, storageKey) {
-            return new Promise((resolve, reject) => {
-                try {
-                    const username = localStorage.getItem('nbaPlayoffsUsername');
-                    console.log('Attempting to save prediction with username:', username);
-
-                    // Format timestamp in YYYY-MM-DDTHH:mm:ss format
-                    const now = new Date();
-                    const timestamp = now.getFullYear() + '-' +
-                        String(now.getMonth() + 1).padStart(2, '0') + '-' +
-                        String(now.getDate()).padStart(2, '0') + 'T' +
-                        String(now.getHours()).padStart(2, '0') + ':' +
-                        String(now.getMinutes()).padStart(2, '0') + ':' +
-                        String(now.getSeconds()).padStart(2, '0');
-
-                    console.log('Formatted timestamp:', timestamp);
-
-                    const prediction = {
-                        username: username,
-                        matchup_id: matchupId,
-                        selected_team: selectedTeam,
-                        timestamp: timestamp
-                    };
-                    console.log('Prediction data:', prediction);
-
-                    console.log('Sending request to API...');
-                    fetch('https://two025nbagames-1.onrender.com/predictions', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(prediction)
-                    })
-                        .then(response => {
-                            console.log('Response status:', response.status);
-                            if (!response.ok) {
-                                return response.text().then(text => {
-                                    console.error('API Error Response:', text);
-                                    throw new Error(`Failed to save prediction: ${text}`);
-                                });
-                            }
-
-                            // Update local storage if API call succeeds
-                            let storedPredictions = JSON.parse(localStorage.getItem(storageKey) || '{}');
-                            storedPredictions[matchupId] = selectedTeam;
-                            localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
-                            console.log('Updated predictions after selection:', JSON.parse(localStorage.getItem(storageKey)));
-                            resolve(true);
-                        })
-                        .catch(error => {
-                            console.error('Error in API call:', error);
-                            // Still update local storage even if API call fails to maintain user experience
-                            let storedPredictions = JSON.parse(localStorage.getItem(storageKey) || '{}');
-                            storedPredictions[matchupId] = selectedTeam;
-                            localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
-                            reject(error);
-                        });
-                } catch (error) {
-                    console.error('Error in savePredictionPromise:', error);
-                    // Still update local storage even if API call fails to maintain user experience
-                    let storedPredictions = JSON.parse(localStorage.getItem(storageKey) || '{}');
-                    storedPredictions[matchupId] = selectedTeam;
-                    localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
-                    reject(error);
-                }
-            });
-        }
-
         document.addEventListener('DOMContentLoaded', async function () {
             // 显示欢迎信息
             displayWelcomeMessage('matchup');
@@ -205,37 +134,34 @@
                 // 直接顯示保存成功的訊息
                 alert('選擇保存成功！冠軍：' + selectedTeam);
 
-                // 保存預測到localStorage - 確保這一步正確執行
+                // 使用全局savePrediction函数保存預測
+                const matchupId = 'R4F';
+                const storageKey = 'round4Predictions';
+
                 try {
-                    const matchupId = 'R4F';
-                    const storageKey = 'round4Predictions';
-                    let storedPredictions = {};
-                    storedPredictions[matchupId] = selectedTeam;
-                    localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
-                    console.log('已保存到localStorage:', JSON.stringify(storedPredictions));
+                    // 使用全局的savePrediction函数
+                    console.log('正在使用全局savePrediction函数保存数据到API...');
+                    await savePrediction(matchupId, selectedTeam, storageKey);
+                    console.log('savePrediction成功完成，数据已发送到API');
 
-                    // 使用同步Promise版本的savePrediction，確保API請求完成
-                    console.log('正在調用savePredictionPromise將數據發送到API...');
-                    try {
-                        await savePredictionPromise(matchupId, selectedTeam, storageKey);
-                        console.log('savePredictionPromise成功完成，數據已發送到API');
-                    } catch (error) {
-                        console.error('savePredictionPromise出錯，但將繼續導航:', error);
-                    }
+                    // 添加延迟确保API请求有足够时间完成
+                    setTimeout(() => {
+                        // 設置URL參數
+                        const url = new URL('predictions.html', window.location.href);
+                        url.searchParams.set('champion', selectedTeam);
 
-                    // 設置URL參數
-                    const url = new URL('predictions.html', window.location.href);
-                    url.searchParams.set('champion', selectedTeam);
+                        console.log('准备导航到predictions.html...');
+                        window.location.href = url.toString();
+                    }, 1500); // 增加延迟时间到1.5秒
 
-                    // API請求已完成，現在可以安全地導航
-                    console.log('API請求已完成，準備導航到predictions.html...');
-                    window.location.href = url.toString();
                 } catch (error) {
                     console.error('保存預測失敗:', error);
-                    // 出錯時仍然跳轉到預測頁面
-                    const url = new URL('predictions.html', window.location.href);
-                    url.searchParams.set('champion', selectedTeam);
-                    window.location.href = url.toString();
+                    // 出錯時仍然跳轉到預測頁面，但給更多延迟
+                    setTimeout(() => {
+                        const url = new URL('predictions.html', window.location.href);
+                        url.searchParams.set('champion', selectedTeam);
+                        window.location.href = url.toString();
+                    }, 1000);
                 }
             });
 
@@ -257,37 +183,34 @@
                 // 直接顯示保存成功的訊息
                 alert('選擇保存成功！冠軍：' + selectedTeam);
 
-                // 保存預測到localStorage - 確保這一步正確執行
+                // 使用全局savePrediction函数保存預測
+                const matchupId = 'R4F';
+                const storageKey = 'round4Predictions';
+
                 try {
-                    const matchupId = 'R4F';
-                    const storageKey = 'round4Predictions';
-                    let storedPredictions = {};
-                    storedPredictions[matchupId] = selectedTeam;
-                    localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
-                    console.log('已保存到localStorage:', JSON.stringify(storedPredictions));
+                    // 使用全局的savePrediction函数
+                    console.log('正在使用全局savePrediction函数保存数据到API...');
+                    await savePrediction(matchupId, selectedTeam, storageKey);
+                    console.log('savePrediction成功完成，数据已发送到API');
 
-                    // 使用同步Promise版本的savePrediction，確保API請求完成
-                    console.log('正在調用savePredictionPromise將數據發送到API...');
-                    try {
-                        await savePredictionPromise(matchupId, selectedTeam, storageKey);
-                        console.log('savePredictionPromise成功完成，數據已發送到API');
-                    } catch (error) {
-                        console.error('savePredictionPromise出錯，但將繼續導航:', error);
-                    }
+                    // 添加延迟确保API请求有足够时间完成
+                    setTimeout(() => {
+                        // 設置URL參數
+                        const url = new URL('predictions.html', window.location.href);
+                        url.searchParams.set('champion', selectedTeam);
 
-                    // 設置URL參數
-                    const url = new URL('predictions.html', window.location.href);
-                    url.searchParams.set('champion', selectedTeam);
+                        console.log('准备导航到predictions.html...');
+                        window.location.href = url.toString();
+                    }, 1500); // 增加延迟时间到1.5秒
 
-                    // API請求已完成，現在可以安全地導航
-                    console.log('API請求已完成，準備導航到predictions.html...');
-                    window.location.href = url.toString();
                 } catch (error) {
                     console.error('保存預測失敗:', error);
-                    // 出錯時仍然跳轉到預測頁面
-                    const url = new URL('predictions.html', window.location.href);
-                    url.searchParams.set('champion', selectedTeam);
-                    window.location.href = url.toString();
+                    // 出錯時仍然跳轉到預測頁面，但給更多延迟
+                    setTimeout(() => {
+                        const url = new URL('predictions.html', window.location.href);
+                        url.searchParams.set('champion', selectedTeam);
+                        window.location.href = url.toString();
+                    }, 1000);
                 }
             });
 
