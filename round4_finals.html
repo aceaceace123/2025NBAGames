@@ -127,7 +127,7 @@
                 // 確保用戶名存在
                 const username = localStorage.getItem('nbaPlayoffsUsername');
                 if (!username) {
-                    console.warn('用戶名不存在，設置臨時用戶名');
+                    console.warn('[DEBUG] 用戶名不存在，設置臨時用戶名');
                     localStorage.setItem('nbaPlayoffsUsername', 'guest');
                 }
 
@@ -138,31 +138,69 @@
                 const matchupId = 'R4F';
                 const storageKey = 'round4Predictions';
 
-                try {
-                    // 使用全局的savePrediction函数
-                    console.log('正在使用全局savePrediction函数保存数据到API...');
-                    await savePrediction(matchupId, selectedTeam, storageKey);
-                    console.log('savePrediction成功完成，数据已发送到API');
+                console.log('[DEBUG] 保存总决赛预测开始...');
 
-                    // 添加延迟确保API请求有足够时间完成
-                    setTimeout(() => {
-                        // 設置URL參數
-                        const url = new URL('predictions.html', window.location.href);
-                        url.searchParams.set('champion', selectedTeam);
-
-                        console.log('准备导航到predictions.html...');
-                        window.location.href = url.toString();
-                    }, 1500); // 增加延迟时间到1.5秒
-
-                } catch (error) {
-                    console.error('保存預測失敗:', error);
-                    // 出錯時仍然跳轉到預測頁面，但給更多延迟
-                    setTimeout(() => {
-                        const url = new URL('predictions.html', window.location.href);
-                        url.searchParams.set('champion', selectedTeam);
-                        window.location.href = url.toString();
-                    }, 1000);
+                // 三次重试保存
+                let saved = false;
+                for (let i = 0; i < 3 && !saved; i++) {
+                    try {
+                        console.log(`[DEBUG] 尝试保存总决赛预测(第${i + 1}次)...`);
+                        saved = await savePrediction(matchupId, selectedTeam, storageKey);
+                        if (saved) {
+                            console.log('[DEBUG] 保存成功!');
+                        } else {
+                            console.log(`[DEBUG] 第${i + 1}次尝试返回false，继续尝试`);
+                            // 等待短暂时间再重试
+                            await new Promise(resolve => setTimeout(resolve, 500));
+                        }
+                    } catch (error) {
+                        console.error(`[ERROR] 第${i + 1}次保存失败: ${error.message}`);
+                        // 等待短暂时间再重试
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                    }
                 }
+
+                // 使用navigator.sendBeacon作为备份保存方法
+                try {
+                    const backupData = {
+                        username: localStorage.getItem('nbaPlayoffsUsername') || 'guest',
+                        matchup_id: matchupId,
+                        selected_team: selectedTeam,
+                        timestamp: new Date().toISOString().split('.')[0]
+                    };
+
+                    if (navigator.sendBeacon) {
+                        const blob = new Blob([JSON.stringify(backupData)], { type: 'application/json' });
+                        const success = navigator.sendBeacon('https://two025nbagames-1.onrender.com/predictions', blob);
+                        console.log(`[DEBUG] sendBeacon结果: ${success ? '成功' : '失败'}`);
+                    } else {
+                        console.log('[DEBUG] 浏览器不支持sendBeacon，使用fetch作为备份');
+                        fetch('https://two025nbagames-1.onrender.com/predictions', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(backupData),
+                            keepalive: true
+                        }).then(() => console.log('[DEBUG] 备份fetch成功')).catch(e => console.error('[ERROR] 备份fetch失败', e));
+                    }
+                } catch (beaconError) {
+                    console.error('[ERROR] 备份保存失败:', beaconError);
+                }
+
+                // 确保本地存储已更新
+                let finalPredictions = JSON.parse(localStorage.getItem(storageKey) || '{}');
+                finalPredictions[matchupId] = selectedTeam;
+                localStorage.setItem(storageKey, JSON.stringify(finalPredictions));
+                console.log(`[DEBUG] 最终确认本地存储已更新:`, finalPredictions);
+
+                // 即使API请求失败也继续导航，但给予足够时间完成请求
+                setTimeout(() => {
+                    const url = new URL('predictions.html', window.location.href);
+                    url.searchParams.set('champion', selectedTeam);
+                    console.log('[DEBUG] 导航到predictions.html...');
+                    window.location.href = url.toString();
+                }, 3000); // 增加到3秒
             });
 
             // 東區冠軍表單提交
@@ -176,7 +214,7 @@
                 // 確保用戶名存在
                 const username = localStorage.getItem('nbaPlayoffsUsername');
                 if (!username) {
-                    console.warn('用戶名不存在，設置臨時用戶名');
+                    console.warn('[DEBUG] 用戶名不存在，設置臨時用戶名');
                     localStorage.setItem('nbaPlayoffsUsername', 'guest');
                 }
 
@@ -187,31 +225,69 @@
                 const matchupId = 'R4F';
                 const storageKey = 'round4Predictions';
 
-                try {
-                    // 使用全局的savePrediction函数
-                    console.log('正在使用全局savePrediction函数保存数据到API...');
-                    await savePrediction(matchupId, selectedTeam, storageKey);
-                    console.log('savePrediction成功完成，数据已发送到API');
+                console.log('[DEBUG] 保存总决赛预测开始...');
 
-                    // 添加延迟确保API请求有足够时间完成
-                    setTimeout(() => {
-                        // 設置URL參數
-                        const url = new URL('predictions.html', window.location.href);
-                        url.searchParams.set('champion', selectedTeam);
-
-                        console.log('准备导航到predictions.html...');
-                        window.location.href = url.toString();
-                    }, 1500); // 增加延迟时间到1.5秒
-
-                } catch (error) {
-                    console.error('保存預測失敗:', error);
-                    // 出錯時仍然跳轉到預測頁面，但給更多延迟
-                    setTimeout(() => {
-                        const url = new URL('predictions.html', window.location.href);
-                        url.searchParams.set('champion', selectedTeam);
-                        window.location.href = url.toString();
-                    }, 1000);
+                // 三次重试保存
+                let saved = false;
+                for (let i = 0; i < 3 && !saved; i++) {
+                    try {
+                        console.log(`[DEBUG] 尝试保存总决赛预测(第${i + 1}次)...`);
+                        saved = await savePrediction(matchupId, selectedTeam, storageKey);
+                        if (saved) {
+                            console.log('[DEBUG] 保存成功!');
+                        } else {
+                            console.log(`[DEBUG] 第${i + 1}次尝试返回false，继续尝试`);
+                            // 等待短暂时间再重试
+                            await new Promise(resolve => setTimeout(resolve, 500));
+                        }
+                    } catch (error) {
+                        console.error(`[ERROR] 第${i + 1}次保存失败: ${error.message}`);
+                        // 等待短暂时间再重试
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                    }
                 }
+
+                // 使用navigator.sendBeacon作为备份保存方法
+                try {
+                    const backupData = {
+                        username: localStorage.getItem('nbaPlayoffsUsername') || 'guest',
+                        matchup_id: matchupId,
+                        selected_team: selectedTeam,
+                        timestamp: new Date().toISOString().split('.')[0]
+                    };
+
+                    if (navigator.sendBeacon) {
+                        const blob = new Blob([JSON.stringify(backupData)], { type: 'application/json' });
+                        const success = navigator.sendBeacon('https://two025nbagames-1.onrender.com/predictions', blob);
+                        console.log(`[DEBUG] sendBeacon结果: ${success ? '成功' : '失败'}`);
+                    } else {
+                        console.log('[DEBUG] 浏览器不支持sendBeacon，使用fetch作为备份');
+                        fetch('https://two025nbagames-1.onrender.com/predictions', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(backupData),
+                            keepalive: true
+                        }).then(() => console.log('[DEBUG] 备份fetch成功')).catch(e => console.error('[ERROR] 备份fetch失败', e));
+                    }
+                } catch (beaconError) {
+                    console.error('[ERROR] 备份保存失败:', beaconError);
+                }
+
+                // 确保本地存储已更新
+                let finalPredictions = JSON.parse(localStorage.getItem(storageKey) || '{}');
+                finalPredictions[matchupId] = selectedTeam;
+                localStorage.setItem(storageKey, JSON.stringify(finalPredictions));
+                console.log(`[DEBUG] 最终确认本地存储已更新:`, finalPredictions);
+
+                // 即使API请求失败也继续导航，但给予足够时间完成请求
+                setTimeout(() => {
+                    const url = new URL('predictions.html', window.location.href);
+                    url.searchParams.set('champion', selectedTeam);
+                    console.log('[DEBUG] 导航到predictions.html...');
+                    window.location.href = url.toString();
+                }, 3000); // 增加到3秒
             });
 
             // 添加按鈕視覺反饋

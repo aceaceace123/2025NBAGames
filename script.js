@@ -93,55 +93,103 @@ function addTeamClickAnimation() {
 async function savePrediction(matchupId, selectedTeamAbbr, storageKey) {
     try {
         const username = localStorage.getItem('nbaPlayoffsUsername');
-        console.log('Attempting to save prediction with username:', username);
+        console.log(`[DEBUG] 保存预测: ${matchupId}, ${selectedTeamAbbr}, 用户: ${username}`);
 
-        // Format timestamp in YYYY-MM-DDTHH:mm:ss format
+        // 格式化时间戳
         const now = new Date();
-        const timestamp = now.getFullYear() + '-' +
-            String(now.getMonth() + 1).padStart(2, '0') + '-' +
-            String(now.getDate()).padStart(2, '0') + 'T' +
-            String(now.getHours()).padStart(2, '0') + ':' +
-            String(now.getMinutes()).padStart(2, '0') + ':' +
-            String(now.getSeconds()).padStart(2, '0');
-
-        console.log('Formatted timestamp:', timestamp);
+        const timestamp = now.toISOString().split('.')[0];
+        console.log(`[DEBUG] 时间戳: ${timestamp}`);
 
         const prediction = {
-            username: username,
+            username: username || 'guest', // 确保总是有用户名
             matchup_id: matchupId,
             selected_team: selectedTeamAbbr,
             timestamp: timestamp
         };
-        console.log('Prediction data:', prediction);
+        console.log(`[DEBUG] 预测数据:`, prediction);
 
-        console.log('Sending request to API...');
+        // 先更新本地存储
+        let storedPredictions = JSON.parse(localStorage.getItem(storageKey) || '{}');
+        storedPredictions[matchupId] = selectedTeamAbbr;
+        localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
+        console.log(`[DEBUG] 本地存储已更新:`, storedPredictions);
+
+        // 尝试发送API请求
+        console.log(`[DEBUG] 正在发送API请求...`);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10秒超时
+
         const response = await fetch('https://two025nbagames-1.onrender.com/predictions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(prediction)
+            body: JSON.stringify(prediction),
+            signal: controller.signal
         });
-        console.log('Response status:', response.status);
+
+        clearTimeout(timeoutId);
+        console.log(`[DEBUG] API响应状态: ${response.status}`);
+
+        // 获取并记录完整响应内容
+        const responseText = await response.text();
+        console.log(`[DEBUG] API响应内容: ${responseText}`);
 
         if (!response.ok) {
-            const errorText = await response.text();
-            console.error('API Error Response:', errorText);
-            throw new Error(`Failed to save prediction: ${errorText}`);
+            throw new Error(`API请求失败: ${response.status} - ${responseText}`);
         }
 
-        // Update local storage if API call succeeds
-        let storedPredictions = JSON.parse(localStorage.getItem(storageKey) || '{}');
-        storedPredictions[matchupId] = selectedTeamAbbr;
-        localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
-        console.log('Updated predictions after selection:', JSON.parse(localStorage.getItem(storageKey)));
+        console.log(`[DEBUG] ${matchupId}预测成功保存到API`);
+        return true;
 
     } catch (error) {
-        console.error('Error saving prediction:', error);
-        // Still update local storage even if API call fails to maintain user experience
+        console.error(`[ERROR] 保存预测失败: ${error.message}`);
+        console.log(`[DEBUG] 尝试重新发送请求...`);
+
+        // 重试一次
+        try {
+            const username = localStorage.getItem('nbaPlayoffsUsername') || 'guest';
+            const now = new Date();
+            const timestamp = now.toISOString().split('.')[0];
+
+            const prediction = {
+                username: username,
+                matchup_id: matchupId,
+                selected_team: selectedTeamAbbr,
+                timestamp: timestamp
+            };
+
+            console.log(`[DEBUG] 重试发送数据:`, prediction);
+
+            // 直接使用fetch并等待响应
+            const retryResponse = await fetch('https://two025nbagames-1.onrender.com/predictions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(prediction)
+            });
+
+            console.log(`[DEBUG] 重试响应状态: ${retryResponse.status}`);
+            const retryResponseText = await retryResponse.text();
+            console.log(`[DEBUG] 重试响应内容: ${retryResponseText}`);
+
+            if (retryResponse.ok) {
+                console.log(`[DEBUG] 重试成功: ${matchupId}已保存`);
+                return true;
+            } else {
+                console.error(`[ERROR] 重试请求失败: ${retryResponse.status}`);
+            }
+        } catch (retryError) {
+            console.error(`[ERROR] 重试也失败了: ${retryError.message}`);
+        }
+
+        // 即使失败也确保本地存储已更新
         let storedPredictions = JSON.parse(localStorage.getItem(storageKey) || '{}');
         storedPredictions[matchupId] = selectedTeamAbbr;
         localStorage.setItem(storageKey, JSON.stringify(storedPredictions));
+        console.log(`[DEBUG] 确保本地存储已更新:`, storedPredictions);
+        return false;
     }
 }
 

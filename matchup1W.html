@@ -71,26 +71,9 @@
             // 添加按鈕點擊事件
             const teamButtons = document.querySelectorAll('.team-button');
             teamButtons.forEach(button => {
-                button.addEventListener('click', function () {
+                button.addEventListener('click', async function () {
                     const selectedTeam = this.getAttribute('data-team');
-                    console.log('選擇的球隊:', selectedTeam);
-
-                    // Check if this is the right-team (MIN) button and special navigation is needed
-                    const isRightTeam = this.classList.contains('right-team');
-                    const currentPage = window.location.pathname.split('/').pop();
-                    console.log('Team selected:', selectedTeam, 'Is right team:', isRightTeam, 'Current page:', currentPage);
-
-                    if (selectedTeam === 'MIN' && currentPage === 'matchup1W.html') {
-                        console.log('Special navigation: Redirecting to matchup2W.html');
-                        window.location.href = 'matchup2W.html';
-                        return;
-                    }
-
-                    // 保存預測結果
-                    const matchupId = 'W1v8';
-                    const storageKey = 'round1Predictions';
-
-                    savePrediction(matchupId, selectedTeam, storageKey);
+                    console.log('[DEBUG] 選擇的球隊:', selectedTeam);
 
                     // 添加視覺反饋
                     teamButtons.forEach(btn => {
@@ -98,10 +81,67 @@
                     });
                     this.classList.add('selected');
 
-                    // 導航到下一頁
+                    // 保存預測結果
+                    const matchupId = 'W1v8';
+                    const storageKey = 'round1Predictions';
+
+                    console.log(`[DEBUG] 开始保存W1v8预测：${selectedTeam}`);
+
+                    // 三次重试保存
+                    let saved = false;
+                    for (let i = 0; i < 3 && !saved; i++) {
+                        try {
+                            console.log(`[DEBUG] 尝试保存W1v8预测(第${i + 1}次)...`);
+                            saved = await savePrediction(matchupId, selectedTeam, storageKey);
+                            if (saved) {
+                                console.log('[DEBUG] W1v8保存成功!');
+                            } else {
+                                console.log(`[DEBUG] W1v8第${i + 1}次尝试返回false，继续尝试`);
+                                // 等待短暂时间再重试
+                                await new Promise(resolve => setTimeout(resolve, 500));
+                            }
+                        } catch (error) {
+                            console.error(`[ERROR] W1v8第${i + 1}次保存失败: ${error.message}`);
+                            // 等待短暂时间再重试
+                            await new Promise(resolve => setTimeout(resolve, 500));
+                        }
+                    }
+
+                    // 使用备份保存方法
+                    try {
+                        const backupData = {
+                            username: localStorage.getItem('nbaPlayoffsUsername') || 'guest',
+                            matchup_id: matchupId,
+                            selected_team: selectedTeam,
+                            timestamp: new Date().toISOString().split('.')[0]
+                        };
+
+                        console.log(`[DEBUG] 备份保存W1v8数据:`, backupData);
+
+                        // 使用fetch作为备份
+                        fetch('https://two025nbagames-1.onrender.com/predictions', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(backupData),
+                            keepalive: true
+                        }).then(() => console.log('[DEBUG] W1v8备份fetch成功')).catch(e => console.error('[ERROR] W1v8备份fetch失败', e));
+                    } catch (error) {
+                        console.error('[ERROR] W1v8备份保存失败:', error);
+                    }
+
+                    // 确保本地存储已更新
+                    let finalPredictions = JSON.parse(localStorage.getItem(storageKey) || '{}');
+                    finalPredictions[matchupId] = selectedTeam;
+                    localStorage.setItem(storageKey, JSON.stringify(finalPredictions));
+                    console.log(`[DEBUG] W1v8最终确认本地存储已更新:`, finalPredictions);
+
+                    // 导航到下一页，但给予足够时间完成请求
                     setTimeout(() => {
+                        console.log('[DEBUG] 导航到matchup2W.html...');
                         window.location.href = 'matchup2W.html';
-                    }, 500);
+                    }, 2000); // 增加到2秒
                 });
             });
 
