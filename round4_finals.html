@@ -61,20 +61,14 @@
             // 创建按钮HTML
             const buttonsContainer = document.querySelector('.team-buttons-container');
             buttonsContainer.innerHTML = `
-                <form id="westForm" action="predictions.html" method="get" style="display: contents; margin: 0; padding: 0; border: none;">
-                    <input type="hidden" name="champion" value="${westChampion}">
-                    <button type="submit" class="team-button left-team" data-team="${westChampion}" style="margin-right: 20px; background-color: ${getTeamColor(westChampion)};">
-                        <div class="team-logo-bg"></div>
-                        <span>${westChampion} (${westTeam.seed})</span>
-                    </button>
-                </form>
-                <form id="eastForm" action="predictions.html" method="get" style="display: contents; margin: 0; padding: 0; border: none;">
-                    <input type="hidden" name="champion" value="${eastChampion}">
-                    <button type="submit" class="team-button right-team" data-team="${eastChampion}" style="margin-left: 20px; background-color: ${getTeamColor(eastChampion)};">
-                        <div class="team-logo-bg"></div>
-                        <span>${eastChampion} (${eastTeam.seed})</span>
-                    </button>
-                </form>
+                <button id="westChampBtn" class="team-button left-team" data-team="${westChampion}" style="margin-right: 20px; background-color: ${getTeamColor(westChampion)};">
+                    <div class="team-logo-bg"></div>
+                    <span>${westChampion} (${westTeam.seed})</span>
+                </button>
+                <button id="eastChampBtn" class="team-button right-team" data-team="${eastChampion}" style="margin-left: 20px; background-color: ${getTeamColor(eastChampion)};">
+                    <div class="team-logo-bg"></div>
+                    <span>${eastChampion} (${eastTeam.seed})</span>
+                </button>
             `;
 
             // 设置球队标志
@@ -112,192 +106,74 @@
                 }
             }, 500);
 
-            // 添加表單提交事件處理
-            const westForm = document.getElementById('westForm');
-            const eastForm = document.getElementById('eastForm');
+            // 添加基础调试代码，确认页面和事件监听正常
+            console.log('[DEBUG] 总决赛页面初始化完成，已设置按钮');
+            console.log('[DEBUG] 西部冠军按钮:', document.getElementById('westChampBtn'));
+            console.log('[DEBUG] 东部冠军按钮:', document.getElementById('eastChampBtn'));
 
-            // 西區冠軍表單提交
-            westForm.addEventListener('submit', async function (e) {
-                // 暫時阻止表單提交，先保存數據
-                e.preventDefault();
+            // 添加按钮点击事件 - 使用更直接的方式绑定事件
+            const westButton = document.getElementById('westChampBtn');
+            const eastButton = document.getElementById('eastChampBtn');
 
-                const selectedTeam = westChampion;
-                console.log('選擇的球隊:', selectedTeam);
+            // 添加直接测试事件处理函数
+            async function handleTeamSelection(selectedTeam) {
+                console.log('[DEBUG] 选择了冠军球队:', selectedTeam);
 
-                // 確保用戶名存在
+                // 确保用户名存在
                 const username = localStorage.getItem('nbaPlayoffsUsername');
                 if (!username) {
-                    console.warn('[DEBUG] 用戶名不存在，設置臨時用戶名');
                     localStorage.setItem('nbaPlayoffsUsername', 'guest');
+                    console.log('[DEBUG] 用户名不存在，设置为guest');
+                } else {
+                    console.log('[DEBUG] 当前用户:', username);
                 }
 
-                // 直接顯示保存成功的訊息
-                alert('選擇保存成功！冠軍：' + selectedTeam);
-
-                // 使用全局savePrediction函数保存預測
+                // 定义matchupId和storageKey
                 const matchupId = 'R4F';
                 const storageKey = 'round4Predictions';
 
-                console.log('[DEBUG] 保存总决赛预测开始...');
+                // 使用script.js中的savePrediction函数保存预测
+                console.log('[DEBUG] 正在保存总决赛冠军预测数据...');
+                const saveResult = await savePrediction(matchupId, selectedTeam, storageKey);
 
-                // 三次重试保存
-                let saved = false;
-                for (let i = 0; i < 3 && !saved; i++) {
-                    try {
-                        console.log(`[DEBUG] 尝试保存总决赛预测(第${i + 1}次)...`);
-                        saved = await savePrediction(matchupId, selectedTeam, storageKey);
-                        if (saved) {
-                            console.log('[DEBUG] 保存成功!');
-                        } else {
-                            console.log(`[DEBUG] 第${i + 1}次尝试返回false，继续尝试`);
-                            // 等待短暂时间再重试
-                            await new Promise(resolve => setTimeout(resolve, 500));
-                        }
-                    } catch (error) {
-                        console.error(`[ERROR] 第${i + 1}次保存失败: ${error.message}`);
-                        // 等待短暂时间再重试
-                        await new Promise(resolve => setTimeout(resolve, 500));
-                    }
+                if (saveResult) {
+                    console.log('[DEBUG] 冠军预测保存成功');
+                } else {
+                    console.warn('[WARNING] API保存可能失败，但本地存储已更新');
                 }
 
-                // 使用navigator.sendBeacon作为备份保存方法
-                try {
-                    const backupData = {
-                        username: localStorage.getItem('nbaPlayoffsUsername') || 'guest',
-                        matchup_id: matchupId,
-                        selected_team: selectedTeam,
-                        timestamp: new Date().toISOString().split('.')[0]
-                    };
+                // 通知用户选择已保存
+                alert('选择保存成功！冠军：' + selectedTeam);
 
-                    if (navigator.sendBeacon) {
-                        const blob = new Blob([JSON.stringify(backupData)], { type: 'application/json' });
-                        const success = navigator.sendBeacon('https://two025nbagames-1.onrender.com/predictions', blob);
-                        console.log(`[DEBUG] sendBeacon结果: ${success ? '成功' : '失败'}`);
-                    } else {
-                        console.log('[DEBUG] 浏览器不支持sendBeacon，使用fetch作为备份');
-                        fetch('https://two025nbagames-1.onrender.com/predictions', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(backupData),
-                            keepalive: true
-                        }).then(() => console.log('[DEBUG] 备份fetch成功')).catch(e => console.error('[ERROR] 备份fetch失败', e));
-                    }
-                } catch (beaconError) {
-                    console.error('[ERROR] 备份保存失败:', beaconError);
-                }
-
-                // 确保本地存储已更新
-                let finalPredictions = JSON.parse(localStorage.getItem(storageKey) || '{}');
-                finalPredictions[matchupId] = selectedTeam;
-                localStorage.setItem(storageKey, JSON.stringify(finalPredictions));
-                console.log(`[DEBUG] 最终确认本地存储已更新:`, finalPredictions);
-
-                // 即使API请求失败也继续导航，但给予足够时间完成请求
+                // 延迟后跳转到predictions.html页面
                 setTimeout(() => {
                     const url = new URL('predictions.html', window.location.href);
                     url.searchParams.set('champion', selectedTeam);
-                    console.log('[DEBUG] 导航到predictions.html...');
+                    console.log('[DEBUG] 准备跳转到predictions.html');
                     window.location.href = url.toString();
-                }, 3000); // 增加到3秒
-            });
+                }, 1000);
+            }
 
-            // 東區冠軍表單提交
-            eastForm.addEventListener('submit', async function (e) {
-                // 暫時阻止表單提交，先保存數據
-                e.preventDefault();
-
-                const selectedTeam = eastChampion;
-                console.log('選擇的球隊:', selectedTeam);
-
-                // 確保用戶名存在
-                const username = localStorage.getItem('nbaPlayoffsUsername');
-                if (!username) {
-                    console.warn('[DEBUG] 用戶名不存在，設置臨時用戶名');
-                    localStorage.setItem('nbaPlayoffsUsername', 'guest');
-                }
-
-                // 直接顯示保存成功的訊息
-                alert('選擇保存成功！冠軍：' + selectedTeam);
-
-                // 使用全局savePrediction函数保存預測
-                const matchupId = 'R4F';
-                const storageKey = 'round4Predictions';
-
-                console.log('[DEBUG] 保存总决赛预测开始...');
-
-                // 三次重试保存
-                let saved = false;
-                for (let i = 0; i < 3 && !saved; i++) {
-                    try {
-                        console.log(`[DEBUG] 尝试保存总决赛预测(第${i + 1}次)...`);
-                        saved = await savePrediction(matchupId, selectedTeam, storageKey);
-                        if (saved) {
-                            console.log('[DEBUG] 保存成功!');
-                        } else {
-                            console.log(`[DEBUG] 第${i + 1}次尝试返回false，继续尝试`);
-                            // 等待短暂时间再重试
-                            await new Promise(resolve => setTimeout(resolve, 500));
-                        }
-                    } catch (error) {
-                        console.error(`[ERROR] 第${i + 1}次保存失败: ${error.message}`);
-                        // 等待短暂时间再重试
-                        await new Promise(resolve => setTimeout(resolve, 500));
-                    }
-                }
-
-                // 使用navigator.sendBeacon作为备份保存方法
-                try {
-                    const backupData = {
-                        username: localStorage.getItem('nbaPlayoffsUsername') || 'guest',
-                        matchup_id: matchupId,
-                        selected_team: selectedTeam,
-                        timestamp: new Date().toISOString().split('.')[0]
-                    };
-
-                    if (navigator.sendBeacon) {
-                        const blob = new Blob([JSON.stringify(backupData)], { type: 'application/json' });
-                        const success = navigator.sendBeacon('https://two025nbagames-1.onrender.com/predictions', blob);
-                        console.log(`[DEBUG] sendBeacon结果: ${success ? '成功' : '失败'}`);
-                    } else {
-                        console.log('[DEBUG] 浏览器不支持sendBeacon，使用fetch作为备份');
-                        fetch('https://two025nbagames-1.onrender.com/predictions', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(backupData),
-                            keepalive: true
-                        }).then(() => console.log('[DEBUG] 备份fetch成功')).catch(e => console.error('[ERROR] 备份fetch失败', e));
-                    }
-                } catch (beaconError) {
-                    console.error('[ERROR] 备份保存失败:', beaconError);
-                }
-
-                // 确保本地存储已更新
-                let finalPredictions = JSON.parse(localStorage.getItem(storageKey) || '{}');
-                finalPredictions[matchupId] = selectedTeam;
-                localStorage.setItem(storageKey, JSON.stringify(finalPredictions));
-                console.log(`[DEBUG] 最终确认本地存储已更新:`, finalPredictions);
-
-                // 即使API请求失败也继续导航，但给予足够时间完成请求
-                setTimeout(() => {
-                    const url = new URL('predictions.html', window.location.href);
-                    url.searchParams.set('champion', selectedTeam);
-                    console.log('[DEBUG] 导航到predictions.html...');
-                    window.location.href = url.toString();
-                }, 3000); // 增加到3秒
-            });
-
-            // 添加按鈕視覺反饋
-            const teamButtons = document.querySelectorAll('.team-button');
-            teamButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    teamButtons.forEach(btn => btn.classList.remove('selected'));
-                    this.classList.add('selected');
+            // 直接绑定点击事件
+            if (westButton) {
+                console.log('[DEBUG] 为西部冠军按钮添加点击事件');
+                westButton.addEventListener('click', function () {
+                    console.log('[DEBUG] 西部冠军按钮被点击');
+                    handleTeamSelection(westChampion);
                 });
-            });
+            } else {
+                console.error('[ERROR] 找不到西部冠军按钮');
+            }
+
+            if (eastButton) {
+                console.log('[DEBUG] 为东部冠军按钮添加点击事件');
+                eastButton.addEventListener('click', function () {
+                    console.log('[DEBUG] 东部冠军按钮被点击');
+                    handleTeamSelection(eastChampion);
+                });
+            } else {
+                console.error('[ERROR] 找不到东部冠军按钮');
+            }
 
             // 獲取球隊顏色的輔助函數
             function getTeamColor(teamAbbr) {
