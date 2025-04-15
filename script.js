@@ -1256,6 +1256,7 @@ async function updateMatchupStats(team1, team2) {
             // 作為測試，也在控制台中以表格形式顯示數據
             console.table({
                 '球隊': [team1, team2],
+                'Wins': matchupData.Wins || [0, 0],
                 'PTS': matchupData.PTS || [0, 0],
                 'REB': matchupData.REB || [0, 0],
                 'AST': matchupData.AST || [0, 0],
@@ -1306,7 +1307,7 @@ function updateMatchupStatsUI(statsData, containerId = '.stats-container') {
     }
 
     // 按順序添加所有統計數據行
-    const statKeys = ["PTS", "REB", "AST", "STL", "BLK", "TO", "FG%", "3P%", "FT%"];
+    const statKeys = ['Wins', "PTS", "REB", "AST", "STL", "BLK", "TO", "FG%", "3P%", "FT%"];
 
     statKeys.forEach(stat => {
         if (!statsData[stat]) {
@@ -1415,6 +1416,7 @@ function debugMatchupStats() {
             console.log('對戰統計數據:');
             console.table({
                 '球隊': [leftTeamAbbr, rightTeamAbbr],
+                'Wins': data.Wins || [0, 0],
                 'PTS': data.PTS || [0, 0],
                 'REB': data.REB || [0, 0],
                 'AST': data.AST || [0, 0],
