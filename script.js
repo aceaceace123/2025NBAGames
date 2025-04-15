@@ -1328,16 +1328,41 @@ function updateMatchupStatsUI(statsData, containerId = '.stats-container') {
             const total = leftValue + rightValue;
             leftWidth = total === 0 ? 50 : Math.round((rightValue / total) * 100);
             rightWidth = total === 0 ? 50 : Math.round((leftValue / total) * 100);
+        } else if (stat === "Wins") {
+            // 特殊處理勝場數據
+            const total = leftValue + rightValue;
+
+            if (total === 0) {
+                // 如果雙方都沒有勝場，顯示均等
+                leftWidth = 50;
+                rightWidth = 50;
+            } else if (leftValue === 0) {
+                // 左邊0勝，右邊有勝場
+                leftWidth = 0; // 給予最小寬度，讓0勝也能顯示
+                rightWidth = 100;
+            } else if (rightValue === 0) {
+                // 右邊0勝，左邊有勝場
+                leftWidth = 100;
+                rightWidth = 0; // 給予最小寬度，讓0勝也能顯示
+            } else {
+                // 雙方都有勝場的情況下正常計算
+                leftWidth = Math.round((leftValue / total) * 100);
+                rightWidth = Math.round((rightValue / total) * 100);
+
+                // 確保寬度至少為33%，最多為67%，以便視覺上更好
+                leftWidth = Math.max(33, Math.min(67, leftWidth));
+                rightWidth = Math.max(33, Math.min(67, rightWidth));
+            }
         } else {
             // 對於其他統計，較大的值更好
             const total = leftValue + rightValue;
             leftWidth = total === 0 ? 50 : Math.round((leftValue / total) * 100);
             rightWidth = total === 0 ? 50 : Math.round((rightValue / total) * 100);
-        }
 
-        // 確保寬度至少為33%，最多為67%，以便視覺上更好
-        leftWidth = Math.max(33, Math.min(67, leftWidth));
-        rightWidth = Math.max(33, Math.min(67, rightWidth));
+            // 確保寬度至少為33%，最多為67%，以便視覺上更好
+            leftWidth = Math.max(33, Math.min(67, leftWidth));
+            rightWidth = Math.max(33, Math.min(67, rightWidth));
+        }
 
         // 創建統計行的HTML，直接使用內聯樣式設置顏色
         const rowHTML = `
