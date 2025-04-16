@@ -1332,11 +1332,7 @@ function updateMatchupStatsUI(statsData, containerId = '.stats-container') {
             // 特殊處理勝場數據
             const total = leftValue + rightValue;
 
-            if (total === 0) {
-                // 如果雙方都沒有勝場，顯示均等
-                leftWidth = 50;
-                rightWidth = 50;
-            } else if (leftValue === 0) {
+            if (leftValue === 0) {
                 // 左邊0勝，右邊有勝場
                 leftWidth = 0; // 給予最小寬度，讓0勝也能顯示
                 rightWidth = 100;
@@ -1350,8 +1346,8 @@ function updateMatchupStatsUI(statsData, containerId = '.stats-container') {
                 rightWidth = Math.round((rightValue / total) * 100);
 
                 // 確保寬度至少為33%，最多為67%，以便視覺上更好
-                leftWidth = Math.max(33, Math.min(67, leftWidth));
-                rightWidth = Math.max(33, Math.min(67, rightWidth));
+                // leftWidth = Math.max(33, Math.min(67, leftWidth));
+                // rightWidth = Math.max(33, Math.min(67, rightWidth));
             }
         } else {
             // 對於其他統計，較大的值更好
@@ -1360,8 +1356,8 @@ function updateMatchupStatsUI(statsData, containerId = '.stats-container') {
             rightWidth = total === 0 ? 50 : Math.round((rightValue / total) * 100);
 
             // 確保寬度至少為33%，最多為67%，以便視覺上更好
-            leftWidth = Math.max(33, Math.min(67, leftWidth));
-            rightWidth = Math.max(33, Math.min(67, rightWidth));
+            // leftWidth = Math.max(33, Math.min(67, leftWidth));
+            // rightWidth = Math.max(33, Math.min(67, rightWidth));
         }
 
         // 創建統計行的HTML，直接使用內聯樣式設置顏色
