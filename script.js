@@ -1231,7 +1231,7 @@ async function fetchMatchupData(team1, team2) {
             "AST": [0, 0],
             "STL": [0, 0],
             "BLK": [0, 0],
-            "TO": [0, 0],
+            "TOV": [0, 0],
             "FG%": [0, 0],
             "3P%": [0, 0],
             "FT%": [0, 0]
@@ -1262,7 +1262,7 @@ async function updateMatchupStats(team1, team2) {
                 'AST': matchupData.AST || [0, 0],
                 'STL': matchupData.STL || [0, 0],
                 'BLK': matchupData.BLK || [0, 0],
-                'TO': matchupData.TO || [0, 0],
+                'TOV': matchupData.TO || [0, 0],
                 'FG%': matchupData['FG%'] || [0, 0],
                 '3P%': matchupData['3P%'] || [0, 0],
                 'FT%': matchupData['FT%'] || [0, 0],
@@ -1307,7 +1307,7 @@ function updateMatchupStatsUI(statsData, containerId = '.stats-container') {
     }
 
     // 按順序添加所有統計數據行
-    const statKeys = ['Wins', "PTS", "REB", "AST", "STL", "BLK", "TO", "FG%", "3P%", "FT%"];
+    const statKeys = ['Wins', "PTS", "REB", "AST", "STL", "BLK", "TOV", "FG%", "3P%", "FT%"];
 
     statKeys.forEach(stat => {
         if (!statsData[stat]) {
@@ -1323,7 +1323,7 @@ function updateMatchupStatsUI(statsData, containerId = '.stats-container') {
         // 計算百分比寬度（基於左右值的相對大小）
         let leftWidth, rightWidth;
 
-        if (stat === "TO") {
+        if (stat === "TOV") {
             // 對於失誤，較小的值更好，所以反轉比例
             const total = leftValue + rightValue;
             leftWidth = total === 0 ? 50 : Math.round((rightValue / total) * 100);
@@ -1443,7 +1443,7 @@ function debugMatchupStats() {
                 'AST': data.AST || [0, 0],
                 'STL': data.STL || [0, 0],
                 'BLK': data.BLK || [0, 0],
-                'TO': data.TO || [0, 0],
+                'TOV': data.TO || [0, 0],
                 'FG%': data['FG%'] || [0, 0],
                 '3P%': data['3P%'] || [0, 0],
                 'FT%': data['FT%'] || [0, 0],
