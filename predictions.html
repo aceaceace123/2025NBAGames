@@ -150,6 +150,30 @@
             font-size: 0.95em;
         }
 
+        /* FMVP 相關樣式 */
+        .fmvp-info {
+            margin-top: 10px;
+            padding-top: 8px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.4);
+            width: 100%;
+        }
+
+        .fmvp-title {
+            font-size: 0.8em;
+            margin: 2px 0;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .fmvp-player {
+            font-size: 0.9em;
+            font-weight: bold;
+            margin: 3px 0;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
         #stats-button {
             position: absolute;
             top: 20px;
@@ -587,6 +611,19 @@
                         <img src="${teamDetails[champion].logo}" alt="${teamDetails[champion].name}">
                         <div>${teamDetails[champion].name}</div>
                     `;
+
+                    // 嘗試獲取 FMVP 預測
+                    const fmvpPrediction = JSON.parse(localStorage.getItem('fmvpPrediction') || '{}');
+                    if (fmvpPrediction && fmvpPrediction.player_name && fmvpPrediction.team_abbr === champion) {
+                        // 添加 FMVP 信息
+                        const fmvpInfo = document.createElement('div');
+                        fmvpInfo.className = 'fmvp-info';
+                        fmvpInfo.innerHTML = `
+                            <p class="fmvp-title">FMVP</p>
+                            <p class="fmvp-player">${fmvpPrediction.player_name}</p>
+                        `;
+                        championContent.appendChild(fmvpInfo);
+                    }
                 } else {
                     // 如果沒有選出冠軍，顯示提示信息
                     championContent.innerHTML = `

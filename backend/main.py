@@ -8,6 +8,7 @@ from datetime import datetime
 import json
 import os
 import sys
+import csv
 
 # 添加數據目錄到路徑
 sys.path.append(os.path.join(os.path.dirname(__file__), 'data'))
@@ -42,11 +43,33 @@ class Prediction(Base):
     selected_team = Column(String)
     timestamp = Column(DateTime, default=datetime.utcnow)
 
+# FMVP預測模型
+class FMVPPrediction(Base):
+    __tablename__ = "fmvp_predictions"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, index=True)
+    team_abbr = Column(String, index=True)
+    player_name = Column(String, index=True)
+    timestamp = Column(DateTime, default=datetime.utcnow)
+
 # 定義Pydantic模型用於請求和響應
 class PredictionCreate(BaseModel):
     username: str
     matchup_id: str
     selected_team: str
+    timestamp: datetime = None
+    
+    class Config:
+        json_encoders = {
+            datetime: lambda v: v.isoformat(),
+        }
+
+# FMVP預測請求模型
+class FMVPPredictionCreate(BaseModel):
+    username: str
+    team_abbr: str
+    player_name: str
     timestamp: datetime = None
     
     class Config:
@@ -89,6 +112,23 @@ async def create_prediction(prediction: PredictionCreate, db: Session = Depends(
     db.refresh(db_prediction)
     return prediction
 
+@app.post("/fmvp-predictions", response_model=FMVPPredictionCreate)
+async def create_fmvp_prediction(prediction: FMVPPredictionCreate, db: Session = Depends(get_db)):
+    print(f"Received FMVP prediction: {prediction}")
+    if prediction.timestamp is None:
+        prediction.timestamp = datetime.utcnow()
+    
+    db_prediction = FMVPPrediction(
+        username=prediction.username,
+        team_abbr=prediction.team_abbr,
+        player_name=prediction.player_name,
+        timestamp=prediction.timestamp
+    )
+    db.add(db_prediction)
+    db.commit()
+    db.refresh(db_prediction)
+    return prediction
+
 @app.get("/predictions/{username}")
 async def get_user_predictions(username: str, db: Session = Depends(get_db)):
     user_predictions = db.query(Prediction).filter(Prediction.username == username).all()
@@ -104,6 +144,26 @@ async def get_user_predictions(username: str, db: Session = Depends(get_db)):
             "username": pred.username,
             "matchup_id": pred.matchup_id,
             "selected_team": pred.selected_team,
+            "timestamp": pred.timestamp.isoformat()
+        })
+    
+    return result
+
+@app.get("/fmvp-predictions/{username}")
+async def get_user_fmvp_predictions(username: str, db: Session = Depends(get_db)):
+    user_predictions = db.query(FMVPPrediction).filter(FMVPPrediction.username == username).all()
+    
+    if not user_predictions:
+        raise HTTPException(status_code=404, detail=f"No FMVP predictions found for user {username}")
+    
+    # 轉換為JSON友好格式
+    result = []
+    for pred in user_predictions:
+        result.append({
+            "id": pred.id,
+            "username": pred.username,
+            "team_abbr": pred.team_abbr,
+            "player_name": pred.player_name,
             "timestamp": pred.timestamp.isoformat()
         })
     
@@ -130,6 +190,63 @@ async def get_all_championship_predictions(db: Session = Depends(get_db)):
         })
     
     return result
+
+# 新增路由：獲取球隊隊員名單
+@app.get("/team-roster/{team_abbr}")
+async def get_team_roster(team_abbr: str):
+    # 讀取CSV文件並過濾特定球隊的隊員
+    roster_file = os.path.join(os.path.dirname(__file__), 'data', 'nba_2024_25_roster.csv')
+    
+    try:
+        team_players = []
+        with open(roster_file, mode='r', encoding='utf-8') as file:
+            csv_reader = csv.DictReader(file)
+            for row in csv_reader:
+                if row['TEAM_NAME'] == team_abbr:
+                    # 選擇需要的列
+                    player_data = {
+                        "player_id": row['PLAYER_ID'],
+                        "name": row['PLAYER'],
+                        "position": row['POSITION'],
+                        "jersey_number": row['NUM'],
+                        "height": row['HEIGHT'],
+                        "weight": row['WEIGHT'],
+                        "age": row['AGE'],
+                        "experience": row['EXP'],
+                        "school": row['SCHOOL']
+                    }
+                    team_players.append(player_data)
+        
+        if not team_players:
+            # 如果沒有找到球隊，嘗試在TEAM_ID欄位中查找
+            with open(roster_file, mode='r', encoding='utf-8') as file:
+                csv_reader = csv.DictReader(file)
+                for row in csv_reader:
+                    # 通過其他方式判斷球隊縮寫
+                    if team_abbr in ['BOS', 'BKN', 'NYK', 'PHI', 'TOR', 'CHI', 'CLE', 'DET', 'IND', 'MIL', 
+                                   'ATL', 'CHA', 'MIA', 'ORL', 'WAS', 'DEN', 'MIN', 'OKC', 'POR', 'UTA', 
+                                   'GSW', 'LAC', 'LAL', 'PHX', 'SAC', 'DAL', 'HOU', 'MEM', 'NOP', 'SAS'] and row['TEAM_NAME'] == team_abbr:
+                        player_data = {
+                            "player_id": row['PLAYER_ID'],
+                            "name": row['PLAYER'],
+                            "position": row['POSITION'],
+                            "jersey_number": row['NUM'],
+                            "height": row['HEIGHT'],
+                            "weight": row['WEIGHT'],
+                            "age": row['AGE'],
+                            "experience": row['EXP'],
+                            "school": row['SCHOOL']
+                        }
+                        team_players.append(player_data)
+        
+        if not team_players:
+            raise HTTPException(status_code=404, detail=f"No roster found for team {team_abbr}")
+            
+        return team_players
+    
+    except Exception as e:
+        print(f"Error reading roster data: {e}")
+        raise HTTPException(status_code=500, detail=f"Error reading roster data: {str(e)}")
 
 # 新增路由：獲取所有模擬對戰數據
 @app.get("/matchups")

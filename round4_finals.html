@@ -6,6 +6,136 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NBA Finals</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* FMVP 模態視窗樣式 */
+        .fmvp-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+        }
+
+        .fmvp-modal-content {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        .fmvp-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .fmvp-modal-header h2 {
+            margin: 0;
+            font-size: 1.5em;
+            color: #333;
+        }
+
+        .fmvp-close {
+            font-size: 1.5em;
+            cursor: pointer;
+            font-weight: bold;
+            color: #777;
+        }
+
+        .roster-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .player-card {
+            border: 2px solid #eee;
+            border-radius: 6px;
+            padding: 12px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            background-color: #f9f9f9;
+        }
+
+        .player-card:hover {
+            border-color: #007bff;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .player-card.selected {
+            border-color: #28a745;
+            background-color: #e8f5e9;
+        }
+
+        .player-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .player-position {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .player-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 0.85em;
+            color: #555;
+        }
+
+        .confirm-fmvp {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .confirm-fmvp:hover {
+            background-color: #218838;
+        }
+
+        .confirm-fmvp:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .roster-container {
+                grid-template-columns: 1fr;
+            }
+
+            .fmvp-modal-content {
+                width: 95%;
+                padding: 15px;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -25,6 +155,21 @@
                 <!-- 統計資料將由JavaScript動態填充 -->
             </div>
         </main>
+    </div>
+
+    <!-- FMVP 選擇模態視窗 -->
+    <div id="fmvpModal" class="fmvp-modal">
+        <div class="fmvp-modal-content">
+            <div class="fmvp-modal-header">
+                <h2 id="fmvpModalTitle">選擇總決賽 MVP</h2>
+                <span class="fmvp-close">&times;</span>
+            </div>
+            <p>請從下方選擇您認為會獲得總決賽 MVP 的球員：</p>
+            <div id="rosterContainer" class="roster-container">
+                <!-- 球員名單將由 JavaScript 動態填充 -->
+            </div>
+            <button id="confirmFMVP" class="confirm-fmvp" disabled>確認選擇</button>
+        </div>
     </div>
 
     <script src="script.js"></script>
@@ -107,36 +252,178 @@
             }
         }
 
+        // 保存 FMVP 預測
+        async function saveFMVPPrediction(teamAbbr, playerName) {
+            try {
+                // 獲取用戶名
+                const username = localStorage.getItem('nbaPlayoffsUsername') || 'guest';
+
+                // 構建預測數據
+                const prediction = {
+                    username: username,
+                    team_abbr: teamAbbr,
+                    player_name: playerName,
+                    timestamp: new Date().toISOString().split('.')[0]
+                };
+
+                console.log('[DEBUG] 保存 FMVP 預測數據:', prediction);
+
+                // 先保存到本地存儲
+                localStorage.setItem('fmvpPrediction', JSON.stringify(prediction));
+                console.log('[DEBUG] 已保存 FMVP 到本地存儲');
+
+                // 設置請求超時
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超時
+
+                // 嘗試發送到API
+                const response = await fetch('https://two025nbagames-1.onrender.com/fmvp-predictions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(prediction),
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+
+                if (!response.ok) {
+                    throw new Error(`API請求失敗: ${response.status}`);
+                }
+
+                console.log('[DEBUG] 成功保存 FMVP 到API');
+                return true;
+            } catch (error) {
+                console.error('[ERROR] 保存 FMVP 預測出錯:', error);
+
+                // 失敗時至少已保存到本地
+                console.log('[DEBUG] 仍然繼續，因為已保存到本地存儲');
+                return true;
+            }
+        }
+
+        // 獲取球隊名單
+        async function fetchTeamRoster(teamAbbr) {
+            try {
+                console.log(`[DEBUG] 獲取 ${teamAbbr} 球隊名單`);
+                const response = await fetch(`https://two025nbagames-1.onrender.com/team-roster/${teamAbbr}`);
+
+                if (!response.ok) {
+                    throw new Error(`獲取球隊名單失敗: ${response.status}`);
+                }
+
+                const roster = await response.json();
+                console.log(`[DEBUG] 獲取到 ${roster.length} 名球員`);
+                return roster;
+            } catch (error) {
+                console.error(`[ERROR] 獲取球隊名單出錯:`, error);
+
+                // 返回模擬數據，確保UI能顯示
+                return [
+                    { player_id: "1", name: "球員 1", position: "G", jersey_number: "1", height: "6-4", weight: "210", age: "25", experience: "3" },
+                    { player_id: "2", name: "球員 2", position: "F", jersey_number: "2", height: "6-8", weight: "230", age: "27", experience: "5" },
+                    { player_id: "3", name: "球員 3", position: "C", jersey_number: "3", height: "7-0", weight: "250", age: "24", experience: "2" },
+                    { player_id: "4", name: "球員 4", position: "G", jersey_number: "4", height: "6-2", weight: "190", age: "29", experience: "7" },
+                    { player_id: "5", name: "球員 5", position: "F", jersey_number: "5", height: "6-7", weight: "215", age: "26", experience: "4" },
+                ];
+            }
+        }
+
+        // FMVP 模態視窗功能
+        let selectedTeamAbbr = null;
+        let selectedFMVP = null;
+
+        function openFMVPModal(teamAbbr, teamName) {
+            selectedTeamAbbr = teamAbbr;
+            const modal = document.getElementById('fmvpModal');
+            const modalTitle = document.getElementById('fmvpModalTitle');
+            const confirmButton = document.getElementById('confirmFMVP');
+
+            modalTitle.textContent = `選擇 ${teamName} 隊的總決賽 MVP`;
+            confirmButton.disabled = true;
+            modal.style.display = 'flex';
+
+            // 獲取並顯示球隊名單
+            loadTeamRoster(teamAbbr);
+        }
+
+        async function loadTeamRoster(teamAbbr) {
+            const rosterContainer = document.getElementById('rosterContainer');
+            rosterContainer.innerHTML = '<p>載入中...</p>';
+
+            try {
+                const roster = await fetchTeamRoster(teamAbbr);
+
+                if (roster && roster.length > 0) {
+                    rosterContainer.innerHTML = '';
+
+                    roster.forEach(player => {
+                        const playerCard = document.createElement('div');
+                        playerCard.className = 'player-card';
+                        playerCard.dataset.playerId = player.player_id;
+                        playerCard.dataset.playerName = player.name;
+
+                        playerCard.innerHTML = `
+                            <div class="player-name">${player.name} ${player.jersey_number ? '#' + player.jersey_number : ''}</div>
+                            <div class="player-position">${player.position}</div>
+                            <div class="player-stats">
+                                <span>身高: ${player.height}</span>
+                                <span>經驗: ${player.experience}年</span>
+                            </div>
+                        `;
+
+                        playerCard.addEventListener('click', () => {
+                            // 移除之前選擇的
+                            document.querySelectorAll('.player-card.selected').forEach(card => {
+                                card.classList.remove('selected');
+                            });
+
+                            // 選擇當前點擊的
+                            playerCard.classList.add('selected');
+                            selectedFMVP = player.name;
+                            document.getElementById('confirmFMVP').disabled = false;
+                        });
+
+                        rosterContainer.appendChild(playerCard);
+                    });
+                } else {
+                    rosterContainer.innerHTML = '<p>無法載入球隊名單，請稍後再試</p>';
+                }
+            } catch (error) {
+                console.error('[ERROR] 載入球隊名單時出錯:', error);
+                rosterContainer.innerHTML = '<p>載入球隊名單時出錯，請稍後再試</p>';
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', async function () {
-            // 显示欢迎信息
+            // 顯示歡迎信息
             displayWelcomeMessage('matchup');
 
             // 從localStorage獲取東西部決賽的獲勝者
             const round3Predictions = JSON.parse(localStorage.getItem('round3Predictions') || '{}');
 
-            // 检查是否完成了东西部决赛选择
+            // 檢查是否完成了東西部決賽選擇
             if (!round3Predictions['R3W'] || !round3Predictions['R3E']) {
-                alert('请先完成东西部决赛的预测');
+                alert('請先完成東西部決賽的預測');
                 window.location.href = 'round3_matchupW.html';
                 return;
             }
 
-            // 获取东西部冠军
+            // 獲取東西部冠軍
             const westChampion = round3Predictions['R3W'];
             const eastChampion = round3Predictions['R3E'];
 
             console.log(`Finals teams: ${westChampion} vs ${eastChampion}`);
 
-            // 获取球队详细信息
+            // 獲取球隊詳細信息
             const westTeam = teamDetails[westChampion];
             const eastTeam = teamDetails[eastChampion];
 
             if (!westTeam || !eastTeam) {
-                console.error('无法获取球队信息');
+                console.error('無法獲取球隊信息');
                 return;
             }
 
-            // 创建按钮HTML
+            // 創建按鈕HTML
             const buttonsContainer = document.querySelector('.team-buttons-container');
             buttonsContainer.innerHTML = `
                 <button id="westChampBtn" class="team-button left-team" data-team="${westChampion}" style="margin-right: 20px; background-color: ${getTeamColor(westChampion)};">
@@ -149,7 +436,7 @@
                 </button>
             `;
 
-            // 设置球队标志
+            // 設置球隊標誌
             const leftTeamBtn = document.querySelector('.left-team');
             const rightTeamBtn = document.querySelector('.right-team');
 
@@ -204,24 +491,20 @@
                     }
 
                     try {
-                        // 設置處理中標誌
-                        isProcessing = true;
-
                         // 視覺反饋
                         westButton.classList.add('clicked');
 
                         console.log('[DEBUG] 西部冠军按钮被点击');
 
-                        // 保存預測並跳轉
+                        // 保存預測並打開 FMVP 選擇視窗
                         await saveChampionPrediction(westChampion);
 
                         // 保存選擇的冠軍
                         localStorage.setItem('nbaChampion', westChampion);
                         console.log('[DEBUG] 保存冠軍到localStorage:', westChampion);
 
-                        // 跳轉到預測摘要頁面
-                        console.log('[DEBUG] 跳轉到predictions.html');
-                        window.location.href = 'predictions.html?champion=' + westChampion;
+                        // 打開 FMVP 模態視窗
+                        openFMVPModal(westChampion, westTeam.name);
                     } catch (error) {
                         console.error('[ERROR] 處理西部冠軍點擊時出錯:', error);
                         // 出錯時重置處理標誌
@@ -243,24 +526,20 @@
                     }
 
                     try {
-                        // 設置處理中標誌
-                        isProcessing = true;
-
                         // 視覺反饋
                         eastButton.classList.add('clicked');
 
                         console.log('[DEBUG] 东部冠军按钮被点击');
 
-                        // 保存預測並跳轉
+                        // 保存預測並打開 FMVP 選擇視窗
                         await saveChampionPrediction(eastChampion);
 
                         // 保存選擇的冠軍
                         localStorage.setItem('nbaChampion', eastChampion);
                         console.log('[DEBUG] 保存冠軍到localStorage:', eastChampion);
 
-                        // 跳轉到預測摘要頁面
-                        console.log('[DEBUG] 跳轉到predictions.html');
-                        window.location.href = 'predictions.html?champion=' + eastChampion;
+                        // 打開 FMVP 模態視窗
+                        openFMVPModal(eastChampion, eastTeam.name);
                     } catch (error) {
                         console.error('[ERROR] 處理東部冠軍點擊時出錯:', error);
                         // 出錯時重置處理標誌
@@ -271,6 +550,37 @@
             } else {
                 console.error('[ERROR] 找不到东部冠军按钮');
             }
+
+            // 設置 FMVP 模態視窗的關閉按鈕
+            document.querySelector('.fmvp-close').addEventListener('click', () => {
+                document.getElementById('fmvpModal').style.display = 'none';
+            });
+
+            // 點擊模態視窗外部時關閉
+            window.addEventListener('click', (event) => {
+                const modal = document.getElementById('fmvpModal');
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+
+            // 設置確認 FMVP 按鈕
+            document.getElementById('confirmFMVP').addEventListener('click', async () => {
+                if (selectedTeamAbbr && selectedFMVP) {
+                    // 保存 FMVP 預測
+                    await saveFMVPPrediction(selectedTeamAbbr, selectedFMVP);
+
+                    // 關閉模態視窗
+                    document.getElementById('fmvpModal').style.display = 'none';
+
+                    // 重置處理標誌
+                    isProcessing = false;
+
+                    // 跳轉到預測摘要頁面
+                    console.log('[DEBUG] 跳轉到predictions.html');
+                    window.location.href = 'predictions.html?champion=' + selectedTeamAbbr;
+                }
+            });
 
             // 獲取球隊顏色的輔助函數
             function getTeamColor(teamAbbr) {
