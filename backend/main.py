@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import create_engine, Column, Integer, String, DateTime, MetaData, Table
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, MetaData, Table, func, desc
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from pydantic import BaseModel
@@ -271,6 +271,37 @@ async def get_team_all_matchups(team: str):
     if not team_data:
         raise HTTPException(status_code=404, detail=f"No matchup data found for team {team}")
     return team_data
+
+# 新增路由：獲取FMVP投票排名
+@app.get("/fmvp-predictions/rankings/top")
+async def get_fmvp_rankings(limit: int = 10, db: Session = Depends(get_db)):
+    # 創建一個查詢來統計每個球員的投票數量並按投票數量排序
+    query = db.query(
+        FMVPPrediction.team_abbr,
+        FMVPPrediction.player_name,
+        func.count(FMVPPrediction.id).label("vote_count")
+    ).group_by(
+        FMVPPrediction.team_abbr,
+        FMVPPrediction.player_name
+    ).order_by(desc("vote_count"))
+    
+    # 限制返回的結果數量
+    fmvp_rankings = query.limit(limit).all()
+    
+    if not fmvp_rankings:
+        raise HTTPException(status_code=404, detail="No FMVP predictions found")
+    
+    # 轉換結果為JSON格式
+    result = []
+    for rank, (team_abbr, player_name, vote_count) in enumerate(fmvp_rankings, 1):
+        result.append({
+            "rank": rank,
+            "team_abbr": team_abbr,
+            "player_name": player_name,
+            "vote_count": vote_count
+        })
+    
+    return result
 
 # 測試路由
 @app.get("/")
