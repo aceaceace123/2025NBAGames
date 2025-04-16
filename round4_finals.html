@@ -57,10 +57,11 @@
         }
 
         .roster-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
             margin-top: 10px;
+            width: 100%;
         }
 
         .player-card {
@@ -70,6 +71,7 @@
             transition: all 0.2s ease;
             cursor: pointer;
             background-color: #f9f9f9;
+            width: 100%;
         }
 
         .player-card:hover {
@@ -86,20 +88,9 @@
         .player-name {
             font-weight: bold;
             font-size: 1.1em;
-            margin-bottom: 5px;
-        }
-
-        .player-position {
-            color: #666;
-            font-size: 0.9em;
-        }
-
-        .player-stats {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 8px;
-            font-size: 0.85em;
-            color: #555;
+            margin: 0;
+            text-align: center;
+            padding: 8px 0;
         }
 
         .confirm-fmvp {
@@ -126,10 +117,6 @@
         }
 
         @media (max-width: 768px) {
-            .roster-container {
-                grid-template-columns: 1fr;
-            }
-
             .fmvp-modal-content {
                 width: 95%;
                 padding: 15px;
@@ -319,11 +306,11 @@
 
                 // 返回模擬數據，確保UI能顯示
                 return [
-                    { player_id: "1", name: "球員 1", position: "G", jersey_number: "1", height: "6-4", weight: "210", age: "25", experience: "3" },
-                    { player_id: "2", name: "球員 2", position: "F", jersey_number: "2", height: "6-8", weight: "230", age: "27", experience: "5" },
-                    { player_id: "3", name: "球員 3", position: "C", jersey_number: "3", height: "7-0", weight: "250", age: "24", experience: "2" },
-                    { player_id: "4", name: "球員 4", position: "G", jersey_number: "4", height: "6-2", weight: "190", age: "29", experience: "7" },
-                    { player_id: "5", name: "球員 5", position: "F", jersey_number: "5", height: "6-7", weight: "215", age: "26", experience: "4" },
+                    { player_id: "1", name: "球員 1", jersey_number: "1" },
+                    { player_id: "2", name: "球員 2", jersey_number: "2" },
+                    { player_id: "3", name: "球員 3", jersey_number: "3" },
+                    { player_id: "4", name: "球員 4", jersey_number: "4" },
+                    { player_id: "5", name: "球員 5", jersey_number: "5" },
                 ];
             }
         }
@@ -364,11 +351,6 @@
 
                         playerCard.innerHTML = `
                             <div class="player-name">${player.name} ${player.jersey_number ? '#' + player.jersey_number : ''}</div>
-                            <div class="player-position">${player.position}</div>
-                            <div class="player-stats">
-                                <span>身高: ${player.height}</span>
-                                <span>經驗: ${player.experience}年</span>
-                            </div>
                         `;
 
                         playerCard.addEventListener('click', () => {
