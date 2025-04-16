@@ -40,73 +40,7 @@
             // 显示欢迎信息
             displayWelcomeMessage('matchup');
 
-            console.log('頁面加載，正在初始化OKC vs MIN對戰');
-
-            // 設置球隊標誌
-            const leftTeamBtn = document.querySelector('.left-team');
-            const rightTeamBtn = document.querySelector('.right-team');
-
-            if (leftTeamBtn && teamDetails['OKC']) {
-                const leftLogo = leftTeamBtn.querySelector('.team-logo-bg');
-                if (leftLogo) {
-                    leftLogo.style.backgroundImage = `url(${teamDetails['OKC'].logo})`;
-                }
-            }
-
-            if (rightTeamBtn && teamDetails['MIN']) {
-                const rightLogo = rightTeamBtn.querySelector('.team-logo-bg');
-                if (rightLogo) {
-                    rightLogo.style.backgroundImage = `url(${teamDetails['MIN'].logo})`;
-                }
-            }
-
-            // 使用更新後的函數獲取和顯示對戰數據
-            updateMatchupStats('OKC', 'MIN');
-
-            // 設置按鈕顏色
-            if (typeof updateBarColors === 'function') {
-                updateBarColors('OKC', 'MIN');
-            }
-
-            // 添加按鈕點擊事件
-            const teamButtons = document.querySelectorAll('.team-button');
-            teamButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    const selectedTeam = this.getAttribute('data-team');
-                    console.log('選擇的球隊:', selectedTeam);
-
-                    // Check if this is the right-team (MIN) button and special navigation is needed
-                    const isRightTeam = this.classList.contains('right-team');
-                    const currentPage = window.location.pathname.split('/').pop();
-                    console.log('Team selected:', selectedTeam, 'Is right team:', isRightTeam, 'Current page:', currentPage);
-
-                    if (selectedTeam === 'MIN' && currentPage === 'matchup1W.html') {
-                        console.log('Special navigation: Redirecting to matchup2W.html');
-                        window.location.href = 'matchup2W.html';
-                        return;
-                    }
-
-                    // 保存預測結果
-                    const matchupId = 'W1v8';
-                    const storageKey = 'round1Predictions';
-
-                    savePrediction(matchupId, selectedTeam, storageKey);
-
-                    // 添加視覺反饋
-                    teamButtons.forEach(btn => {
-                        btn.classList.remove('selected');
-                    });
-                    this.classList.add('selected');
-
-                    // 導航到下一頁
-                    setTimeout(() => {
-                        window.location.href = 'matchup2W.html';
-                    }, 500);
-                });
-            });
-
-            // 初始調試輸出
-            console.log('對戰頁面初始化完成');
+            // 其他脚本代码
         });
     </script>
 </body>
