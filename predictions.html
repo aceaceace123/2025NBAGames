@@ -360,6 +360,7 @@
             max-width: 500px;
             max-height: 80vh;
             overflow-y: auto;
+            position: relative;
         }
 
         .fmvp-rank-item {
@@ -415,6 +416,21 @@
             padding: 20px;
             color: #666;
         }
+
+        .fmvp-close-button {
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #c8102e;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            text-align: center;
+        }
     </style>
 </head>
 
@@ -425,7 +441,7 @@
             <h1 id="main-title" class="typewriter conference-title"></h1>
         </header>
 
-        <button id="stats-button">See others' predictions</button>
+        <button id="stats-button">Others' predictions</button>
 
         <button id="fmvp-rank-button">FMVP Rank</button>
 
@@ -822,7 +838,7 @@
                                     <div class="fmvp-rank-team-abbr" style="background-color: ${teamColor}; color: white;">${item.team_abbr}</div>
                                     <div class="fmvp-rank-player">${item.player_name}</div>
                                 </div>
-                                <div class="fmvp-rank-votes">${item.vote_count} 票</div>
+                                <div class="fmvp-rank-votes">${item.vote_count} votes</div>
                             `;
 
                             rankContainer.appendChild(rankItem);
