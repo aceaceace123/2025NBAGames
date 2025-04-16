@@ -1,13 +1,13 @@
 // --- Shared Data ---
 const teamDetails = {
     "OKC": { name: "Thunder", logo: "https://cdn.nba.com/logos/nba/1610612760/global/L/logo.svg", seed: 1, conference: 'Western' },
-    "MIN": { name: "Timberwolves", logo: "https://cdn.nba.com/logos/nba/1610612750/global/L/logo.svg", seed: 8, conference: 'Western' },
+    "MIN": { name: "Timberwolves", logo: "https://cdn.nba.com/logos/nba/1610612750/global/L/logo.svg", seed: 6, conference: 'Western' },
     "DEN": { name: "Nuggets", logo: "https://cdn.nba.com/logos/nba/1610612743/global/L/logo.svg", seed: 4, conference: 'Western' },
     "LAC": { name: "Clippers", logo: "https://cdn.nba.com/logos/nba/1610612746/global/L/logo.svg", seed: 5, conference: 'Western' },
     "LAL": { name: "Lakers", logo: "https://cdn.nba.com/logos/nba/1610612747/global/L/logo.svg", seed: 3, conference: 'Western' },
-    "GSW": { name: "Warriors", logo: "https://cdn.nba.com/logos/nba/1610612744/global/L/logo.svg", seed: 6, conference: 'Western' },
+    "GSW": { name: "Warriors", logo: "https://cdn.nba.com/logos/nba/1610612744/global/L/logo.svg", seed: 7, conference: 'Western' },
     "HOU": { name: "Rockets", logo: "https://cdn.nba.com/logos/nba/1610612745/global/L/logo.svg", seed: 2, conference: 'Western' },
-    "MEM": { name: "Grizzlies", logo: "https://cdn.nba.com/logos/nba/1610612763/global/L/logo.svg", seed: 7, conference: 'Western' },
+    "MEM": { name: "Grizzlies", logo: "https://cdn.nba.com/logos/nba/1610612763/global/L/logo.svg", seed: 8, conference: 'Western' },
     "CLE": { name: "Cavaliers", logo: "https://cdn.nba.com/logos/nba/1610612739/global/L/logo.svg", seed: 1, conference: 'Eastern' },
     "ATL": { name: "Hawks", logo: "https://cdn.nba.com/logos/nba/1610612737/global/L/logo.svg", seed: 8, conference: 'Eastern' },
     "IND": { name: "Pacers", logo: "https://cdn.nba.com/logos/nba/1610612754/global/L/logo.svg", seed: 4, conference: 'Eastern' },
@@ -19,10 +19,10 @@ const teamDetails = {
 };
 
 const round1Matchups = [
-    { id: "W1v8", team1Abbr: "OKC", team2Abbr: "MIN", conference: "Western", matchupNum: 1 },
+    { id: "W1v8", team1Abbr: "OKC", team2Abbr: "MEM", conference: "Western", matchupNum: 1 },
     { id: "W4v5", team1Abbr: "DEN", team2Abbr: "LAC", conference: "Western", matchupNum: 2 },
-    { id: "W3v6", team1Abbr: "LAL", team2Abbr: "GSW", conference: "Western", matchupNum: 3 },
-    { id: "W2v7", team1Abbr: "HOU", team2Abbr: "MEM", conference: "Western", matchupNum: 4 },
+    { id: "W3v6", team1Abbr: "LAL", team2Abbr: "MIN", conference: "Western", matchupNum: 3 },
+    { id: "W2v7", team1Abbr: "HOU", team2Abbr: "GSW", conference: "Western", matchupNum: 4 },
     { id: "E1v8", team1Abbr: "CLE", team2Abbr: "ATL", conference: "Eastern", matchupNum: 1 },
     { id: "E4v5", team1Abbr: "IND", team2Abbr: "MIL", conference: "Eastern", matchupNum: 2 },
     { id: "E3v6", team1Abbr: "NYK", team2Abbr: "DET", conference: "Eastern", matchupNum: 3 },
