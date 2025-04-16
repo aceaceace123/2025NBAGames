@@ -150,14 +150,14 @@
                     this.classList.add('selected');
 
                     // 確保導航必定觸發 - 使用直接導航而不是setTimeout
-                    console.log('準備跳轉到 round4_finals.html...');
+                    console.log('準備跳轉到 round3_matchupE.html...');
 
                     // 仍然使用setTimeout但縮短時間並添加直接跳轉作為後備
                     let hasNavigated = false;
                     setTimeout(() => {
                         if (!hasNavigated) {
                             hasNavigated = true;
-                            window.location.href = 'round4_finals.html';
+                            window.location.href = 'round3_matchupE.html';
                         }
                     }, 300);
 
@@ -165,7 +165,7 @@
                     setTimeout(() => {
                         if (!hasNavigated) {
                             console.warn('導航延遲，強制跳轉...');
-                            window.location.replace('round4_finals.html');
+                            window.location.replace('round3_matchupE.html');
                         }
                     }, 2000);
                 });

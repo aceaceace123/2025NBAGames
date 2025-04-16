@@ -33,9 +33,9 @@ const roundSources = {
     "R2W1": { round: 2, source1: "W1v8", source2: "W4v5", name: "Western Semifinal 1", next: "round2_matchup2W.html", prevRound: "round1Predictions", requiredCount: 8 },
     "R2W2": { round: 2, source1: "W3v6", source2: "W2v7", name: "Western Semifinal 2", next: "round2_matchup1E.html", prevRound: "round1Predictions", requiredCount: 8 },
     "R2E1": { round: 2, source1: "E1v8", source2: "E4v5", name: "Eastern Semifinal 1", next: "round2_matchup2E.html", prevRound: "round1Predictions", requiredCount: 8 },
-    "R2E2": { round: 2, source1: "E3v6", source2: "E2v7", name: "Eastern Semifinal 2", next: "round3_matchupE.html", prevRound: "round1Predictions", requiredCount: 8 },
-    "R3E": { round: 3, source1: "R2E1", source2: "R2E2", name: "Eastern Conference Final", next: "round3_matchupW.html", prevRound: "round2Predictions", requiredCount: 4 },
-    "R3W": { round: 3, source1: "R2W1", source2: "R2W2", name: "Western Conference Final", next: "round4_finals.html", prevRound: "round2Predictions", requiredCount: 4 },
+    "R2E2": { round: 2, source1: "E3v6", source2: "E2v7", name: "Eastern Semifinal 2", next: "round3_matchupW.html", prevRound: "round1Predictions", requiredCount: 8 },
+    "R3W": { round: 3, source1: "R2W1", source2: "R2W2", name: "Western Conference Final", next: "round3_matchupE.html", prevRound: "round2Predictions", requiredCount: 4 },
+    "R3E": { round: 3, source1: "R2E1", source2: "R2E2", name: "Eastern Conference Final", next: "round4_finals.html", prevRound: "round2Predictions", requiredCount: 4 },
     "R4F": { round: 4, source1: "R3W", source2: "R3E", name: "NBA Finals", next: "predictions.html", prevRound: "round3Predictions", requiredCount: 2 }
 };
 
