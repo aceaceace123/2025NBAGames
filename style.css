@@ -102,7 +102,7 @@ img {
     left: 50%;
     transform: translate(-50%, -50%) scale(0.6);
     max-width: 400px;
-    width: 90%;
+    width: 60%;
     padding: 25px;
     background-image: url('images/basketballs.png');
     background-size: cover;
