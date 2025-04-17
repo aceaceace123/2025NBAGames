@@ -90,15 +90,22 @@ function addTeamClickAnimation() {
     });
 }
 
+// Helper function to get Taiwan time (UTC+8)
+function getTaiwanTime() {
+    const now = new Date();
+    // Add 8 hours to convert to Taiwan time (UTC+8)
+    const taiwanTime = new Date(now.getTime() + (8 * 60 * 60 * 1000));
+    return taiwanTime.toISOString().split('.')[0]; // Format as ISO string without milliseconds
+}
+
 async function savePrediction(matchupId, selectedTeamAbbr, storageKey) {
     try {
         const username = localStorage.getItem('nbaPlayoffsUsername');
         console.log(`[DEBUG] 保存预测: ${matchupId}, ${selectedTeamAbbr}, 用户: ${username}`);
 
-        // 格式化时间戳
-        const now = new Date();
-        const timestamp = now.toISOString().split('.')[0];
-        console.log(`[DEBUG] 时间戳: ${timestamp}`);
+        // 使用台灣時間
+        const timestamp = getTaiwanTime();
+        console.log(`[DEBUG] 台灣時間戳: ${timestamp}`);
 
         const prediction = {
             username: username || 'guest', // 确保总是有用户名
@@ -149,8 +156,8 @@ async function savePrediction(matchupId, selectedTeamAbbr, storageKey) {
         // 重试一次
         try {
             const username = localStorage.getItem('nbaPlayoffsUsername') || 'guest';
-            const now = new Date();
-            const timestamp = now.toISOString().split('.')[0];
+            // 使用台灣時間
+            const timestamp = getTaiwanTime();
 
             const prediction = {
                 username: username,

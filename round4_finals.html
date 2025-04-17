@@ -190,6 +190,14 @@
 
     <script src="script.js"></script>
     <script>
+        // Helper function to get Taiwan time (UTC+8)
+        function getTaiwanTime() {
+            const now = new Date();
+            // Add 8 hours to convert to Taiwan time (UTC+8)
+            const taiwanTime = new Date(now.getTime() + (8 * 60 * 60 * 1000));
+            return taiwanTime.toISOString().split('.')[0]; // Format as ISO string without milliseconds
+        }
+
         // 簡單的預測保存函數
         async function saveChampionPrediction(teamAbbr) {
             try {
@@ -208,7 +216,7 @@
                     username: username,
                     matchup_id: 'R4F',
                     selected_team: teamAbbr,
-                    timestamp: new Date().toISOString().split('.')[0]
+                    timestamp: getTaiwanTime() // 使用台灣時間
                 };
 
                 console.log('[DEBUG] Saving champion prediction data:', prediction);
@@ -254,7 +262,7 @@
                             username: username,
                             matchup_id: 'R4F',
                             selected_team: teamAbbr,
-                            timestamp: new Date().toISOString().split('.')[0]
+                            timestamp: getTaiwanTime() // 使用台灣時間
                         }),
                         keepalive: true // 確保請求在頁面跳轉後仍然完成
                     });
@@ -279,7 +287,7 @@
                     username: username,
                     team_abbr: teamAbbr,
                     player_name: playerName,
-                    timestamp: new Date().toISOString().split('.')[0]
+                    timestamp: getTaiwanTime() // 使用台灣時間
                 };
 
                 console.log('[DEBUG] Saving FMVP prediction data:', prediction);
