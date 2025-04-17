@@ -20,18 +20,31 @@
             justify-content: center;
             align-items: center;
             overflow-y: auto;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .fmvp-modal.show {
+            opacity: 1;
         }
 
         .fmvp-modal-content {
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.95);
             border-radius: 8px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            width: 90%;
-            max-width: 600px;
-            max-height: 80vh;
+            width: 80%;
+            max-width: 450px;
+            max-height: 70vh;
             overflow-y: auto;
-            padding: 20px;
+            padding: 15px;
             position: relative;
+            border: 3px solid #fff;
+            transition: all 0.3s ease;
+            transform: scale(0.9);
+        }
+
+        .fmvp-modal.show .fmvp-modal-content {
+            transform: scale(1);
         }
 
         .fmvp-modal-header {
@@ -40,20 +53,22 @@
             align-items: center;
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
         }
 
         .fmvp-modal-header h2 {
             margin: 0;
             font-size: 1.5em;
-            color: #333;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .fmvp-close {
             font-size: 1.5em;
             cursor: pointer;
             font-weight: bold;
-            color: #777;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
 
         .roster-container {
@@ -65,24 +80,28 @@
         }
 
         .player-card {
-            border: 2px solid #eee;
+            border: 2px solid rgba(255, 255, 255, 0.7);
             border-radius: 6px;
             padding: 12px;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             cursor: pointer;
-            background-color: #f9f9f9;
+            background-color: rgba(255, 255, 255, 0.85);
             width: 100%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .player-card:hover {
-            border-color: #007bff;
+            border-color: #fff;
             transform: translateY(-3px);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            background-color: rgba(255, 255, 255, 0.95);
         }
 
         .player-card.selected {
-            border-color: #28a745;
-            background-color: #e8f5e9;
+            border-color: #fff;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+            transform: scale(1.02);
         }
 
         .player-name {
@@ -91,6 +110,7 @@
             margin: 0;
             text-align: center;
             padding: 8px 0;
+            color: #333;
         }
 
         .confirm-fmvp {
@@ -104,7 +124,9 @@
             border-radius: 4px;
             font-size: 1.1em;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            font-weight: bold;
         }
 
         .confirm-fmvp:hover {
@@ -121,6 +143,13 @@
                 width: 95%;
                 padding: 15px;
             }
+        }
+
+        /* Update modal content text color for better contrast */
+        .fmvp-modal-content p {
+            color: white;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
     </style>
 </head>
@@ -144,18 +173,18 @@
         </main>
     </div>
 
-    <!-- FMVP 選擇模態視窗 -->
+    <!-- FMVP Selection Modal -->
     <div id="fmvpModal" class="fmvp-modal">
         <div class="fmvp-modal-content">
             <div class="fmvp-modal-header">
-                <h2 id="fmvpModalTitle">選擇總決賽 MVP</h2>
+                <h2 id="fmvpModalTitle">Select Finals MVP</h2>
                 <span class="fmvp-close">&times;</span>
             </div>
-            <p>請從下方選擇您認為會獲得總決賽 MVP 的球員：</p>
+            <p>Please select the player you think will win the Finals MVP award:</p>
             <div id="rosterContainer" class="roster-container">
-                <!-- 球員名單將由 JavaScript 動態填充 -->
+                <!-- Player roster will be dynamically populated by JavaScript -->
             </div>
-            <button id="confirmFMVP" class="confirm-fmvp" disabled>確認選擇</button>
+            <button id="confirmFMVP" class="confirm-fmvp" disabled>Confirm Selection</button>
         </div>
     </div>
 
@@ -167,7 +196,7 @@
                 // 檢查是否已經保存過該預測，防止重複保存
                 const round4Predictions = JSON.parse(localStorage.getItem('round4Predictions') || '{}');
                 if (round4Predictions['R4F'] === teamAbbr) {
-                    console.log('[DEBUG] 已經保存過該預測，跳過API請求');
+                    console.log('[DEBUG] Already saved this prediction, skipping API request');
                     return true;
                 }
 
@@ -182,12 +211,12 @@
                     timestamp: new Date().toISOString().split('.')[0]
                 };
 
-                console.log('[DEBUG] 保存冠軍預測數據:', prediction);
+                console.log('[DEBUG] Saving champion prediction data:', prediction);
 
                 // 先保存到本地存儲
                 round4Predictions['R4F'] = teamAbbr;
                 localStorage.setItem('round4Predictions', JSON.stringify(round4Predictions));
-                console.log('[DEBUG] 已保存到本地存儲');
+                console.log('[DEBUG] Saved to local storage');
 
                 // 設置請求超時
                 const controller = new AbortController();
@@ -204,18 +233,18 @@
                 clearTimeout(timeoutId);
 
                 if (!response.ok) {
-                    throw new Error(`API請求失敗: ${response.status}`);
+                    throw new Error(`API request failed: ${response.status}`);
                 }
 
-                console.log('[DEBUG] 成功保存到API');
+                console.log('[DEBUG] Successfully saved to API');
                 return true;
             } catch (error) {
-                console.error('[ERROR] 保存預測出錯:', error);
+                console.error('[ERROR] Error saving prediction:', error);
 
                 // 在API請求失敗時嘗試一次備份請求，使用不同的機制
                 try {
                     const username = localStorage.getItem('nbaPlayoffsUsername') || 'guest';
-                    console.log('[DEBUG] 嘗試備份保存請求...');
+                    console.log('[DEBUG] Attempting backup save request...');
 
                     // 使用不同的方式發送請求，不設置超時
                     await fetch('https://two025nbagames-1.onrender.com/predictions', {
@@ -230,9 +259,9 @@
                         keepalive: true // 確保請求在頁面跳轉後仍然完成
                     });
 
-                    console.log('[DEBUG] 備份請求已發送');
+                    console.log('[DEBUG] Backup request sent');
                 } catch (backupError) {
-                    console.error('[ERROR] 備份請求也失敗了:', backupError);
+                    console.error('[ERROR] Backup request also failed:', backupError);
                 }
 
                 return false;
@@ -253,11 +282,11 @@
                     timestamp: new Date().toISOString().split('.')[0]
                 };
 
-                console.log('[DEBUG] 保存 FMVP 預測數據:', prediction);
+                console.log('[DEBUG] Saving FMVP prediction data:', prediction);
 
                 // 先保存到本地存儲
                 localStorage.setItem('fmvpPrediction', JSON.stringify(prediction));
-                console.log('[DEBUG] 已保存 FMVP 到本地存儲');
+                console.log('[DEBUG] Saved FMVP to local storage');
 
                 // 設置請求超時
                 const controller = new AbortController();
@@ -274,16 +303,16 @@
                 clearTimeout(timeoutId);
 
                 if (!response.ok) {
-                    throw new Error(`API請求失敗: ${response.status}`);
+                    throw new Error(`API request failed: ${response.status}`);
                 }
 
-                console.log('[DEBUG] 成功保存 FMVP 到API');
+                console.log('[DEBUG] Successfully saved FMVP to API');
                 return true;
             } catch (error) {
-                console.error('[ERROR] 保存 FMVP 預測出錯:', error);
+                console.error('[ERROR] Error saving FMVP prediction:', error);
 
                 // 失敗時至少已保存到本地
-                console.log('[DEBUG] 仍然繼續，因為已保存到本地存儲');
+                console.log('[DEBUG] Continuing anyway, as it was saved to local storage');
                 return true;
             }
         }
@@ -291,26 +320,26 @@
         // 獲取球隊名單
         async function fetchTeamRoster(teamAbbr) {
             try {
-                console.log(`[DEBUG] 獲取 ${teamAbbr} 球隊名單`);
+                console.log(`[DEBUG] Fetching ${teamAbbr} team roster`);
                 const response = await fetch(`https://two025nbagames-1.onrender.com/team-roster/${teamAbbr}`);
 
                 if (!response.ok) {
-                    throw new Error(`獲取球隊名單失敗: ${response.status}`);
+                    throw new Error(`Failed to get team roster: ${response.status}`);
                 }
 
                 const roster = await response.json();
-                console.log(`[DEBUG] 獲取到 ${roster.length} 名球員`);
+                console.log(`[DEBUG] Retrieved ${roster.length} players`);
                 return roster;
             } catch (error) {
-                console.error(`[ERROR] 獲取球隊名單出錯:`, error);
+                console.error(`[ERROR] Error fetching team roster:`, error);
 
                 // 返回模擬數據，確保UI能顯示
                 return [
-                    { player_id: "1", name: "球員 1", jersey_number: "1" },
-                    { player_id: "2", name: "球員 2", jersey_number: "2" },
-                    { player_id: "3", name: "球員 3", jersey_number: "3" },
-                    { player_id: "4", name: "球員 4", jersey_number: "4" },
-                    { player_id: "5", name: "球員 5", jersey_number: "5" },
+                    { player_id: "1", name: "Player 1", jersey_number: "1" },
+                    { player_id: "2", name: "Player 2", jersey_number: "2" },
+                    { player_id: "3", name: "Player 3", jersey_number: "3" },
+                    { player_id: "4", name: "Player 4", jersey_number: "4" },
+                    { player_id: "5", name: "Player 5", jersey_number: "5" },
                 ];
             }
         }
@@ -322,20 +351,52 @@
         function openFMVPModal(teamAbbr, teamName) {
             selectedTeamAbbr = teamAbbr;
             const modal = document.getElementById('fmvpModal');
+            const modalContent = modal.querySelector('.fmvp-modal-content');
             const modalTitle = document.getElementById('fmvpModalTitle');
             const confirmButton = document.getElementById('confirmFMVP');
 
-            modalTitle.textContent = `選擇 ${teamName} 隊的總決賽 MVP`;
+            // Get team color
+            const teamColor = getTeamColor(teamAbbr);
+
+            // Set modal background color with semi-transparency
+            modalContent.style.backgroundColor = `${hexToRgba(teamColor, 0.85)}`;
+            modalContent.style.borderColor = teamColor;
+
+            // Set confirm button color
+            confirmButton.style.backgroundColor = teamColor;
+
+            modalTitle.textContent = `Select ${teamName} team's Finals MVP`;
             confirmButton.disabled = true;
+
+            // Display the modal
             modal.style.display = 'flex';
+
+            // Trigger animation after a small delay
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
 
             // 獲取並顯示球隊名單
             loadTeamRoster(teamAbbr);
         }
 
+        // Helper function to convert hex color to rgba
+        function hexToRgba(hex, alpha = 1) {
+            // Remove the hash if it exists
+            hex = hex.replace('#', '');
+
+            // Parse the hex values
+            const r = parseInt(hex.substring(0, 2), 16);
+            const g = parseInt(hex.substring(2, 4), 16);
+            const b = parseInt(hex.substring(4, 6), 16);
+
+            // Return rgba string
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        }
+
         async function loadTeamRoster(teamAbbr) {
             const rosterContainer = document.getElementById('rosterContainer');
-            rosterContainer.innerHTML = '<p>載入中...</p>';
+            rosterContainer.innerHTML = '<p>Loading...</p>';
 
             try {
                 const roster = await fetchTeamRoster(teamAbbr);
@@ -535,16 +596,27 @@
 
             // 設置 FMVP 模態視窗的關閉按鈕
             document.querySelector('.fmvp-close').addEventListener('click', () => {
-                document.getElementById('fmvpModal').style.display = 'none';
+                closeModal();
             });
 
             // 點擊模態視窗外部時關閉
             window.addEventListener('click', (event) => {
                 const modal = document.getElementById('fmvpModal');
                 if (event.target === modal) {
-                    modal.style.display = 'none';
+                    closeModal();
                 }
             });
+
+            // Modal close function with animation
+            function closeModal() {
+                const modal = document.getElementById('fmvpModal');
+                modal.classList.remove('show');
+
+                // Wait for animation to complete before hiding
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 300);
+            }
 
             // 設置確認 FMVP 按鈕
             document.getElementById('confirmFMVP').addEventListener('click', async () => {
@@ -553,14 +625,16 @@
                     await saveFMVPPrediction(selectedTeamAbbr, selectedFMVP);
 
                     // 關閉模態視窗
-                    document.getElementById('fmvpModal').style.display = 'none';
+                    closeModal();
 
                     // 重置處理標誌
                     isProcessing = false;
 
                     // 跳轉到預測摘要頁面
                     console.log('[DEBUG] 跳轉到predictions.html');
-                    window.location.href = 'predictions.html?champion=' + selectedTeamAbbr;
+                    setTimeout(() => {
+                        window.location.href = 'predictions.html?champion=' + selectedTeamAbbr;
+                    }, 300);
                 }
             });
 
