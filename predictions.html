@@ -414,13 +414,14 @@
         /* FMVP Rank Styles */
         .fmvp-rank-modal-content {
             background-color: white;
-            padding: 20px;
+            padding: 25px;
             border-radius: 8px;
-            width: 90%;
-            max-width: 500px;
+            width: 95%;
+            max-width: 700px;
             max-height: 80vh;
             overflow-y: auto;
             position: relative;
+            font-family: 'Libre Baskerville', Baskerville, serif;
         }
 
         .fmvp-rank-item {
@@ -467,14 +468,18 @@
 
         .fmvp-rank-heading {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             color: #333;
+            font-family: 'Libre Baskerville', Baskerville, serif;
+            font-weight: bold;
+            font-size: 1.2em;
         }
 
         .fmvp-rank-loading {
             text-align: center;
             padding: 20px;
             color: #666;
+            font-family: 'Libre Baskerville', Baskerville, serif;
         }
 
         .fmvp-close-button {
@@ -516,6 +521,13 @@
         #fmvp-rank-button:hover {
             animation: none;
         }
+
+        #fmvp-chart-container {
+            width: 100%;
+            height: 400px;
+            margin: 0 auto;
+            position: relative;
+        }
     </style>
 </head>
 
@@ -547,6 +559,7 @@
                 <h2 class="fmvp-rank-heading">FMVP Vote Rankings</h2>
                 <div id="fmvp-rank-container">
                     <div class="fmvp-rank-loading">Loading rankings...</div>
+                    <canvas id="fmvp-chart" style="width: 100%; height: 400px;"></canvas>
                 </div>
             </div>
         </div>
@@ -892,10 +905,17 @@
                 }
             }
 
-            // Fetch and display FMVP rankings
+            // Fetch and display FMVP rankings as horizontal bar chart
             async function fetchAndDisplayFMVPRankings() {
                 const rankContainer = document.getElementById('fmvp-rank-container');
-                rankContainer.innerHTML = '<div class="fmvp-rank-loading">Loading rankings...</div>';
+                const loadingElement = rankContainer.querySelector('.fmvp-rank-loading');
+                loadingElement.style.display = 'block';
+
+                // Create or get reference to canvas
+                const canvas = document.getElementById('fmvp-chart');
+                canvas.style.display = 'none';
+
+                let fmvpChart = null;
 
                 try {
                     const response = await fetch('https://two025nbagames-1.onrender.com/fmvp-predictions/rankings/top');
@@ -907,35 +927,136 @@
                     const rankings = await response.json();
 
                     if (rankings && rankings.length > 0) {
-                        // Clear loading message
-                        rankContainer.innerHTML = '';
+                        // Hide loading message and show chart
+                        loadingElement.style.display = 'none';
+                        canvas.style.display = 'block';
 
-                        // Create ranking items
-                        rankings.forEach(item => {
-                            const rankItem = document.createElement('div');
-                            rankItem.className = 'fmvp-rank-item';
+                        // Process data for chart
+                        const labels = rankings.map(item => `${item.player_name}`);
+                        const data = rankings.map(item => item.vote_count);
+                        const backgroundColors = rankings.map(item => getTeamColor(item.team_abbr));
 
-                            // Get team color
-                            const teamColor = getTeamColor(item.team_abbr);
+                        // Create chart
+                        const ctx = canvas.getContext('2d');
 
-                            rankItem.innerHTML = `
-                                <div class="fmvp-rank-number">${item.rank}.</div>
-                                <div class="fmvp-rank-team">
-                                    <div class="fmvp-rank-team-abbr" style="background-color: ${teamColor}; color: white;">${item.team_abbr}</div>
-                                    <div class="fmvp-rank-player">${item.player_name}</div>
-                                </div>
-                                <div class="fmvp-rank-votes">${item.vote_count} votes</div>
-                            `;
+                        // Destroy existing chart if it exists
+                        if (fmvpChart) {
+                            fmvpChart.destroy();
+                        }
 
-                            rankContainer.appendChild(rankItem);
+                        fmvpChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'FMVP Votes',
+                                    data: data,
+                                    backgroundColor: backgroundColors,
+                                    borderColor: backgroundColors.map(color => adjustColorBrightness(color, -20)), // darker border
+                                    borderWidth: 1,
+                                    barPercentage: 0.8,
+                                    categoryPercentage: 0.9,
+                                }]
+                            },
+                            options: {
+                                indexAxis: 'y', // Horizontal bar chart
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                layout: {
+                                    padding: {
+                                        left: 10,
+                                        right: 30,
+                                        top: 10,
+                                        bottom: 10
+                                    }
+                                },
+                                plugins: {
+                                    legend: {
+                                        display: false, // Hide legend
+                                    },
+                                    tooltip: {
+                                        callbacks: {
+                                            label: function (context) {
+                                                return `${context.parsed.x} votes`;
+                                            }
+                                        },
+                                        titleFont: {
+                                            family: "'Libre Baskerville', Baskerville, serif"
+                                        },
+                                        bodyFont: {
+                                            family: "'Libre Baskerville', Baskerville, serif"
+                                        }
+                                    },
+                                    datalabels: {
+                                        display: false // Hide the vote count labels at the end of bars
+                                    }
+                                },
+                                scales: {
+                                    x: {
+                                        title: {
+                                            display: true,
+                                            text: 'Votes',
+                                            font: {
+                                                family: "'Libre Baskerville', Baskerville, serif",
+                                                weight: 'bold',
+                                                size: 14
+                                            }
+                                        },
+                                        ticks: {
+                                            precision: 0, // Show only integer values
+                                            font: {
+                                                family: "'Libre Baskerville', Baskerville, serif"
+                                            }
+                                        },
+                                        grid: {
+                                            display: true,
+                                            drawBorder: true,
+                                            color: 'rgba(0, 0, 0, 0.1)'
+                                        }
+                                    },
+                                    y: {
+                                        title: {
+                                            display: false
+                                        },
+                                        ticks: {
+                                            font: {
+                                                family: "'Libre Baskerville', Baskerville, serif",
+                                                weight: 'bold'
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         });
                     } else {
-                        rankContainer.innerHTML = '<div class="fmvp-rank-loading">No FMVP predictions found.</div>';
+                        loadingElement.innerHTML = 'No FMVP predictions found.';
+                        loadingElement.style.display = 'block';
+                        canvas.style.display = 'none';
                     }
                 } catch (error) {
                     console.error('Error fetching FMVP rankings:', error);
-                    rankContainer.innerHTML = `<div class="fmvp-rank-loading">Error loading rankings: ${error.message}</div>`;
+                    loadingElement.innerHTML = `Error loading rankings: ${error.message}`;
+                    loadingElement.style.display = 'block';
+                    canvas.style.display = 'none';
                 }
+            }
+
+            // Helper function to adjust color brightness for borders
+            function adjustColorBrightness(hex, percent) {
+                hex = hex.replace(/^\s*#|\s*$/g, '');
+
+                // Convert to RGB
+                let r = parseInt(hex.substr(0, 2), 16);
+                let g = parseInt(hex.substr(2, 2), 16);
+                let b = parseInt(hex.substr(4, 2), 16);
+
+                // Adjust brightness
+                r = Math.max(0, Math.min(255, r + percent));
+                g = Math.max(0, Math.min(255, g + percent));
+                b = Math.max(0, Math.min(255, b + percent));
+
+                // Convert back to hex
+                return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
             }
 
             async function loadChampionshipStats() {
