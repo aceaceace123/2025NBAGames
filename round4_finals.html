@@ -437,6 +437,29 @@
             }
         }
 
+        // 獲取球隊顏色的輔助函數 - Moved to global scope
+        function getTeamColor(teamAbbr) {
+            switch (teamAbbr) {
+                case 'OKC': return '#007AC1'; // Thunder Blue
+                case 'MIN': return '#0C2340'; // Timberwolves Navy
+                case 'DEN': return '#0E2240'; // Nuggets Navy
+                case 'LAC': return '#C8102E'; // Clippers Red
+                case 'LAL': return '#552583'; // Lakers Purple
+                case 'GSW': return '#1D428A'; // Warriors Blue
+                case 'HOU': return '#CE1141'; // Rockets Red
+                case 'MEM': return '#5D76A9'; // Grizzlies Blue
+                case 'CLE': return '#860038'; // Cavaliers Wine
+                case 'ATL': return '#E03A3E'; // Hawks Red
+                case 'IND': return '#002D62'; // Pacers Blue
+                case 'MIL': return '#00471B'; // Bucks Green
+                case 'NYK': return '#006BB6'; // Knicks Blue
+                case 'DET': return '#C8102E'; // Pistons Red
+                case 'BOS': return '#007A33'; // Celtics Green
+                case 'ORL': return '#0077C0'; // Magic Blue
+                default: return '#333333';    // Default dark gray
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', async function () {
             // 顯示歡迎信息
             displayWelcomeMessage('matchup');
@@ -499,17 +522,6 @@
 
             // 使用全局函數從matchup_stats.json獲取對戰數據
             updateMatchupStats(westChampion, eastChampion);
-
-            // 確保統計欄顏色也更新 - 直接調用一次更新
-            setTimeout(() => {
-                // 延遲執行以確保updateMatchupStats已完成
-                const statsRows = document.querySelectorAll('.stats-row');
-                if (statsRows.length > 0) {
-                    console.log('檢測到統計行已生成，再次應用顏色...');
-                    // 再次應用顏色，確保無論統計數據來源，顏色都能正確應用
-                    // updateBarColors(westChampion, eastChampion); // 移除這行
-                }
-            }, 500);
 
             // 添加基础调试代码，确认页面和事件监听正常
             console.log('[DEBUG] 总决赛页面初始化完成，已设置按钮');
@@ -637,29 +649,6 @@
                     }, 300);
                 }
             });
-
-            // 獲取球隊顏色的輔助函數
-            function getTeamColor(teamAbbr) {
-                switch (teamAbbr) {
-                    case 'OKC': return '#007AC1'; // Thunder Blue
-                    case 'MIN': return '#0C2340'; // Timberwolves Navy
-                    case 'DEN': return '#0E2240'; // Nuggets Navy
-                    case 'LAC': return '#C8102E'; // Clippers Red
-                    case 'LAL': return '#552583'; // Lakers Purple
-                    case 'GSW': return '#1D428A'; // Warriors Blue
-                    case 'HOU': return '#CE1141'; // Rockets Red
-                    case 'MEM': return '#5D76A9'; // Grizzlies Blue
-                    case 'CLE': return '#860038'; // Cavaliers Wine
-                    case 'ATL': return '#E03A3E'; // Hawks Red
-                    case 'IND': return '#002D62'; // Pacers Blue
-                    case 'MIL': return '#00471B'; // Bucks Green
-                    case 'NYK': return '#006BB6'; // Knicks Blue
-                    case 'DET': return '#C8102E'; // Pistons Red
-                    case 'BOS': return '#007A33'; // Celtics Green
-                    case 'ORL': return '#0077C0'; // Magic Blue
-                    default: return '#333333';    // Default dark gray
-                }
-            }
         });
     </script>
 </body>
