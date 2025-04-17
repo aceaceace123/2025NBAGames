@@ -10,6 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&display=swap');
 
         .container {
             max-width: 100%;
@@ -23,11 +24,18 @@
             background: #f5f5f5;
             margin: 10px;
             gap: 10px;
+            font-family: 'Libre Baskerville', Baskerville, serif;
+            font-weight: bold;
         }
 
         .conference {
             flex: 1;
             max-width: 45%;
+        }
+
+        .conference h2 {
+            font-family: 'Libre Baskerville', Baskerville, serif;
+            font-weight: 700;
         }
 
         .round {
@@ -37,11 +45,15 @@
         .round h3 {
             font-size: 0.9em;
             margin: 10px 0;
+            font-family: 'Libre Baskerville', Baskerville, serif;
+            font-style: normal;
+            font-weight: bold;
         }
 
         h2 {
             font-size: 1em;
             margin: 10px 0;
+            font-family: 'Libre Baskerville', Baskerville, serif;
         }
 
         .matchup {
@@ -80,10 +92,12 @@
         .seed {
             color: #666;
             margin-bottom: 0;
+            font-weight: bold;
         }
 
         .team-name {
-            font-weight: 500;
+            font-weight: bold;
+            font-family: 'Libre Baskerville', Baskerville, serif;
         }
 
         .team.winner {
@@ -98,6 +112,7 @@
             flex-direction: column;
             align-items: center;
             min-width: 120px;
+            font-family: 'Libre Baskerville', Baskerville, serif;
         }
 
         .champion {
@@ -114,6 +129,7 @@
             z-index: 10;
             margin-left: auto;
             margin-right: auto;
+            font-family: 'Libre Baskerville', Baskerville, serif;
         }
 
         .champion img {
@@ -126,16 +142,31 @@
             margin: 4px 0;
             font-size: 0.85em;
             white-space: pre-line;
+            font-family: 'Libre Baskerville', Baskerville, serif;
+            font-weight: 700;
         }
 
         .incomplete-message {
             text-align: center;
             color: #666;
             margin: 10px;
-            padding: 10px;
+            padding: 15px;
             background: #f8f8f8;
             border-radius: 5px;
             font-size: 0.9em;
+            font-family: 'Libre Baskerville', Baskerville, serif;
+            border: 1px solid #ddd;
+            line-height: 1.5;
+        }
+
+        .incomplete-message a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .incomplete-message a:hover {
+            text-decoration: underline;
         }
 
         #champion-content {
@@ -143,6 +174,7 @@
             flex-direction: column;
             align-items: center;
             font-size: 0.85em;
+            font-family: 'Libre Baskerville', Baskerville, serif;
         }
 
         #champion-content img {
@@ -152,6 +184,7 @@
         #champion-content div {
             font-weight: bold;
             font-size: 0.95em;
+            font-family: 'Libre Baskerville', Baskerville, serif;
         }
 
         /* FMVP 相關樣式 */
@@ -160,6 +193,7 @@
             padding-top: 8px;
             border-top: 1px dashed rgba(255, 255, 255, 0.4);
             width: 100%;
+            font-family: 'Libre Baskerville', Baskerville, serif;
         }
 
         .fmvp-title {
@@ -168,14 +202,16 @@
             color: rgba(255, 255, 255, 0.9);
             letter-spacing: 1px;
             text-transform: uppercase;
+            font-family: 'Libre Baskerville', Baskerville, serif;
         }
 
         .fmvp-player {
             font-size: 0.9em;
             font-weight: bold;
             margin: 3px 0;
-            color: white;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            color: black;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+            font-family: 'Libre Baskerville', Baskerville, serif;
         }
 
         /* Add new button container styling */
@@ -332,10 +368,12 @@
         }
 
         h1 {
-            font-family: 'Libre Baskerville', Baskerville, serif;
+            font-family: 'Libre Caslon Text', 'Caslon', serif;
             font-size: 1.5em;
             margin: 15px 0;
             display: inline-block;
+            font-weight: 700;
+            letter-spacing: 0.02em;
         }
 
         .typewriter {
