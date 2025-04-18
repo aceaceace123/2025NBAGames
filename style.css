@@ -100,15 +100,15 @@ img {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) scale(0.6);
+    transform: translate(-50%, -50%) scale(0.5);
     max-width: 400px;
     width: 60%;
-    padding: 25px;
+    padding: 15px;
     background-image: url('images/basketballs.png');
     background-size: cover;
     background-position: center;
     background-color: rgba(255, 255, 255, 0.92);
-    border-radius: 10px;
+    border-radius: 8px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -119,27 +119,26 @@ img {
 }
 
 .login-box:hover {
-    transform: translate(-50%, -52%) scale(0.6);
+    transform: translate(-50%, -52%) scale(0.5);
     box-shadow: 0 12px 36px rgba(0, 0, 0, 0.2);
     background-color: rgba(255, 255, 255, 0.96);
 }
 
 .login-box label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     color: #333;
     font-weight: 500;
-    font-size: 1.1em;
+    font-size: 1em;
 }
 
 .login-box input[type="text"] {
-    width: calc(100% - 24px);
-    /* Subtract padding from width */
-    padding: 12px;
-    margin: 10px 0;
+    width: calc(100% - 20px);
+    padding: 8px;
+    margin: 8px 0;
     border: 2px solid rgba(0, 0, 0, 0.1);
     border-radius: 6px;
-    font-size: 16px;
+    font-size: 14px;
     transition: all 0.3s ease;
     background-color: rgba(255, 255, 255, 0.8);
     font-family: 'Libre Baskerville', Baskerville, serif;
@@ -153,15 +152,14 @@ img {
 }
 
 .login-box button {
-    width: calc(100% - 24px);
-    /* Match input field width */
-    padding: 12px;
-    margin-top: 15px;
+    width: calc(100% - 20px);
+    padding: 8px;
+    margin-top: 12px;
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
     border: none;
     border-radius: 6px;
-    font-size: 16px;
+    font-size: 14px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-family: 'Libre Baskerville', Baskerville, serif;
@@ -182,12 +180,12 @@ img {
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translate(-50%, -40%) scale(0.6);
+        transform: translate(-50%, -40%) scale(0.5);
     }
 
     to {
         opacity: 1;
-        transform: translate(-50%, -50%) scale(0.6);
+        transform: translate(-50%, -50%) scale(0.5);
     }
 }
 
@@ -597,7 +595,7 @@ main.matchup-page.new-style {
 
 .bracket-team.winner {
     font-weight: 600;
-    background-color: #e7f3ff;
+    background-color: lightskyblue;
 }
 
 /* Connectors will be drawn by JS using absolute positioning and borders/lines */
