@@ -23,16 +23,17 @@
                     <div class="team-logo-bg"></div>
                     <span>CLE (1)</span>
                 </button>
-                <button class="team-button right-team" data-team="ATL">
-                    <div class="team-logo-bg"></div>
-                    <span>ATL (8)</span>
-                </button>
+                <button class="team-button right-team" data-team="MIA>
+                    <div class=" team-logo-bg">
             </div>
+            <span>MIA (8)</span>
+            </button>
+    </div>
 
-            <div class="stats-container">
-                <!-- 統計資料將由JavaScript動態填充 -->
-            </div>
-        </main>
+    <div class="stats-container">
+        <!-- 統計資料將由JavaScript動態填充 -->
+    </div>
+    </main>
     </div>
 
     <script src="script.js"></script>
@@ -52,19 +53,19 @@
                 }
             }
 
-            if (rightTeamBtn && teamDetails['ATL']) {
+            if (rightTeamBtn && teamDetails['MIA']) {
                 const rightLogo = rightTeamBtn.querySelector('.team-logo-bg');
                 if (rightLogo) {
-                    rightLogo.style.backgroundImage = `url(${teamDetails['ATL'].logo})`;
+                    rightLogo.style.backgroundImage = `url(${teamDetails['MIA'].logo})`;
                 }
             }
 
             // 使用script.js中的通用函數獲取和顯示對戰數據
-            fetchMatchupStatsAndUpdateUI('CLE', 'ATL');
+            fetchMatchupStatsAndUpdateUI('CLE', 'MIA');
 
             // 設置按鈕顏色
             if (typeof updateBarColors === 'function') {
-                updateBarColors('CLE', 'ATL');
+                updateBarColors('CLE', 'MIA');
             }
 
             // 添加按鈕點擊事件

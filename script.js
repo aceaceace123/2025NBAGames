@@ -9,7 +9,7 @@ const teamDetails = {
     "HOU": { name: "Rockets", logo: "https://cdn.nba.com/logos/nba/1610612745/global/L/logo.svg", seed: 2, conference: 'Western' },
     "MEM": { name: "Grizzlies", logo: "https://cdn.nba.com/logos/nba/1610612763/global/L/logo.svg", seed: 8, conference: 'Western' },
     "CLE": { name: "Cavaliers", logo: "https://cdn.nba.com/logos/nba/1610612739/global/L/logo.svg", seed: 1, conference: 'Eastern' },
-    "ATL": { name: "Hawks", logo: "https://cdn.nba.com/logos/nba/1610612737/global/L/logo.svg", seed: 8, conference: 'Eastern' },
+    "MIA": { name: "Heat", logo: "https://cdn.nba.com/logos/nba/1610612748/global/L/logo.svg", seed: 8, conference: 'Eastern' },
     "IND": { name: "Pacers", logo: "https://cdn.nba.com/logos/nba/1610612754/global/L/logo.svg", seed: 4, conference: 'Eastern' },
     "MIL": { name: "Bucks", logo: "https://cdn.nba.com/logos/nba/1610612749/global/L/logo.svg", seed: 5, conference: 'Eastern' },
     "NYK": { name: "Knicks", logo: "https://cdn.nba.com/logos/nba/1610612752/global/L/logo.svg", seed: 3, conference: 'Eastern' },
@@ -23,7 +23,7 @@ const round1Matchups = [
     { id: "W4v5", team1Abbr: "DEN", team2Abbr: "LAC", conference: "Western", matchupNum: 2 },
     { id: "W3v6", team1Abbr: "LAL", team2Abbr: "MIN", conference: "Western", matchupNum: 3 },
     { id: "W2v7", team1Abbr: "HOU", team2Abbr: "GSW", conference: "Western", matchupNum: 4 },
-    { id: "E1v8", team1Abbr: "CLE", team2Abbr: "ATL", conference: "Eastern", matchupNum: 1 },
+    { id: "E1v8", team1Abbr: "CLE", team2Abbr: "MIA", conference: "Eastern", matchupNum: 1 },
     { id: "E4v5", team1Abbr: "IND", team2Abbr: "MIL", conference: "Eastern", matchupNum: 2 },
     { id: "E3v6", team1Abbr: "NYK", team2Abbr: "DET", conference: "Eastern", matchupNum: 3 },
     { id: "E2v7", team1Abbr: "BOS", team2Abbr: "ORL", conference: "Eastern", matchupNum: 4 }
@@ -584,7 +584,7 @@ document.addEventListener('DOMContentLoaded', function () {
                               ${createMatchupHTML(r1Winners['E3v6'], r1Winners['E2v7'], r2Winners['R2E2'].abbr)}
                          </div>
                          <div class="bracket-round"> <!-- R1 East -->
-                            ${createMatchupHTML(teamDetails['CLE'], teamDetails['ATL'], r1Winners['E1v8'].abbr)}
+                            ${createMatchupHTML(teamDetails['CLE'], teamDetails['MIA'], r1Winners['E1v8'].abbr)}
                             ${createMatchupHTML(teamDetails['IND'], teamDetails['MIL'], r1Winners['E4v5'].abbr)}
                             ${createMatchupHTML(teamDetails['NYK'], teamDetails['DET'], r1Winners['E3v6'].abbr)}
                             ${createMatchupHTML(teamDetails['BOS'], teamDetails['ORL'], r1Winners['E2v7'].abbr)}
@@ -865,10 +865,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     leftTeam.style.backgroundColor = '#860038';
                     document.documentElement.style.setProperty('--left-team-color', '#860038');
                     break; // Cavaliers Wine
-                case 'ATL':
-                    leftTeam.style.backgroundColor = '#E03A3E';
-                    document.documentElement.style.setProperty('--left-team-color', '#E03A3E');
-                    break; // Hawks Red
+                case 'MIA':
+                    leftTeam.style.backgroundColor = '#98002E';
+                    document.documentElement.style.setProperty('--left-team-color', '#98002E');
+                    break; // Heat Red
                 case 'IND':
                     leftTeam.style.backgroundColor = '#002D62';
                     document.documentElement.style.setProperty('--left-team-color', '#002D62');
@@ -944,10 +944,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     rightTeam.style.backgroundColor = '#860038';
                     document.documentElement.style.setProperty('--right-team-color', '#860038');
                     break; // Cavaliers Wine
-                case 'ATL':
-                    rightTeam.style.backgroundColor = '#E03A3E';
-                    document.documentElement.style.setProperty('--right-team-color', '#E03A3E');
-                    break; // Hawks Red
+                case 'MIA':
+                    rightTeam.style.backgroundColor = '#98002E';
+                    document.documentElement.style.setProperty('--right-team-color', '#98002E');
+                    break; // Heat Red
                 case 'IND':
                     rightTeam.style.backgroundColor = '#002D62';
                     document.documentElement.style.setProperty('--right-team-color', '#002D62');
@@ -1405,7 +1405,7 @@ function getTeamColorByAbbr(teamAbbr) {
         case 'HOU': return '#CE1141'; // Rockets Red
         case 'MEM': return '#5D76A9'; // Grizzlies Blue
         case 'CLE': return '#860038'; // Cavaliers Wine
-        case 'ATL': return '#E03A3E'; // Hawks Red
+        case 'MIA': return '#98002E'; // Heat Red
         case 'IND': return '#002D62'; // Pacers Blue
         case 'MIL': return '#00471B'; // Bucks Green
         case 'NYK': return '#006BB6'; // Knicks Blue

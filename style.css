@@ -343,9 +343,10 @@ main.matchup-page.new-style {
     border-bottom: 3px solid #EEE1C6;
 }
 
-.team-section[data-team-abbr="ATL"] .choice-button {
-    border-bottom: 3px solid #C1D32F;
+.team-section[data-team-abbr="MIA"] .choice-button {
+    border-bottom: 3px solid #F9A01B;
 }
+
 
 .team-section[data-team-abbr="CLE"] .choice-button {
     border-bottom: 3px solid #FDBB30;
@@ -408,9 +409,10 @@ main.matchup-page.new-style {
     background-color: #00471B;
 }
 
-.team-section[data-team-abbr="ATL"] {
-    background-color: #E03A3E;
+.team-section[data-team-abbr="MIA"] {
+    background-color: #98002E;
 }
+
 
 .team-section[data-team-abbr="CLE"] {
     background-color: #860038;
@@ -693,11 +695,12 @@ main.matchup-page.new-style {
     background-color: #EEE1C6;
 }
 
-.bracket-champion[data-team-abbr="ATL"] {
-    border-color: #E03A3E;
-    box-shadow: 0 2px 4px rgba(224, 58, 62, 0.3);
-    background-color: #C1D32F;
+.bracket-champion[data-team-abbr="MIA"] {
+    border-color: #98002E;
+    box-shadow: 0 2px 4px rgba(152, 0, 46, 0.3);
+    background-color: #F9A01B;
 }
+
 
 .bracket-champion[data-team-abbr="CLE"] {
     border-color: #860038;
